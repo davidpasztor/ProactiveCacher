@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		635D6ABE1FCC431700321A76 /* InstagramClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635D6ABD1FCC431700321A76 /* InstagramClient.swift */; };
+		635D6AC01FCC6EBA00321A76 /* SwiftInstagram.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 635D6ABF1FCC6EB900321A76 /* SwiftInstagram.framework */; };
+		635D6AC11FCC6EBA00321A76 /* SwiftInstagram.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 635D6ABF1FCC6EB900321A76 /* SwiftInstagram.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		63838C151FB60F4B002697D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C141FB60F4B002697D6 /* AppDelegate.swift */; };
 		63838C171FB60F4B002697D6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C161FB60F4B002697D6 /* ViewController.swift */; };
 		63838C1A1FB60F4B002697D6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63838C181FB60F4B002697D6 /* Main.storyboard */; };
@@ -14,6 +17,14 @@
 		63838C1F1FB60F4B002697D6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63838C1D1FB60F4B002697D6 /* LaunchScreen.storyboard */; };
 		63838C2A1FB60F4B002697D6 /* ProactiveCacherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C291FB60F4B002697D6 /* ProactiveCacherTests.swift */; };
 		63838C351FB60F4B002697D6 /* ProactiveCacherUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C341FB60F4B002697D6 /* ProactiveCacherUITests.swift */; };
+		63838C431FB61306002697D6 /* UserDataLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C421FB61306002697D6 /* UserDataLogger.swift */; };
+		63838C4B1FB6193E002697D6 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63838C491FB6193E002697D6 /* Realm.framework */; };
+		63838C4C1FB6193E002697D6 /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 63838C491FB6193E002697D6 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		63838C4D1FB6193E002697D6 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63838C4A1FB6193E002697D6 /* RealmSwift.framework */; };
+		63838C4E1FB6193E002697D6 /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 63838C4A1FB6193E002697D6 /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		63838C511FB61961002697D6 /* RealmModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C501FB61961002697D6 /* RealmModels.swift */; };
+		63838C541FB6257C002697D6 /* PMKCoreLocation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 63838C461FB615A4002697D6 /* PMKCoreLocation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		63838C561FB6257C002697D6 /* PromiseKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 63838C451FB615A4002697D6 /* PromiseKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,7 +44,27 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		63838C4F1FB6193E002697D6 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				63838C4E1FB6193E002697D6 /* RealmSwift.framework in Embed Frameworks */,
+				63838C541FB6257C002697D6 /* PMKCoreLocation.framework in Embed Frameworks */,
+				63838C4C1FB6193E002697D6 /* Realm.framework in Embed Frameworks */,
+				63838C561FB6257C002697D6 /* PromiseKit.framework in Embed Frameworks */,
+				635D6AC11FCC6EBA00321A76 /* SwiftInstagram.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		635D6ABD1FCC431700321A76 /* InstagramClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramClient.swift; sourceTree = "<group>"; };
+		635D6ABF1FCC6EB900321A76 /* SwiftInstagram.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftInstagram.framework; path = Frameworks/iOS/SwiftInstagram.framework; sourceTree = "<group>"; };
 		63838C111FB60F4B002697D6 /* ProactiveCacher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProactiveCacher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63838C141FB60F4B002697D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		63838C161FB60F4B002697D6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -47,6 +78,12 @@
 		63838C301FB60F4B002697D6 /* ProactiveCacherUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProactiveCacherUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		63838C341FB60F4B002697D6 /* ProactiveCacherUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProactiveCacherUITests.swift; sourceTree = "<group>"; };
 		63838C361FB60F4B002697D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		63838C421FB61306002697D6 /* UserDataLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataLogger.swift; sourceTree = "<group>"; };
+		63838C451FB615A4002697D6 /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = Frameworks/iOS/PromiseKit.framework; sourceTree = "<group>"; };
+		63838C461FB615A4002697D6 /* PMKCoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PMKCoreLocation.framework; path = Frameworks/iOS/PMKCoreLocation.framework; sourceTree = "<group>"; };
+		63838C491FB6193E002697D6 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Frameworks/iOS/Realm.framework; sourceTree = "<group>"; };
+		63838C4A1FB6193E002697D6 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = Frameworks/iOS/RealmSwift.framework; sourceTree = "<group>"; };
+		63838C501FB61961002697D6 /* RealmModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmModels.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +91,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63838C4B1FB6193E002697D6 /* Realm.framework in Frameworks */,
+				63838C4D1FB6193E002697D6 /* RealmSwift.framework in Frameworks */,
+				635D6AC01FCC6EBA00321A76 /* SwiftInstagram.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,10 +117,14 @@
 		63838C081FB60F4B002697D6 = {
 			isa = PBXGroup;
 			children = (
+				635D6ABF1FCC6EB900321A76 /* SwiftInstagram.framework */,
+				63838C491FB6193E002697D6 /* Realm.framework */,
+				63838C4A1FB6193E002697D6 /* RealmSwift.framework */,
 				63838C131FB60F4B002697D6 /* ProactiveCacher */,
 				63838C281FB60F4B002697D6 /* ProactiveCacherTests */,
 				63838C331FB60F4B002697D6 /* ProactiveCacherUITests */,
 				63838C121FB60F4B002697D6 /* Products */,
+				63838C441FB615A4002697D6 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -98,6 +142,9 @@
 			isa = PBXGroup;
 			children = (
 				63838C141FB60F4B002697D6 /* AppDelegate.swift */,
+				635D6ABD1FCC431700321A76 /* InstagramClient.swift */,
+				63838C501FB61961002697D6 /* RealmModels.swift */,
+				63838C421FB61306002697D6 /* UserDataLogger.swift */,
 				63838C161FB60F4B002697D6 /* ViewController.swift */,
 				63838C181FB60F4B002697D6 /* Main.storyboard */,
 				63838C1B1FB60F4B002697D6 /* Assets.xcassets */,
@@ -125,6 +172,15 @@
 			path = ProactiveCacherUITests;
 			sourceTree = "<group>";
 		};
+		63838C441FB615A4002697D6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				63838C461FB615A4002697D6 /* PMKCoreLocation.framework */,
+				63838C451FB615A4002697D6 /* PromiseKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -135,6 +191,8 @@
 				63838C0D1FB60F4B002697D6 /* Sources */,
 				63838C0E1FB60F4B002697D6 /* Frameworks */,
 				63838C0F1FB60F4B002697D6 /* Resources */,
+				63838C4F1FB6193E002697D6 /* Embed Frameworks */,
+				63838C521FB61A42002697D6 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -194,6 +252,11 @@
 					63838C101FB60F4B002697D6 = {
 						CreatedOnToolsVersion = 9.1;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					63838C241FB60F4B002697D6 = {
 						CreatedOnToolsVersion = 9.1;
@@ -254,13 +317,32 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		63838C521FB61A42002697D6 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework/strip-frameworks.sh\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		63838C0D1FB60F4B002697D6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				63838C171FB60F4B002697D6 /* ViewController.swift in Sources */,
+				63838C511FB61961002697D6 /* RealmModels.swift in Sources */,
 				63838C151FB60F4B002697D6 /* AppDelegate.swift in Sources */,
+				63838C431FB61306002697D6 /* UserDataLogger.swift in Sources */,
+				635D6ABE1FCC431700321A76 /* InstagramClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,6 +510,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = HTKJ5L46U5;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks/iOS",
+				);
 				INFOPLIST_FILE = ProactiveCacher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = DavidPasztor.ProactiveCacher;
@@ -443,6 +529,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = HTKJ5L46U5;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks/iOS",
+				);
 				INFOPLIST_FILE = ProactiveCacher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = DavidPasztor.ProactiveCacher;
