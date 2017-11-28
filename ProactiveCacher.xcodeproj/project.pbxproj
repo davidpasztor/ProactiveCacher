@@ -10,6 +10,10 @@
 		635D6ABE1FCC431700321A76 /* InstagramClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635D6ABD1FCC431700321A76 /* InstagramClient.swift */; };
 		635D6AC01FCC6EBA00321A76 /* SwiftInstagram.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 635D6ABF1FCC6EB900321A76 /* SwiftInstagram.framework */; };
 		635D6AC11FCC6EBA00321A76 /* SwiftInstagram.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 635D6ABF1FCC6EB900321A76 /* SwiftInstagram.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		635D6AC71FCC7EF500321A76 /* InstagramScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635D6AC31FCC7EF400321A76 /* InstagramScope.swift */; };
+		635D6AC81FCC7EF500321A76 /* Array++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635D6AC41FCC7EF400321A76 /* Array++.swift */; };
+		635D6AC91FCC7EF500321A76 /* InstagramError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635D6AC51FCC7EF500321A76 /* InstagramError.swift */; };
+		635D6ACA1FCC7EF500321A76 /* InstagramLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635D6AC61FCC7EF500321A76 /* InstagramLoginViewController.swift */; };
 		63838C151FB60F4B002697D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C141FB60F4B002697D6 /* AppDelegate.swift */; };
 		63838C171FB60F4B002697D6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C161FB60F4B002697D6 /* ViewController.swift */; };
 		63838C1A1FB60F4B002697D6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63838C181FB60F4B002697D6 /* Main.storyboard */; };
@@ -65,6 +69,10 @@
 /* Begin PBXFileReference section */
 		635D6ABD1FCC431700321A76 /* InstagramClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramClient.swift; sourceTree = "<group>"; };
 		635D6ABF1FCC6EB900321A76 /* SwiftInstagram.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftInstagram.framework; path = Frameworks/iOS/SwiftInstagram.framework; sourceTree = "<group>"; };
+		635D6AC31FCC7EF400321A76 /* InstagramScope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InstagramScope.swift; path = Frameworks/Carthage/Checkouts/InstagramLogin/InstagramLogin/Classes/InstagramScope.swift; sourceTree = SOURCE_ROOT; };
+		635D6AC41FCC7EF400321A76 /* Array++.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Array++.swift"; path = "Frameworks/Carthage/Checkouts/InstagramLogin/InstagramLogin/Classes/Array++.swift"; sourceTree = SOURCE_ROOT; };
+		635D6AC51FCC7EF500321A76 /* InstagramError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InstagramError.swift; path = Frameworks/Carthage/Checkouts/InstagramLogin/InstagramLogin/Classes/InstagramError.swift; sourceTree = SOURCE_ROOT; };
+		635D6AC61FCC7EF500321A76 /* InstagramLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InstagramLoginViewController.swift; path = Frameworks/Carthage/Checkouts/InstagramLogin/InstagramLogin/Classes/InstagramLoginViewController.swift; sourceTree = SOURCE_ROOT; };
 		63838C111FB60F4B002697D6 /* ProactiveCacher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProactiveCacher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63838C141FB60F4B002697D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		63838C161FB60F4B002697D6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -114,9 +122,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		635D6AC21FCC7EE200321A76 /* InstagramLogin */ = {
+			isa = PBXGroup;
+			children = (
+				635D6AC41FCC7EF400321A76 /* Array++.swift */,
+				635D6AC51FCC7EF500321A76 /* InstagramError.swift */,
+				635D6AC61FCC7EF500321A76 /* InstagramLoginViewController.swift */,
+				635D6AC31FCC7EF400321A76 /* InstagramScope.swift */,
+			);
+			path = InstagramLogin;
+			sourceTree = "<group>";
+		};
 		63838C081FB60F4B002697D6 = {
 			isa = PBXGroup;
 			children = (
+				635D6AC21FCC7EE200321A76 /* InstagramLogin */,
 				635D6ABF1FCC6EB900321A76 /* SwiftInstagram.framework */,
 				63838C491FB6193E002697D6 /* Realm.framework */,
 				63838C4A1FB6193E002697D6 /* RealmSwift.framework */,
@@ -341,8 +361,12 @@
 				63838C171FB60F4B002697D6 /* ViewController.swift in Sources */,
 				63838C511FB61961002697D6 /* RealmModels.swift in Sources */,
 				63838C151FB60F4B002697D6 /* AppDelegate.swift in Sources */,
+				635D6AC71FCC7EF500321A76 /* InstagramScope.swift in Sources */,
 				63838C431FB61306002697D6 /* UserDataLogger.swift in Sources */,
 				635D6ABE1FCC431700321A76 /* InstagramClient.swift in Sources */,
+				635D6ACA1FCC7EF500321A76 /* InstagramLoginViewController.swift in Sources */,
+				635D6AC81FCC7EF500321A76 /* Array++.swift in Sources */,
+				635D6AC91FCC7EF500321A76 /* InstagramError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

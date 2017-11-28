@@ -10,7 +10,7 @@ import Foundation
 import RealmSwift
 
 class BatteryStateLog: Object {
-    @objc dynamic var batteryPercentage:Float = 0
+    @objc dynamic var batteryPercentage:Int = 0
     @objc dynamic var batteryState = ""
 }
 
@@ -29,5 +29,17 @@ class UserLog: Object {
     
     enum NetworkStatus:String{
         case Wifi, Mobile, Offline
+    }
+}
+
+extension Realm {
+    func save<T:Object>(object:T){
+        do {
+            try self.write {
+                self.add(object)
+            }
+        } catch {
+            print(error)
+        }
     }
 }

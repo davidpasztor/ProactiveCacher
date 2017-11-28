@@ -11,6 +11,7 @@ import PMKCoreLocation
 import PromiseKit
 import RealmSwift
 import UIKit
+import CoreTelephony
 
 class UserDataLogger {
     static let shared = UserDataLogger()
@@ -30,24 +31,24 @@ class UserDataLogger {
         }
     }
     
-    func saveBatteryState(){
+    func getBatteryState()->BatteryStateLog?{
         UIDevice.current.isBatteryMonitoringEnabled = true
         let batteryLog = BatteryStateLog()
-        batteryLog.batteryPercentage = UIDevice.current.batteryLevel
+        batteryLog.batteryPercentage = Int(UIDevice.current.batteryLevel*100)
         switch UIDevice.current.batteryState {
-            case .charging:
-                batteryLog.batteryState = "charging"
-            case .full:
-                batteryLog.batteryState = "full"
-            case .unknown:
-                batteryLog.batteryState = "unknown"
-            case .unplugged:
-                batteryLog.batteryState = "unplugged"
+        case .charging:
+            batteryLog.batteryState = "charging"
+        case .full:
+            batteryLog.batteryState = "full"
+        case .unknown:
+            batteryLog.batteryState = "unknown"
+        case .unplugged:
+            batteryLog.batteryState = "unplugged"
         }
-        let realm = try! Realm()
-        try! realm.write {
-            realm.add(batteryLog)
+        guard batteryLog.batteryPercentage > 0 else {
+            print("Couldn't retrieve battery percentage"); return nil
         }
+        return batteryLog
     }
     
     //Return download speed in kilobytes/sec
@@ -56,7 +57,7 @@ class UserDataLogger {
             let url = URL(string: "https://placehold.it/150/92c952")!
             let startDate = Date()
             URLSession.shared.dataTask(with: url, completionHandler: { data, response, error in
-                guard data != nil, error != nil, let response = response else {
+                guard data != nil, error == nil, let response = response else {
                     reject(error ?? AppErrors.DownloadSpeed.Generic); return
                 }
                 let expectedContentSize = response.expectedContentLength //content size in bytes
@@ -64,34 +65,45 @@ class UserDataLogger {
                     reject(AppErrors.DownloadSpeed.NoHeader); return
                 }
                 let responseTime = -startDate.timeIntervalSinceNow //download time in seconds
-                fulfill(Double(expectedContentSize/1000)/responseTime)
+                fulfill(Double(expectedContentSize)/1000/responseTime)
             }).resume()
         }
     }
     
-    /*
-    func locationUsageAuthorized()->Promise<Bool>{
-        return Promise{ fulfill,reject in
-            switch CLLocationManager.authorizationStatus() {
-                case .notDetermined:
-                    CLLocationManager.requestAuthorization(type: .automatic).then{ authStatus->Void in
-                        switch authStatus {
-                            case .authorizedAlways, .authorizedWhenInUse:
-                                fulfill(true)
-                            default:
-                                fulfill(false)
-                        }
-                    }.catch{ error in
-                        reject(error)
-                    }
-                case .authorizedAlways, .authorizedWhenInUse:
-                    fulfill(true)
-                default:
-                    fulfill(false)
+    enum NetworkType:String {
+        case LTE, UMTS, EDGE, Wifi, Offline
+    }
+    
+    func determineNetworkType()->NetworkType{
+        let networkType = CTTelephonyNetworkInfo().currentRadioAccessTechnology
+        if let networkType = networkType {
+            switch networkType {
+            case CTRadioAccessTechnologyLTE:
+                return NetworkType.LTE
+            case CTRadioAccessTechnologyHSDPA, CTRadioAccessTechnologyHSUPA, CTRadioAccessTechnologyWCDMA:
+                return NetworkType.UMTS
+            case CTRadioAccessTechnologyGPRS, CTRadioAccessTechnologyEdge:
+                return NetworkType.EDGE
+            default:
+                return NetworkType.Offline
             }
         }
+        return NetworkType.Offline
     }
-    */
+    
+    func getSignalStrength()->Int?{
+        let libHandle = dlopen ("/System/Library/Frameworks/CoreTelephony.framework/CoreTelephony", RTLD_NOW)
+        let CTGetSignalStrength2 = dlsym(libHandle, "CTGetSignalStrength")
+        
+        typealias CFunction = @convention(c) () -> Int
+        
+        if (CTGetSignalStrength2 != nil) {
+            let fun = unsafeBitCast(CTGetSignalStrength2!, to: CFunction.self)
+            let result = fun()
+            return result
+        }
+        return nil
+    }
 }
 
 enum AppErrors: Error {
@@ -103,4 +115,14 @@ enum AppErrors: Error {
             return self.rawValue
         }
     }
+    enum InstagramErrors: String, LocalizedError {
+        case InvalidToken = "Access token expired"
+        
+        var errorDescription: String? {
+            return self.rawValue
+        }
+    }
+    case InvalidURL(String)
+    case Unknown
+    case JSONError
 }
