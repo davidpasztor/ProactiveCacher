@@ -8,23 +8,27 @@
 
 import Foundation
 import JWT
+import BoxContentSDK
 
-class BoxAPI {
+class BoxAPI: NSObject {    //Need to inherit from NSObject to be able to conform to BOXAPIAccessTokenDelegate
     private let clientId = "fr23hr7q5fututlb7028kc7ecqbeuywu"
     private let clientSecret = "4dtJmnHrHlm1KnuOfBlEPQyFufr2irpf"
-    let enterpriseId = "37248674"
+    private let enterpriseId = "37248674"
+    let sharedUserId = "3183511991"
+    //Need to set client to a specific user's client
+    let client = BOXContentClient(forUser: BOXUser(userID: "3183511991", name: "Shared", login: "AppUser_523282_bweXCHyogt@boxdevedition.com")) //BOXContentClient.default()
     
     static let shared = BoxAPI()
-    private init(){}
+    private override init(){
+        super.init()
+        //Needed for BoxContentSDK to be able to use the custom OAuth methods
+        client?.accessTokenDelegate = self
+    }
     
     func generateJWTToken(isEnterprise:Bool = false,userId:String)->String?{
         let payload:[String:Any] = ["iss":"fr23hr7q5fututlb7028kc7ecqbeuywu","sub":userId,"aud":"https://api.box.com/oauth2/token","exp":Int(Date().addingTimeInterval(59).timeIntervalSince1970),"jti":UUID().uuidString,"box_sub_type": isEnterprise ? "enterprise":"user"]
         let headers = ["alg":"RS256","typ":"jwt","kid":"hs2yr1uc"]
-        
-        //let publicKeyData = try! Data(contentsOf: Bundle.main.url(forResource: "publicKey", withExtension: "pem")!)
-        //let privateKeyData = try! Data(contentsOf: Bundle.main.url(forResource: "privateKeyCert", withExtension: "p12")!)
-        //let privateKeyData = try! Data(contentsOf: Bundle.main.url(forResource: "privateKey", withExtension: "pem")!)
-        
+        /*
         let publicKeyString = """
 -----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwjhaJdHIpvuH6wpOIooa
@@ -36,6 +40,7 @@ VNGLa2kBGeEH5AgpzTapDEARNHk7ct0cVLFsICHyr743P7DH2jECIie57k+NkpWP
 7wIDAQAB
 -----END PUBLIC KEY-----
 """
+         */
         let privateKeyString = """
 -----BEGIN RSA PRIVATE KEY-----
 MIIEpQIBAAKCAQEAwjhaJdHIpvuH6wpOIooaOqO5+eEPoFtD6mJsO24uqxZmvTah
@@ -65,24 +70,22 @@ GbYcXgSy0SFFnzm/mf9yBqHuyQ/7DJlDt/Srge+7FIYXg5+nlzq9E64kV1/c8jnc
 Uh0GL/z1qN6g2yAridgPyvjofcayOCsxibfAG3lnD3aetP/4ED0+hHY=
 -----END RSA PRIVATE KEY-----
 """
-        let publicKey = try? JWTCryptoKeyPublic(pemEncoded: publicKeyString, parameters: nil)
+        //let publicKey = try? JWTCryptoKeyPublic(pemEncoded: publicKeyString, parameters: nil)
         let privateKey = try? JWTCryptoKeyPrivate(pemEncoded: privateKeyString, parameters: nil)
         let signDataHolder = JWTAlgorithmRSFamilyDataHolder().signKey(privateKey)?.secretData(privateKeyString.data(using: .utf8)!)?.algorithmName(JWTAlgorithmNameRS256)
-        //let signDataHolder = JWTAlgorithmRSFamilyDataHolder().keyExtractorType(JWTCryptoKeyExtractor.privateKeyWithPEMBase64().type)?.algorithmName(JWTAlgorithmNameRS256)?.secretData(privateKeyData)
-        
-        //let signDataHolder = JWTAlgorithmRSFamilyDataHolder().keyExtractorType(JWTCryptoKeyExtractor.privateKeyInP12().type)?.privateKeyCertificatePassphrase(passphraseForPrivateKey)?.algorithmName(JWTAlgorithmNameRS256)?.secretData(privateKeyData)
-        //let verifyDataHolder = JWTAlgorithmRSFamilyDataHolder().keyExtractorType(JWTCryptoKeyExtractor.publicKeyWithPEMBase64().type)?.algorithmName(JWTAlgorithmNameRS256)?.secretData(publicKeyData)
-        let verifyDataHolder = JWTAlgorithmRSFamilyDataHolder().signKey(publicKey)?.secretData(publicKeyString.data(using: .utf8)!)?.algorithmName(JWTAlgorithmNameRS256)
+        //let verifyDataHolder = JWTAlgorithmRSFamilyDataHolder().signKey(publicKey)?.secretData(publicKeyString.data(using: .utf8)!)?.algorithmName(JWTAlgorithmNameRS256)
         let signBuilder = JWTEncodingBuilder.encodePayload(payload).headers(headers)?.addHolder(signDataHolder)
         let signResult = signBuilder?.result
         if let token = signResult?.successResult?.encoded {
-            print("Builder 3.0 token: \(token)")
+            //print("Builder 3.0 token: \(token)")
+            /*
             let verifyResult = JWTDecodingBuilder.decodeMessage(token).addHolder(verifyDataHolder)?.result
             if verifyResult?.successResult != nil, let result = verifyResult?.successResult.encoded {
                 print("Verification successful, result: \(result)")
             } else {
                 print("Verification error: \(verifyResult?.errorResult.error as Any)")
             }
+            */
             return token
         }
         if signResult?.errorResult != nil, let error = signResult?.errorResult.error {
@@ -90,33 +93,49 @@ Uh0GL/z1qN6g2yAridgPyvjofcayOCsxibfAG3lnD3aetP/4ED0+hHY=
         }
         return nil
         
-        /*
-        let builder = JWTBuilder.encodePayload(payload).headers(headers)?.secretData(privateKeyData)?.privateKeyCertificatePassphrase(passphraseForPrivateKey)?.algorithmName(JWTAlgorithmNameRS256)
-        //let builder = JWTBuilder.encode(claims).headers(headers)?.secretData(privateKeyData)?.privateKeyCertificatePassphrase(passphraseForPrivateKey)?.algorithmName(JWTAlgorithmNameRS256)
-        let token = builder?.encode
-        print("Builder error: ",builder?.jwtError ?? "none")
-        print("JWT token: \(token ?? "no token")")
-        return token
-        */
     }
     
-    func getOAuth2Token(using jwtToken:String, completion: @escaping (_ oAuthToken:String?, _ error:Error?)->()){
+    func getOAuth2Token(using jwtToken:String, completion: @escaping (_ oAuthToken:String?,_ expirationDate:Date?, _ error:Error?)->()){
         let oAuthUrl = URL(string: "https://api.box.com/oauth2/token")!
         var oAuthTokenrequest = URLRequest(url: oAuthUrl)
         oAuthTokenrequest.httpMethod = "POST"
         oAuthTokenrequest.httpBody = "grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&client_id=\(clientId)&client_secret=\(clientSecret)&assertion=\(jwtToken)".data(using: .utf8)
         URLSession.shared.dataTask(with: oAuthTokenrequest, completionHandler: { data, response, error in
             guard let data = data, error == nil else {
-                print("Error retrieving OAuth2 token: \(error!)")
-                completion(nil,error)
-                return
+                completion(nil,nil,BoxErrors.OAuth2GenericError(error!)); return
             }
             guard let json = (try? JSONSerialization.jsonObject(with: data)) as? [String:Any] else {
-                print("Response is not JSON Dictionary")
-                completion(nil, NSError(domain: "Response is not JSON Dictionary", code: 1))
-                return
+                completion(nil,nil,BoxErrors.JSONResponse); return
             }
-            print(json)
+            guard let token = json["access_token"] as? String, let expiresInSeconds = json["expires_in"] as? Int else {
+                completion(nil,nil,BoxErrors.NoOAuthToken); return
+            }
+            completion(token, Date().addingSeconds(expiresInSeconds), nil)
         }).resume()
+    }
+}
+
+enum BoxErrors: Error {
+    case OAuth2GenericError(Error)
+    case JSONResponse
+    case NoOAuthToken
+}
+
+extension Date {
+    func addingSeconds(_ seconds:Int)->Date{
+        return self.addingTimeInterval(TimeInterval(seconds))
+    }
+}
+
+extension BoxAPI: BOXAPIAccessTokenDelegate {
+    func fetchAccessToken(completion: ((String?, Date?, Error?) -> Void)!) {
+        print("Fetching access token")
+        if let jwtToken = BoxAPI.shared.generateJWTToken(isEnterprise: false, userId: BoxAPI.shared.sharedUserId) {
+            BoxAPI.shared.getOAuth2Token(using: jwtToken, completion: { oAuthToken, expiryDate, error in
+                completion(oAuthToken,expiryDate,error)
+            })
+        } else {
+            completion(nil,nil,nil)
+        }
     }
 }

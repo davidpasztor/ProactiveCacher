@@ -36,15 +36,29 @@ class ViewController: UIViewController {
         print(logger.determineNetworkType().rawValue)
         print("Signal strength: \(logger.getSignalStrength() ?? -1)")
         /*
-        let boxClient = BOXContentClient.default()
-        boxClient?.authenticate(completionBlock: { user, error in
+        if let jwtToken = BoxAPI.shared.generateJWTToken(isEnterprise: false, userId: BoxAPI.shared.sharedUserId) {
+            BoxAPI.shared.getOAuth2Token(using: jwtToken, completion: { oAuthToken, expiryDate, error in
+                guard let oAuthToken = oAuthToken, let expiryDate = expiryDate, error == nil else {
+                    print(error?.localizedDescription ?? "No error");return
+                }
+                print("OAuthToken: \(oAuthToken), expires at : \(expiryDate)")
+            })
+        } else {
+            print("No JWT token")
+        }
+        */
+        BoxAPI.shared.client?.authenticate(completionBlock: { user, error in
             guard error == nil, let user = user else {
                 print(error!);return
             }
-            //boxClient?.folderInfoRequest(withID: <#T##String!#>)
-            
+            print(user)
+            BOXContentClient(forUser: user).folderInfoRequest(withID: BOXAPIFolderIDRoot).perform(completion: { boxFolder, error in
+                guard error == nil, let boxFolder = boxFolder else {
+                    print(error!);return
+                }
+                print(boxFolder)
+            })
         })
-         */
     }
 
 

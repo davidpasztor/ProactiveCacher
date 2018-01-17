@@ -14,9 +14,6 @@
 		6361EE45200D184A001727A2 /* BoxAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6361EE44200D184A001727A2 /* BoxAPI.swift */; };
 		6361EE58200D30FA001727A2 /* JWT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6361EE56200D30EB001727A2 /* JWT.framework */; };
 		6361EE59200D30FA001727A2 /* JWT.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6361EE56200D30EB001727A2 /* JWT.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6361EE61200D62D7001727A2 /* publicKey.pem in Resources */ = {isa = PBXBuildFile; fileRef = 6361EE60200D62D7001727A2 /* publicKey.pem */; };
-		6361EE65200D6D1D001727A2 /* privateKey.pem in Resources */ = {isa = PBXBuildFile; fileRef = 6361EE64200D6D1D001727A2 /* privateKey.pem */; };
-		6361EE67200D70F5001727A2 /* privateKeyCert.p12 in Resources */ = {isa = PBXBuildFile; fileRef = 6361EE66200D70F5001727A2 /* privateKeyCert.p12 */; };
 		63838C151FB60F4B002697D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C141FB60F4B002697D6 /* AppDelegate.swift */; };
 		63838C171FB60F4B002697D6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C161FB60F4B002697D6 /* ViewController.swift */; };
 		63838C1A1FB60F4B002697D6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63838C181FB60F4B002697D6 /* Main.storyboard */; };
@@ -76,9 +73,6 @@
 		6361EE40200B8568001727A2 /* BoxContentSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BoxContentSDK.framework; path = Frameworks/iOS/BoxContentSDK.framework; sourceTree = "<group>"; };
 		6361EE44200D184A001727A2 /* BoxAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxAPI.swift; sourceTree = "<group>"; };
 		6361EE56200D30EB001727A2 /* JWT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JWT.framework; path = Frameworks/iOS/JWT.framework; sourceTree = "<group>"; };
-		6361EE60200D62D7001727A2 /* publicKey.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = publicKey.pem; path = Frameworks/publicKey.pem; sourceTree = SOURCE_ROOT; };
-		6361EE64200D6D1D001727A2 /* privateKey.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = privateKey.pem; path = Frameworks/privateKey.pem; sourceTree = SOURCE_ROOT; };
-		6361EE66200D70F5001727A2 /* privateKeyCert.p12 */ = {isa = PBXFileReference; lastKnownFileType = file; name = privateKeyCert.p12; path = Frameworks/privateKeyCert.p12; sourceTree = SOURCE_ROOT; };
 		63838C111FB60F4B002697D6 /* ProactiveCacher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProactiveCacher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63838C141FB60F4B002697D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		63838C161FB60F4B002697D6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -159,9 +153,6 @@
 		63838C131FB60F4B002697D6 /* ProactiveCacher */ = {
 			isa = PBXGroup;
 			children = (
-				6361EE64200D6D1D001727A2 /* privateKey.pem */,
-				6361EE66200D70F5001727A2 /* privateKeyCert.p12 */,
-				6361EE60200D62D7001727A2 /* publicKey.pem */,
 				63838C141FB60F4B002697D6 /* AppDelegate.swift */,
 				6361EE44200D184A001727A2 /* BoxAPI.swift */,
 				63838C501FB61961002697D6 /* RealmModels.swift */,
@@ -316,10 +307,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6361EE65200D6D1D001727A2 /* privateKey.pem in Resources */,
-				6361EE67200D70F5001727A2 /* privateKeyCert.p12 in Resources */,
 				63838C1F1FB60F4B002697D6 /* LaunchScreen.storyboard in Resources */,
-				6361EE61200D62D7001727A2 /* publicKey.pem in Resources */,
 				63838C1C1FB60F4B002697D6 /* Assets.xcassets in Resources */,
 				63838C1A1FB60F4B002697D6 /* Main.storyboard in Resources */,
 			);

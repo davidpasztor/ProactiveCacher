@@ -44,16 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //Set up BoxContent SDK
         BOXContentClient.setClientID("fr23hr7q5fututlb7028kc7ecqbeuywu", clientSecret: "4dtJmnHrHlm1KnuOfBlEPQyFufr2irpf")
-        if let jwtToken = BoxAPI.shared.generateJWTToken(isEnterprise: true, userId: BoxAPI.shared.enterpriseId) {
-            BoxAPI.shared.getOAuth2Token(using: jwtToken, completion: { oAuthToken, error in
-                guard let oAuthToken = oAuthToken, error == nil else {
-                    print(error!);return
-                }
-                print("OAuthToken: \(oAuthToken)")
-            })
-        } else {
-            print("No JWT token")
-        }
+        
         return true
     }
 
