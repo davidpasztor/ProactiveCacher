@@ -7,13 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		635D6ABE1FCC431700321A76 /* InstagramClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635D6ABD1FCC431700321A76 /* InstagramClient.swift */; };
-		635D6AC01FCC6EBA00321A76 /* SwiftInstagram.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 635D6ABF1FCC6EB900321A76 /* SwiftInstagram.framework */; };
-		635D6AC11FCC6EBA00321A76 /* SwiftInstagram.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 635D6ABF1FCC6EB900321A76 /* SwiftInstagram.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		635D6AC71FCC7EF500321A76 /* InstagramScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635D6AC31FCC7EF400321A76 /* InstagramScope.swift */; };
-		635D6AC81FCC7EF500321A76 /* Array++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635D6AC41FCC7EF400321A76 /* Array++.swift */; };
-		635D6AC91FCC7EF500321A76 /* InstagramError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635D6AC51FCC7EF500321A76 /* InstagramError.swift */; };
-		635D6ACA1FCC7EF500321A76 /* InstagramLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635D6AC61FCC7EF500321A76 /* InstagramLoginViewController.swift */; };
+		63535349200F96DA00657850 /* Base64.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63535347200F96C500657850 /* Base64.framework */; };
+		6353534A200F96DA00657850 /* Base64.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 63535347200F96C500657850 /* Base64.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6361EE42200D136C001727A2 /* BoxContentSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6361EE40200B8568001727A2 /* BoxContentSDK.framework */; };
+		6361EE43200D136C001727A2 /* BoxContentSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6361EE40200B8568001727A2 /* BoxContentSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6361EE45200D184A001727A2 /* BoxAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6361EE44200D184A001727A2 /* BoxAPI.swift */; };
+		6361EE58200D30FA001727A2 /* JWT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6361EE56200D30EB001727A2 /* JWT.framework */; };
+		6361EE59200D30FA001727A2 /* JWT.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6361EE56200D30EB001727A2 /* JWT.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6361EE61200D62D7001727A2 /* publicKey.pem in Resources */ = {isa = PBXBuildFile; fileRef = 6361EE60200D62D7001727A2 /* publicKey.pem */; };
+		6361EE65200D6D1D001727A2 /* privateKey.pem in Resources */ = {isa = PBXBuildFile; fileRef = 6361EE64200D6D1D001727A2 /* privateKey.pem */; };
+		6361EE67200D70F5001727A2 /* privateKeyCert.p12 in Resources */ = {isa = PBXBuildFile; fileRef = 6361EE66200D70F5001727A2 /* privateKeyCert.p12 */; };
 		63838C151FB60F4B002697D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C141FB60F4B002697D6 /* AppDelegate.swift */; };
 		63838C171FB60F4B002697D6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C161FB60F4B002697D6 /* ViewController.swift */; };
 		63838C1A1FB60F4B002697D6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63838C181FB60F4B002697D6 /* Main.storyboard */; };
@@ -55,11 +58,13 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				6361EE59200D30FA001727A2 /* JWT.framework in Embed Frameworks */,
 				63838C4E1FB6193E002697D6 /* RealmSwift.framework in Embed Frameworks */,
 				63838C541FB6257C002697D6 /* PMKCoreLocation.framework in Embed Frameworks */,
 				63838C4C1FB6193E002697D6 /* Realm.framework in Embed Frameworks */,
 				63838C561FB6257C002697D6 /* PromiseKit.framework in Embed Frameworks */,
-				635D6AC11FCC6EBA00321A76 /* SwiftInstagram.framework in Embed Frameworks */,
+				6353534A200F96DA00657850 /* Base64.framework in Embed Frameworks */,
+				6361EE43200D136C001727A2 /* BoxContentSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -67,12 +72,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		635D6ABD1FCC431700321A76 /* InstagramClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramClient.swift; sourceTree = "<group>"; };
-		635D6ABF1FCC6EB900321A76 /* SwiftInstagram.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftInstagram.framework; path = Frameworks/iOS/SwiftInstagram.framework; sourceTree = "<group>"; };
-		635D6AC31FCC7EF400321A76 /* InstagramScope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InstagramScope.swift; path = Frameworks/Carthage/Checkouts/InstagramLogin/InstagramLogin/Classes/InstagramScope.swift; sourceTree = SOURCE_ROOT; };
-		635D6AC41FCC7EF400321A76 /* Array++.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Array++.swift"; path = "Frameworks/Carthage/Checkouts/InstagramLogin/InstagramLogin/Classes/Array++.swift"; sourceTree = SOURCE_ROOT; };
-		635D6AC51FCC7EF500321A76 /* InstagramError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InstagramError.swift; path = Frameworks/Carthage/Checkouts/InstagramLogin/InstagramLogin/Classes/InstagramError.swift; sourceTree = SOURCE_ROOT; };
-		635D6AC61FCC7EF500321A76 /* InstagramLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InstagramLoginViewController.swift; path = Frameworks/Carthage/Checkouts/InstagramLogin/InstagramLogin/Classes/InstagramLoginViewController.swift; sourceTree = SOURCE_ROOT; };
+		63535347200F96C500657850 /* Base64.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Base64.framework; path = Frameworks/iOS/Base64.framework; sourceTree = "<group>"; };
+		6361EE40200B8568001727A2 /* BoxContentSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BoxContentSDK.framework; path = Frameworks/iOS/BoxContentSDK.framework; sourceTree = "<group>"; };
+		6361EE44200D184A001727A2 /* BoxAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxAPI.swift; sourceTree = "<group>"; };
+		6361EE56200D30EB001727A2 /* JWT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JWT.framework; path = Frameworks/iOS/JWT.framework; sourceTree = "<group>"; };
+		6361EE60200D62D7001727A2 /* publicKey.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = publicKey.pem; path = Frameworks/publicKey.pem; sourceTree = SOURCE_ROOT; };
+		6361EE64200D6D1D001727A2 /* privateKey.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = privateKey.pem; path = Frameworks/privateKey.pem; sourceTree = SOURCE_ROOT; };
+		6361EE66200D70F5001727A2 /* privateKeyCert.p12 */ = {isa = PBXFileReference; lastKnownFileType = file; name = privateKeyCert.p12; path = Frameworks/privateKeyCert.p12; sourceTree = SOURCE_ROOT; };
 		63838C111FB60F4B002697D6 /* ProactiveCacher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProactiveCacher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63838C141FB60F4B002697D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		63838C161FB60F4B002697D6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -100,8 +106,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				63838C4B1FB6193E002697D6 /* Realm.framework in Frameworks */,
+				6361EE42200D136C001727A2 /* BoxContentSDK.framework in Frameworks */,
+				6361EE58200D30FA001727A2 /* JWT.framework in Frameworks */,
+				63535349200F96DA00657850 /* Base64.framework in Frameworks */,
 				63838C4D1FB6193E002697D6 /* RealmSwift.framework in Frameworks */,
-				635D6AC01FCC6EBA00321A76 /* SwiftInstagram.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,22 +130,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		635D6AC21FCC7EE200321A76 /* InstagramLogin */ = {
-			isa = PBXGroup;
-			children = (
-				635D6AC41FCC7EF400321A76 /* Array++.swift */,
-				635D6AC51FCC7EF500321A76 /* InstagramError.swift */,
-				635D6AC61FCC7EF500321A76 /* InstagramLoginViewController.swift */,
-				635D6AC31FCC7EF400321A76 /* InstagramScope.swift */,
-			);
-			path = InstagramLogin;
-			sourceTree = "<group>";
-		};
 		63838C081FB60F4B002697D6 = {
 			isa = PBXGroup;
 			children = (
-				635D6AC21FCC7EE200321A76 /* InstagramLogin */,
-				635D6ABF1FCC6EB900321A76 /* SwiftInstagram.framework */,
+				63535347200F96C500657850 /* Base64.framework */,
+				6361EE56200D30EB001727A2 /* JWT.framework */,
+				6361EE40200B8568001727A2 /* BoxContentSDK.framework */,
 				63838C491FB6193E002697D6 /* Realm.framework */,
 				63838C4A1FB6193E002697D6 /* RealmSwift.framework */,
 				63838C131FB60F4B002697D6 /* ProactiveCacher */,
@@ -161,8 +159,11 @@
 		63838C131FB60F4B002697D6 /* ProactiveCacher */ = {
 			isa = PBXGroup;
 			children = (
+				6361EE64200D6D1D001727A2 /* privateKey.pem */,
+				6361EE66200D70F5001727A2 /* privateKeyCert.p12 */,
+				6361EE60200D62D7001727A2 /* publicKey.pem */,
 				63838C141FB60F4B002697D6 /* AppDelegate.swift */,
-				635D6ABD1FCC431700321A76 /* InstagramClient.swift */,
+				6361EE44200D184A001727A2 /* BoxAPI.swift */,
 				63838C501FB61961002697D6 /* RealmModels.swift */,
 				63838C421FB61306002697D6 /* UserDataLogger.swift */,
 				63838C161FB60F4B002697D6 /* ViewController.swift */,
@@ -315,7 +316,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6361EE65200D6D1D001727A2 /* privateKey.pem in Resources */,
+				6361EE67200D70F5001727A2 /* privateKeyCert.p12 in Resources */,
 				63838C1F1FB60F4B002697D6 /* LaunchScreen.storyboard in Resources */,
+				6361EE61200D62D7001727A2 /* publicKey.pem in Resources */,
 				63838C1C1FB60F4B002697D6 /* Assets.xcassets in Resources */,
 				63838C1A1FB60F4B002697D6 /* Main.storyboard in Resources */,
 			);
@@ -359,14 +363,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				63838C171FB60F4B002697D6 /* ViewController.swift in Sources */,
+				6361EE45200D184A001727A2 /* BoxAPI.swift in Sources */,
 				63838C511FB61961002697D6 /* RealmModels.swift in Sources */,
 				63838C151FB60F4B002697D6 /* AppDelegate.swift in Sources */,
-				635D6AC71FCC7EF500321A76 /* InstagramScope.swift in Sources */,
 				63838C431FB61306002697D6 /* UserDataLogger.swift in Sources */,
-				635D6ABE1FCC431700321A76 /* InstagramClient.swift in Sources */,
-				635D6ACA1FCC7EF500321A76 /* InstagramLoginViewController.swift in Sources */,
-				635D6AC81FCC7EF500321A76 /* Array++.swift in Sources */,
-				635D6AC91FCC7EF500321A76 /* InstagramError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

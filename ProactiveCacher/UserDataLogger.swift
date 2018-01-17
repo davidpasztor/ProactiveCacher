@@ -85,6 +85,7 @@ class UserDataLogger {
             case CTRadioAccessTechnologyGPRS, CTRadioAccessTechnologyEdge:
                 return NetworkType.EDGE
             default:
+                print("Unknown network type: \(networkType)")
                 return NetworkType.Offline
             }
         }

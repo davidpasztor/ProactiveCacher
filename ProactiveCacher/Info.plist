@@ -47,9 +47,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>InstagramClientId</key>
-	<string>518044a832694c54bacb7c2375a9ff5f</string>
-	<key>InstagramRedirectURI</key>
-	<string>https://proactivecacher.co.uk/instagram</string>
 </dict>
 </plist>
