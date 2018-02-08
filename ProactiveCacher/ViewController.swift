@@ -35,30 +35,43 @@ class ViewController: UIViewController {
         logger.saveUserLocation()
         print(logger.determineNetworkType().rawValue)
         print("Signal strength: \(logger.getSignalStrength() ?? -1)")
-        /*
+        
         if let jwtToken = BoxAPI.shared.generateJWTToken(isEnterprise: false, userId: BoxAPI.shared.sharedUserId) {
             BoxAPI.shared.getOAuth2Token(using: jwtToken, completion: { oAuthToken, expiryDate, error in
                 guard let oAuthToken = oAuthToken, let expiryDate = expiryDate, error == nil else {
                     print(error?.localizedDescription ?? "No error");return
                 }
                 print("OAuthToken: \(oAuthToken), expires at : \(expiryDate)")
+                BoxAPI.shared.accessToken = oAuthToken
+                BoxAPI.shared.getFolderInfo(completion: { fileIDs, error in
+                    guard let fileIDs = fileIDs, error == nil else {
+                        print(error!);return
+                    }
+                    print(fileIDs)
+                })
             })
         } else {
             print("No JWT token")
         }
-        */
+        
+        /*
         BoxAPI.shared.client?.authenticate(completionBlock: { user, error in
             guard error == nil, let user = user else {
                 print(error!);return
             }
             print(user)
-            BOXContentClient(forUser: user).folderInfoRequest(withID: BOXAPIFolderIDRoot).perform(completion: { boxFolder, error in
+            guard let userClient = BOXContentClient(forUser: user) else {return}
+            //userClient.fileThumbnailRequest(withID: <#T##String!#>, size: <#T##BOXThumbnailSize#>)
+            /*
+            userClient.folderInfoRequest(withID: BOXAPIFolderIDRoot).perform(completion: { boxFolder, error in
                 guard error == nil, let boxFolder = boxFolder else {
                     print(error!);return
                 }
                 print(boxFolder)
             })
+             */
         })
+        */
     }
 
 

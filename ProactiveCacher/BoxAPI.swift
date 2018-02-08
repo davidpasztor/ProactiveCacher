@@ -17,6 +17,8 @@ class BoxAPI: NSObject {    //Need to inherit from NSObject to be able to confor
     let sharedUserId = "3183511991"
     //Need to set client to a specific user's client
     let client = BOXContentClient(forUser: BOXUser(userID: "3183511991", name: "Shared", login: "AppUser_523282_bweXCHyogt@boxdevedition.com")) //BOXContentClient.default()
+    var accessToken:String?
+    private let sharedFolderID = "46350020304"
     
     static let shared = BoxAPI()
     private override init(){
@@ -113,12 +115,34 @@ Uh0GL/z1qN6g2yAridgPyvjofcayOCsxibfAG3lnD3aetP/4ED0+hHY=
             completion(token, Date().addingSeconds(expiresInSeconds), nil)
         }).resume()
     }
+    
+    func getFolderInfo(for folderId:String="46350020304", completion: @escaping ([BoxItemMetadata]?,Error?)->()){
+        guard let folderInfoUrl = URL(string: "https://api.box.com/2.0/folders/\(folderId)") else {
+            completion(nil,BoxErrors.IncorrectURL("https://api.box.com/2.0/folders/\(folderId)")); return
+        }
+        var folderInfoRequest = URLRequest(url: folderInfoUrl)
+        guard let accessToken = self.accessToken else {completion(nil,BoxErrors.NoOAuthToken);return}
+        folderInfoRequest.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        URLSession.shared.dataTask(with: folderInfoRequest, completionHandler: { data, response, error in
+            guard let data = data, error == nil else {
+                completion(nil, BoxErrors.GenericError(error!)); return
+            }
+            do {
+                let items = try JSONDecoder().decode(BoxFolder.self, from: data).items
+                completion(items, nil)
+            } catch {
+                completion(nil,BoxErrors.GenericError(error))
+            }
+        }).resume()
+    }
 }
 
 enum BoxErrors: Error {
     case OAuth2GenericError(Error)
     case JSONResponse
     case NoOAuthToken
+    case GenericError(Error)
+    case IncorrectURL(String)
 }
 
 extension Date {

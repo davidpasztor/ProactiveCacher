@@ -29,6 +29,8 @@
 		63838C511FB61961002697D6 /* RealmModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C501FB61961002697D6 /* RealmModels.swift */; };
 		63838C541FB6257C002697D6 /* PMKCoreLocation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 63838C461FB615A4002697D6 /* PMKCoreLocation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		63838C561FB6257C002697D6 /* PromiseKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 63838C451FB615A4002697D6 /* PromiseKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		63D07EC5202CDA4E0024697D /* BoxFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D07EC4202CDA4E0024697D /* BoxFolder.swift */; };
+		63D07EC7202CDEB00024697D /* OAuthToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D07EC6202CDEB00024697D /* OAuthToken.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +94,8 @@
 		63838C491FB6193E002697D6 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Frameworks/iOS/Realm.framework; sourceTree = "<group>"; };
 		63838C4A1FB6193E002697D6 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = Frameworks/iOS/RealmSwift.framework; sourceTree = "<group>"; };
 		63838C501FB61961002697D6 /* RealmModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmModels.swift; sourceTree = "<group>"; };
+		63D07EC4202CDA4E0024697D /* BoxFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxFolder.swift; sourceTree = "<group>"; };
+		63D07EC6202CDEB00024697D /* OAuthToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthToken.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +159,8 @@
 			children = (
 				63838C141FB60F4B002697D6 /* AppDelegate.swift */,
 				6361EE44200D184A001727A2 /* BoxAPI.swift */,
+				63D07EC4202CDA4E0024697D /* BoxFolder.swift */,
+				63D07EC6202CDEB00024697D /* OAuthToken.swift */,
 				63838C501FB61961002697D6 /* RealmModels.swift */,
 				63838C421FB61306002697D6 /* UserDataLogger.swift */,
 				63838C161FB60F4B002697D6 /* ViewController.swift */,
@@ -350,9 +356,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63D07EC7202CDEB00024697D /* OAuthToken.swift in Sources */,
 				63838C171FB60F4B002697D6 /* ViewController.swift in Sources */,
 				6361EE45200D184A001727A2 /* BoxAPI.swift in Sources */,
 				63838C511FB61961002697D6 /* RealmModels.swift in Sources */,
+				63D07EC5202CDA4E0024697D /* BoxFolder.swift in Sources */,
 				63838C151FB60F4B002697D6 /* AppDelegate.swift in Sources */,
 				63838C431FB61306002697D6 /* UserDataLogger.swift in Sources */,
 			);
