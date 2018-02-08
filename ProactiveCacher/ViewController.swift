@@ -48,30 +48,21 @@ class ViewController: UIViewController {
                         print(error!);return
                     }
                     print(fileIDs)
+                    BoxAPI.shared.createThumbnail(for: fileIDs.first!.id, completion: { thumbnail, error in
+                        guard let thumbnail = thumbnail else {
+                            print(error!); return
+                        }
+                        DispatchQueue.main.async {
+                            let thumbnailView = UIImageView(frame: self.view.frame)
+                            thumbnailView.image = thumbnail
+                            self.view.addSubview(thumbnailView)
+                        }
+                    })
                 })
             })
         } else {
             print("No JWT token")
         }
-        
-        /*
-        BoxAPI.shared.client?.authenticate(completionBlock: { user, error in
-            guard error == nil, let user = user else {
-                print(error!);return
-            }
-            print(user)
-            guard let userClient = BOXContentClient(forUser: user) else {return}
-            //userClient.fileThumbnailRequest(withID: <#T##String!#>, size: <#T##BOXThumbnailSize#>)
-            /*
-            userClient.folderInfoRequest(withID: BOXAPIFolderIDRoot).perform(completion: { boxFolder, error in
-                guard error == nil, let boxFolder = boxFolder else {
-                    print(error!);return
-                }
-                print(boxFolder)
-            })
-             */
-        })
-        */
     }
 
 
