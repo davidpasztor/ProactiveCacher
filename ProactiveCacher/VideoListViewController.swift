@@ -26,7 +26,7 @@ class VideoListViewController: UITableViewController {
                 guard let oAuthToken = oAuthToken, let expiryDate = expiryDate, error == nil else {
                     print(error?.localizedDescription ?? "No error");return
                 }
-                print("OAuthToken: \(oAuthToken), expires at : \(expiryDate)")
+                //print("OAuthToken: \(oAuthToken), expires at : \(expiryDate)")
                 BoxAPI.shared.accessToken = oAuthToken
                 BoxAPI.shared.getFolderInfo(completion: { metadataForFiles, error in
                     guard let metadataForFiles = metadataForFiles, error == nil else {
@@ -67,16 +67,11 @@ class VideoListViewController: UITableViewController {
     }
     
     func playVideo(from url:URL){
-        let player = AVPlayer(url: url)
         let playerController = AVPlayerViewController()
-        
-        //TODO: Cannot go back from player
-        playerController.player = player
-        self.addChildViewController(playerController)
-        self.view.addSubview(playerController.view)
+        playerController.player = AVPlayer(url: url)
+        self.present(playerController, animated: true, completion: nil)
         playerController.view.frame = self.view.frame
-        
-        player.play()
+        playerController.player?.play()
     }
 
     // MARK: - Table view data source
@@ -120,7 +115,10 @@ class VideoListViewController: UITableViewController {
                 }
                 print(error ?? "Unknown error while downloading file"); return
             }
-            self.playVideo(from: fileURL)
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+                self.playVideo(from: fileURL)
+            }
         })
         /*
         BoxAPI.shared.getEmbedLink(for: fileMetadatas[indexPath.row].id, completion: { embedUrl, error in

@@ -17,7 +17,6 @@
 		6361EE58200D30FA001727A2 /* JWT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6361EE56200D30EB001727A2 /* JWT.framework */; };
 		6361EE59200D30FA001727A2 /* JWT.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6361EE56200D30EB001727A2 /* JWT.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		63838C151FB60F4B002697D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C141FB60F4B002697D6 /* AppDelegate.swift */; };
-		63838C171FB60F4B002697D6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C161FB60F4B002697D6 /* ViewController.swift */; };
 		63838C1A1FB60F4B002697D6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63838C181FB60F4B002697D6 /* Main.storyboard */; };
 		63838C1C1FB60F4B002697D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63838C1B1FB60F4B002697D6 /* Assets.xcassets */; };
 		63838C1F1FB60F4B002697D6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63838C1D1FB60F4B002697D6 /* LaunchScreen.storyboard */; };
@@ -81,7 +80,6 @@
 		6361EE56200D30EB001727A2 /* JWT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JWT.framework; path = Frameworks/iOS/JWT.framework; sourceTree = "<group>"; };
 		63838C111FB60F4B002697D6 /* ProactiveCacher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProactiveCacher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63838C141FB60F4B002697D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		63838C161FB60F4B002697D6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		63838C191FB60F4B002697D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		63838C1B1FB60F4B002697D6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		63838C1E1FB60F4B002697D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -173,7 +171,6 @@
 				63838C421FB61306002697D6 /* UserDataLogger.swift */,
 				6301589D202F7A8D00F84147 /* VideoListViewController.swift */,
 				6301589F202F7AC200F84147 /* VideoTableViewCell.swift */,
-				63838C161FB60F4B002697D6 /* ViewController.swift */,
 			);
 			path = ProactiveCacher;
 			sourceTree = "<group>";
@@ -363,7 +360,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				63D07EC7202CDEB00024697D /* OAuthToken.swift in Sources */,
-				63838C171FB60F4B002697D6 /* ViewController.swift in Sources */,
 				6301589E202F7A8D00F84147 /* VideoListViewController.swift in Sources */,
 				6361EE45200D184A001727A2 /* BoxAPI.swift in Sources */,
 				63838C511FB61961002697D6 /* RealmModels.swift in Sources */,
