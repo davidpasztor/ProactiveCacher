@@ -10,4 +10,5 @@ import UIKit
 
 class VideoTableViewCell: UITableViewCell {
     @IBOutlet weak var thumbnailImageView: UIImageView!
+    @IBOutlet weak var titleLabel: UILabel!
 }

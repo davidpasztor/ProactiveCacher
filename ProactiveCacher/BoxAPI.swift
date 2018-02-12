@@ -154,8 +154,9 @@ Uh0GL/z1qN6g2yAridgPyvjofcayOCsxibfAG3lnD3aetP/4ED0+hHY=
     }
     
     func createThumbnail(for fileId:String, completion: @escaping (UIImage?,Error?)->()){
-        guard let getThumbnailUrl = URL(string: "https://api.box.com/2.0/files/\(fileId)/thumbnail.jpg?min_height=256&min_width=256") else {
-            completion(nil, BoxErrors.IncorrectURL("")); return
+        let urlString = "https://api.box.com/2.0/files/\(fileId)/thumbnail.jpg?min_height=256&min_width=256"
+        guard let getThumbnailUrl = URL(string: urlString) else {
+            completion(nil, BoxErrors.IncorrectURL(urlString)); return
         }
         var getThumbnailRequest = URLRequest(url: getThumbnailUrl)
         guard let accessToken = self.accessToken else {completion(nil,BoxErrors.NoOAuthToken);return}
@@ -168,6 +169,56 @@ Uh0GL/z1qN6g2yAridgPyvjofcayOCsxibfAG3lnD3aetP/4ED0+hHY=
                 completion(nil,BoxErrors.CustomMessage("Couldn't get thumnail image")); return
             }
             completion(thumbnail,nil)
+        }).resume()
+    }
+    
+    func getEmbedLink(for fileId:String, completion: @escaping(URL?,Error?)->()){
+        let urlString = "https://api.box.com/2.0/files/\(fileId)?fields=expiring_embed_link"
+        guard let getEmbedLinkUrl = URL(string: urlString) else {
+            completion(nil, BoxErrors.IncorrectURL(urlString)); return
+        }
+        var getEmbedLinkRequest = URLRequest(url: getEmbedLinkUrl)
+        guard let accessToken = self.accessToken else {completion(nil,BoxErrors.NoOAuthToken);return}
+        getEmbedLinkRequest.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        URLSession.shared.dataTask(with: getEmbedLinkRequest, completionHandler: { data, response, error in
+            guard let data = data else {
+                completion(nil, error); return
+            }
+            do {
+                guard let jsonResponse = try JSONSerialization.jsonObject(with: data) as? [String:Any], let embedUrlDictionary = jsonResponse["expiring_embed_link"] as? [String:String], let embedUrlString = embedUrlDictionary["url"] else {
+                    completion(nil,BoxErrors.JSONResponse); return
+                }
+                guard let embedUrl = URL(string: embedUrlString) else {
+                    completion(nil,BoxErrors.IncorrectURL(embedUrlString)); return
+                }
+                completion(embedUrl,nil)
+            } catch {
+                completion(nil,error)
+            }
+        }).resume()
+    }
+    
+    func downloadFile(with fileMetadata:BoxItemMetadata, completion: @escaping(URL?,Error?)->()){
+        let urlString = "https://api.box.com/2.0/files/\(fileMetadata.id)/content?fields=download_url"
+        guard let getDownloadLinkUrl = URL(string: urlString) else {
+            completion(nil, BoxErrors.IncorrectURL(urlString)); return
+        }
+        var getDownloadLinkRequest = URLRequest(url: getDownloadLinkUrl)
+        guard let accessToken = self.accessToken else {completion(nil,BoxErrors.NoOAuthToken);return}
+        getDownloadLinkRequest.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        URLSession.shared.dataTask(with: getDownloadLinkRequest, completionHandler: { data, response, error in
+            //Data is the raw file itself
+            guard let rawFileData = data, error == nil else {
+                completion(nil, error); return
+            }
+            do {
+                let documentsDirectory = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+                let fileUrl = documentsDirectory.appendingPathComponent("\(fileMetadata.name).mp4")
+                try rawFileData.write(to: fileUrl)
+                completion(fileUrl,error)
+            } catch {
+                completion(nil,error)
+            }
         }).resume()
     }
 }

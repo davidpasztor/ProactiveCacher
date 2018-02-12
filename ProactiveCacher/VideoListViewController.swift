@@ -7,16 +7,18 @@
 //
 
 import UIKit
+import AVKit
+import AVFoundation
 
 class VideoListViewController: UITableViewController {
     
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-    var fileIDs = [String]()
+    var fileMetadatas = [BoxItemMetadata]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.estimatedRowHeight = tableView.frame.height/5
-        tableView.rowHeight = UITableViewAutomaticDimension
+        //Since the videos have to have a 16:9 ratio, the thumbnails should also
+        tableView.rowHeight = CGFloat(tableView.frame.width)/16*9
         addActivityIndicator(activityIndicator: activityIndicator, view: self.view)
         activityIndicator.startAnimating()
         if let jwtToken = BoxAPI.shared.generateJWTToken(isEnterprise: false, userId: BoxAPI.shared.sharedUserId) {
@@ -30,8 +32,7 @@ class VideoListViewController: UITableViewController {
                     guard let metadataForFiles = metadataForFiles, error == nil else {
                         print(error ?? "Unknown error");return
                     }
-                    print(metadataForFiles)
-                    self.fileIDs = metadataForFiles.map{$0.id}
+                    self.fileMetadatas = metadataForFiles
                     DispatchQueue.main.async {
                         self.tableView.reloadData()
                         self.activityIndicator.stopAnimating()
@@ -64,6 +65,19 @@ class VideoListViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    func playVideo(from url:URL){
+        let player = AVPlayer(url: url)
+        let playerController = AVPlayerViewController()
+        
+        //TODO: Cannot go back from player
+        playerController.player = player
+        self.addChildViewController(playerController)
+        self.view.addSubview(playerController.view)
+        playerController.view.frame = self.view.frame
+        
+        player.play()
+    }
 
     // MARK: - Table view data source
 
@@ -72,7 +86,7 @@ class VideoListViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return fileIDs.count
+        return fileMetadatas.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -80,7 +94,7 @@ class VideoListViewController: UITableViewController {
         let cellDownloadIndicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
         addActivityIndicator(activityIndicator: cellDownloadIndicator, view: cell.contentView)
         cellDownloadIndicator.startAnimating()
-        BoxAPI.shared.createThumbnail(for: fileIDs[indexPath.row], completion: { thumbnail, error in
+        BoxAPI.shared.createThumbnail(for: fileMetadatas[indexPath.row].id, completion: { thumbnail, error in
             guard let thumbnail = thumbnail else {
                 DispatchQueue.main.async {
                     cellDownloadIndicator.stopAnimating()
@@ -88,12 +102,41 @@ class VideoListViewController: UITableViewController {
                 print(error ?? "Unknown error"); return
             }
             DispatchQueue.main.async {
-                // TODO: need to fix the cell height
                 cell.thumbnailImageView.image = thumbnail
+                cell.titleLabel.text = self.fileMetadatas[indexPath.row].name
                 cellDownloadIndicator.stopAnimating()
             }
         })
         return cell
+    }
+    
+    // MARK: - Table view delegate
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        activityIndicator.startAnimating()
+        BoxAPI.shared.downloadFile(with: fileMetadatas[indexPath.row], completion: { fileURL, error in
+            guard let fileURL = fileURL, error == nil else {
+                DispatchQueue.main.async {
+                    self.activityIndicator.stopAnimating()
+                }
+                print(error ?? "Unknown error while downloading file"); return
+            }
+            self.playVideo(from: fileURL)
+        })
+        /*
+        BoxAPI.shared.getEmbedLink(for: fileMetadatas[indexPath.row].id, completion: { embedUrl, error in
+            guard let embedUrl = embedUrl, error == nil else {
+                DispatchQueue.main.async {
+                    self.activityIndicator.stopAnimating()
+                }
+                print(error ?? "Unknown error while getting embed URL"); return
+            }
+            print(embedUrl)
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+                self.playVideo(from: embedUrl)
+            }
+        })
+        */
     }
 
     /*

@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -26,35 +25,6 @@
             </objects>
             <point key="canvasLocation" x="-834" y="34"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
-            <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="ProactiveCacher" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ifM-BA-jxG">
-                                <rect key="frame" x="115" y="396" width="145" height="30"/>
-                                <state key="normal" title="Save current location"/>
-                                <connections>
-                                    <action selector="saveUserLocation" destination="BYZ-38-t0r" eventType="touchUpInside" id="RmW-tD-0ex"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="ifM-BA-jxG" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="XgJ-1s-Qvc"/>
-                            <constraint firstItem="ifM-BA-jxG" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="yb8-lz-6Hj"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="YrC-8a-4EJ"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-174" y="-189"/>
-        </scene>
         <!--Video List View Controller-->
         <scene sceneID="bmA-xV-6Mb">
             <objects>
@@ -64,26 +34,37 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="videoCell" id="XTw-65-2qL" customClass="VideoTableViewCell" customModule="ProactiveCacher" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="videoCell" rowHeight="111" id="XTw-65-2qL" customClass="VideoTableViewCell" customModule="ProactiveCacher" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="111"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="XTw-65-2qL" id="QSb-4p-rcv">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="110.66666666666667"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="kv7-fM-280">
-                                            <rect key="frame" x="-0.66666666666665719" y="-1" width="375.33333333333326" height="44"/>
+                                            <rect key="frame" x="-0.66666666666665719" y="0.0" width="375.33333333333326" height="110.66666666666667"/>
                                         </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" layoutMarginsFollowReadableWidth="YES" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QYG-6W-fTf">
+                                            <rect key="frame" x="19.999999999999996" y="84.666666666666671" width="43.666666666666657" height="21"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="kv7-fM-280" firstAttribute="width" secondItem="QSb-4p-rcv" secondAttribute="width" id="5BH-IO-Uby"/>
                                         <constraint firstItem="kv7-fM-280" firstAttribute="centerX" secondItem="QSb-4p-rcv" secondAttribute="centerX" id="6hZ-JJ-jSw"/>
                                         <constraint firstItem="kv7-fM-280" firstAttribute="height" secondItem="QSb-4p-rcv" secondAttribute="height" id="SIf-na-X8s"/>
+                                        <constraint firstItem="QYG-6W-fTf" firstAttribute="leading" secondItem="QSb-4p-rcv" secondAttribute="leading" constant="20" id="WC0-lQ-e7d"/>
+                                        <constraint firstAttribute="bottom" secondItem="QYG-6W-fTf" secondAttribute="bottom" constant="5" id="d6n-qu-0ru"/>
+                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="QYG-6W-fTf" secondAttribute="trailing" id="k8b-Sh-8qC"/>
                                         <constraint firstItem="kv7-fM-280" firstAttribute="centerY" secondItem="QSb-4p-rcv" secondAttribute="centerY" id="qmW-GP-QBu"/>
+                                        <constraint firstItem="QYG-6W-fTf" firstAttribute="top" relation="greaterThanOrEqual" secondItem="QSb-4p-rcv" secondAttribute="top" constant="20" id="w2k-kT-M9F"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="thumbnailImageView" destination="kv7-fM-280" id="n6S-7p-gCr"/>
+                                    <outlet property="titleLabel" destination="QYG-6W-fTf" id="AaS-ni-aJJ"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -96,7 +77,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N7P-wd-9Bf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="476" y="34"/>
+            <point key="canvasLocation" x="-12" y="33.990147783251231"/>
         </scene>
     </scenes>
 </document>
