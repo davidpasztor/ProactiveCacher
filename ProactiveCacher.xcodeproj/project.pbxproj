@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		6301589E202F7A8D00F84147 /* VideoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6301589D202F7A8D00F84147 /* VideoListViewController.swift */; };
 		630158A0202F7AC200F84147 /* VideoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6301589F202F7AC200F84147 /* VideoTableViewCell.swift */; };
+		630158C8204B243B00F84147 /* CacheServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630158C7204B243B00F84147 /* CacheServerAPI.swift */; };
 		63535349200F96DA00657850 /* Base64.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63535347200F96C500657850 /* Base64.framework */; };
 		6353534A200F96DA00657850 /* Base64.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 63535347200F96C500657850 /* Base64.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6361EE42200D136C001727A2 /* BoxContentSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6361EE40200B8568001727A2 /* BoxContentSDK.framework */; };
@@ -74,6 +75,7 @@
 /* Begin PBXFileReference section */
 		6301589D202F7A8D00F84147 /* VideoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListViewController.swift; sourceTree = "<group>"; };
 		6301589F202F7AC200F84147 /* VideoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTableViewCell.swift; sourceTree = "<group>"; };
+		630158C7204B243B00F84147 /* CacheServerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheServerAPI.swift; sourceTree = "<group>"; };
 		63535347200F96C500657850 /* Base64.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Base64.framework; path = Frameworks/iOS/Base64.framework; sourceTree = "<group>"; };
 		6361EE40200B8568001727A2 /* BoxContentSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BoxContentSDK.framework; path = Frameworks/iOS/BoxContentSDK.framework; sourceTree = "<group>"; };
 		6361EE44200D184A001727A2 /* BoxAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxAPI.swift; sourceTree = "<group>"; };
@@ -166,6 +168,7 @@
 				63838C141FB60F4B002697D6 /* AppDelegate.swift */,
 				6361EE44200D184A001727A2 /* BoxAPI.swift */,
 				63D07EC4202CDA4E0024697D /* BoxFolder.swift */,
+				630158C7204B243B00F84147 /* CacheServerAPI.swift */,
 				63D07EC6202CDEB00024697D /* OAuthToken.swift */,
 				63838C501FB61961002697D6 /* RealmModels.swift */,
 				63838C421FB61306002697D6 /* UserDataLogger.swift */,
@@ -364,6 +367,7 @@
 				6361EE45200D184A001727A2 /* BoxAPI.swift in Sources */,
 				63838C511FB61961002697D6 /* RealmModels.swift in Sources */,
 				63D07EC5202CDA4E0024697D /* BoxFolder.swift in Sources */,
+				630158C8204B243B00F84147 /* CacheServerAPI.swift in Sources */,
 				63838C151FB60F4B002697D6 /* AppDelegate.swift in Sources */,
 				63838C431FB61306002697D6 /* UserDataLogger.swift in Sources */,
 				630158A0202F7AC200F84147 /* VideoTableViewCell.swift in Sources */,

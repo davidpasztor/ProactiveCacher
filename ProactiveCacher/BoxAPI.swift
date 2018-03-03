@@ -153,22 +153,29 @@ Uh0GL/z1qN6g2yAridgPyvjofcayOCsxibfAG3lnD3aetP/4ED0+hHY=
         }).resume()
     }
     
-    func createThumbnail(for fileId:String, completion: @escaping (UIImage?,Error?)->()){
-        let urlString = "https://api.box.com/2.0/files/\(fileId)/thumbnail.jpg?min_height=256&min_width=256"
+    func createThumbnail(for fileMetadata:BoxItemMetadata, completion: @escaping (UIImage?,URL?,Error?)->()){
+        let urlString = "https://api.box.com/2.0/files/\(fileMetadata.id)/thumbnail.jpg?min_height=256&min_width=256"
         guard let getThumbnailUrl = URL(string: urlString) else {
-            completion(nil, BoxErrors.IncorrectURL(urlString)); return
+            completion(nil, nil, BoxErrors.IncorrectURL(urlString)); return
         }
         var getThumbnailRequest = URLRequest(url: getThumbnailUrl)
-        guard let accessToken = self.accessToken else {completion(nil,BoxErrors.NoOAuthToken);return}
+        guard let accessToken = self.accessToken else {completion(nil,nil,BoxErrors.NoOAuthToken);return}
         getThumbnailRequest.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         URLSession.shared.dataTask(with: getThumbnailRequest, completionHandler: { data, response, error in
             guard let data = data else {
-                completion(nil, error); return
+                completion(nil, nil, error); return
             }
             guard let thumbnail = UIImage(data: data) else {
-                completion(nil,BoxErrors.CustomMessage("Couldn't get thumnail image")); return
+                completion(nil,nil,BoxErrors.CustomMessage("Couldn't get thumnail image")); return
             }
-            completion(thumbnail,nil)
+            do {
+                let documentsDirectory = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+                let thumbnailUrl = documentsDirectory.appendingPathComponent("\(fileMetadata.name)_thumbnail.jpg")
+                try data.write(to: thumbnailUrl)
+                completion(thumbnail,thumbnailUrl,error)
+            } catch {
+                completion(nil,nil,error)
+            }
         }).resume()
     }
     
@@ -213,7 +220,7 @@ Uh0GL/z1qN6g2yAridgPyvjofcayOCsxibfAG3lnD3aetP/4ED0+hHY=
             }
             do {
                 let documentsDirectory = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-                let fileUrl = documentsDirectory.appendingPathComponent("\(fileMetadata.name).mp4")
+                let fileUrl = documentsDirectory.appendingPathComponent("\(fileMetadata.name)")
                 try rawFileData.write(to: fileUrl)
                 completion(fileUrl,error)
             } catch {

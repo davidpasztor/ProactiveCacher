@@ -32,11 +32,32 @@ class UserLog: Object {
     }
 }
 
+class Video: Object, Decodable {
+    @objc dynamic var youtubeID = ""
+    @objc dynamic var title = ""
+    @objc dynamic var filePath:String? = nil
+    @objc dynamic var thumbnailPath:String? = nil
+    
+    override class func primaryKey()->String {
+        return "youtubeID"
+    }
+}
+
 extension Realm {
     func save<T:Object>(object:T){
         do {
             try self.write {
                 self.add(object)
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
+    func saveOrUpdate<T:Object>(object:T, update: Bool = true){
+        do {
+            try self.write {
+                self.add(object, update: update)
             }
         } catch {
             print(error)
