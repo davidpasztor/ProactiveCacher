@@ -13,6 +13,8 @@ import RealmSwift
 
 class VideoListViewController: UITableViewController {
     
+    @IBOutlet weak var uploadButton: UIBarButtonItem!
+    
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
     //var videos:Results<Video>?
     var videos = [Video]()
@@ -33,6 +35,33 @@ class VideoListViewController: UITableViewController {
             }
             self.activityIndicator.stopAnimating()
         })
+    }
+    
+    @IBAction func addVideo(_ sender: UIBarButtonItem) {
+        let actionController = UIAlertController(title: "Upload new video", message: "Please provide the YouTube link for the video you would like to upload.", preferredStyle: .alert)
+        actionController.addTextField(configurationHandler: { textfield in
+            textfield.placeholder = "YouTube link of video"
+        })
+        let uploadAction = UIAlertAction(title: "Upload", style: .default, handler: { action in
+            // Should validate that the URL is a YouTube URL of the correct form
+            if let youtubeUrlString = actionController.textFields?.first?.text, let youtubeUrl = URL(string: youtubeUrlString){
+                CacheServerAPI.shared.uploadVideo(with: youtubeUrl, completion: { result in
+                    switch result {
+                        case .success(_):
+                            print("Upload successfully started!")
+                        case let .failure(error):
+                            print("Upload failed with error: \(error)")
+                    }
+                })
+            } else {
+                print("Invalid URL \(actionController.textFields?.first?.text ?? "")")
+                //Present another controller with an error message
+            }
+        })
+        actionController.addAction(uploadAction)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        actionController.addAction(cancelAction)
+        self.present(actionController, animated: true, completion: nil)
     }
     
     func addActivityIndicator(activityIndicator: UIActivityIndicatorView,view:UIView){

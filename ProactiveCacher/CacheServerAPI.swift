@@ -62,6 +62,10 @@ class CacheServerAPI {
         let uploadVideoUrl = URL(string: "\(baseURL)/storage")!
         var uploadVideoRequest = URLRequest(url: uploadVideoUrl)
         uploadVideoRequest.httpMethod = "POST"
+        //uploadVideoRequest.httpBody = try? JSONEncoder().encode(["url":youtubeUrl])
+        uploadVideoRequest.httpBody = try? JSONSerialization.data(withJSONObject: ["url":youtubeUrl.absoluteString])
+        uploadVideoRequest.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+        print(String(data:uploadVideoRequest.httpBody ?? Data(),encoding: .utf8) ?? "JSON Encoding of URL failed")
         URLSession.shared.dataTask(with: uploadVideoRequest, completionHandler: { data, response, error in
             guard error == nil else {
                 completion(Result.failure(error!)); return
@@ -70,12 +74,14 @@ class CacheServerAPI {
                 completion(Result.failure(CacheServerErrors.CustomMessage("No HTTP response"))); return
             }
             guard response.statusCode == 200 else {
-                let errorResponse:String?
+                let errorResponse:String? = String(data: data ?? Data(), encoding: .utf8)
+                /*
                 if let data = data {
                     errorResponse = (try? JSONSerialization.jsonObject(with: data)) as? String
                 } else {
                     errorResponse = nil
                 }
+                */
                 completion(Result.failure(CacheServerErrors.HTTPFailureResponse(response.statusCode,errorResponse))); return
             }
             completion(Result.success(()))

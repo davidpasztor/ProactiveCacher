@@ -74,8 +74,15 @@
                             <outlet property="delegate" destination="dEp-Jo-BRw" id="JwO-eD-KX3"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="Opj-lf-YnL"/>
+                    <navigationItem key="navigationItem" id="Opj-lf-YnL">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="oly-Ym-kDg" userLabel="UploadButton">
+                            <connections>
+                                <action selector="addVideo:" destination="dEp-Jo-BRw" id="zec-Du-TZc"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="uploadButton" destination="oly-Ym-kDg" id="3kc-lW-KEg"/>
                         <segue destination="hZA-db-87k" kind="show" identifier="streamVideoSegue" id="Grs-Ne-Xti"/>
                     </connections>
                 </tableViewController>
