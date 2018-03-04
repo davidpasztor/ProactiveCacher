@@ -81,6 +81,33 @@ class CacheServerAPI {
             completion(Result.success(()))
         }).resume()
     }
+    
+    func streamVideo(with youtubeID:String, completion: @escaping (Result<String>)->()){
+        let streamVideoUrlString = "\(baseURL)/startStream?videoID=\(youtubeID)"
+        guard let streamVideoUrl = URL(string: streamVideoUrlString) else {
+            DispatchQueue.main.async {
+                completion(Result.failure(CacheServerErrors.IncorrectURL(streamVideoUrlString)))
+            }
+            return
+        }
+        URLSession.shared.dataTask(with: streamVideoUrl, completionHandler: { data, response, error in
+            guard let data = data, error == nil else {
+                DispatchQueue.main.async {
+                    completion(Result.failure(error!))
+                }
+                return
+            }
+            guard let htmlString = String(data: data, encoding: .utf8) else {
+                DispatchQueue.main.async {
+                    completion(Result.failure(CacheServerErrors.CustomMessage("Couldn't convert stream response to HTML String")))
+                }
+                return
+            }
+            DispatchQueue.main.async {
+                completion(Result.success(htmlString))
+            }
+        }).resume()
+    }
 }
 
 enum Result<T>{

@@ -104,91 +104,35 @@ class VideoListViewController: UITableViewController {
     
     // MARK: - Table view delegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        /*
-        // Check it the video has already been downloaded or not
-        let fileMetadata = fileMetadatas[indexPath.row]
+        let videoMetadata = videos[indexPath.row]
         let realm = try! Realm()
-        // If the video is already cached, load it from the local storage
         var video:Video
-        if let fetchedVideo = realm.object(ofType: Video.self, forPrimaryKey: fileMetadata.id) {
+        if let fetchedVideo = realm.object(ofType: Video.self, forPrimaryKey: videoMetadata.youtubeID) {
             video = fetchedVideo
+            if let filePathString = video.filePath, let filePath = URL(string: filePathString) {
+                self.playVideo(from: filePath)
+            }
         } else {
             video = Video()
-            video.name = fileMetadata.name
-            video.fileID = fileMetadata.id
-        }
-        if let videoURLString = video.filePath, let videoURL = URL(string: videoURLString) {
-            self.playVideo(from: videoURL)
-        } else {
+            video.title = videoMetadata.title
+            video.youtubeID = videoMetadata.youtubeID
             activityIndicator.startAnimating()
-            BoxAPI.shared.downloadFile(with: fileMetadata, completion: { fileURL, error in
-                guard let fileURL = fileURL, error == nil else {
-                    DispatchQueue.main.async {
-                        self.activityIndicator.stopAnimating()
-                    }
-                    print(error ?? "Unknown error while downloading file"); return
+            CacheServerAPI.shared.streamVideo(with: video.youtubeID, completion: { result in
+                switch result {
+                case let .success(htmlString):
+                    self.performSegue(withIdentifier: "streamVideoSegue", sender: htmlString)
+                case let .failure(error):
+                    print(error)
                 }
-                DispatchQueue.main.async {
-                    let realm = try! Realm()
-                    do {
-                        try realm.write {
-                            video.filePath = fileURL.absoluteString
-                        }
-                    } catch {
-                        print(error)
-                    }
-                    realm.saveOrUpdate(object: video)
-                    self.activityIndicator.stopAnimating()
-                    self.playVideo(from: fileURL)
-                }
+                self.activityIndicator.stopAnimating()
             })
         }
-        */
-        /*
-        BoxAPI.shared.getEmbedLink(for: fileMetadatas[indexPath.row].id, completion: { embedUrl, error in
-            guard let embedUrl = embedUrl, error == nil else {
-                DispatchQueue.main.async {
-                    self.activityIndicator.stopAnimating()
-                }
-                print(error ?? "Unknown error while getting embed URL"); return
-            }
-            print(embedUrl)
-            DispatchQueue.main.async {
-                self.activityIndicator.stopAnimating()
-                self.playVideo(from: embedUrl)
-            }
-        })
-        */
     }
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "streamVideoSegue", let destination = segue.destination as? StreamedVideoVC, let htmlString = sender as? String {
+            destination.streamHtmlString = htmlString
+        }
     }
-    */
 
 }
