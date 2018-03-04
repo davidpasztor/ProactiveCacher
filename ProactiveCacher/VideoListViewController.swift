@@ -23,17 +23,26 @@ class VideoListViewController: UITableViewController {
         super.viewDidLoad()
         //Since the videos have to have a 16:9 ratio, the thumbnails should also
         tableView.rowHeight = CGFloat(tableView.frame.width)/16*9
+        //Pull to refresh
+        refreshControl = UIRefreshControl()
+        refreshControl?.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl?.addTarget(self, action: #selector(VideoListViewController.loadVideos), for: .valueChanged)
         addActivityIndicator(activityIndicator: activityIndicator, view: self.view)
+        loadVideos()
+    }
+    
+    @objc func loadVideos(){
         activityIndicator.startAnimating()
         CacheServerAPI.shared.getVideoList(completion: { result in
             switch result {
-                case let .success(videos):
-                    self.videos = videos
-                    self.tableView.reloadData()
-                case let .failure(error):
-                    print(error)
+            case let .success(videos):
+                self.videos = videos
+                self.tableView.reloadData()
+            case let .failure(error):
+                print(error)
             }
             self.activityIndicator.stopAnimating()
+            self.refreshControl?.endRefreshing()
         })
     }
     
