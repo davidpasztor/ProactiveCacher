@@ -154,6 +154,11 @@ class VideoListViewController: UITableViewController {
             video = Video()
             video.title = videoMetadata.title
             video.youtubeID = videoMetadata.youtubeID
+            guard let streamURL = URL(string: "http://localhost:3000/stream?videoID=\(video.youtubeID)") else {
+                print("Invalid streamURL: http://localhost:3000/stream?videoID=\(video.youtubeID)"); return
+            }
+            self.playVideo(from: streamURL)
+            /*
             activityIndicator.startAnimating()
             CacheServerAPI.shared.streamVideo(with: video.youtubeID, completion: { result in
                 switch result {
@@ -164,6 +169,7 @@ class VideoListViewController: UITableViewController {
                 }
                 self.activityIndicator.stopAnimating()
             })
+            */
         }
     }
 
