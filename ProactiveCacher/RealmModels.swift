@@ -23,8 +23,8 @@ class UserLocation: Object {
 
 class UserLog: Object {
     @objc private dynamic var _networkStatus = ""
-    var location: UserLocation?
-    var batteryState: BatteryStateLog?
+    @objc dynamic var location: UserLocation?
+    @objc dynamic var batteryState: BatteryStateLog?
     @objc dynamic var downloadSpeed:Double = 0
     
     var networkStatus: Reachability.Connection {
@@ -42,9 +42,31 @@ class Video: Object, Decodable {
     @objc dynamic var title = ""
     @objc dynamic var filePath:String? = nil
     @objc dynamic var thumbnailPath:String? = nil
+    @objc dynamic var watched = false
+    let rating = RealmOptional<Double>()
     
     override class func primaryKey()->String {
         return "youtubeID"
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case youtubeID, title, filePath, thumbnailPath, watched, rating
+    }
+    
+    convenience required init(from decoder: Decoder) throws {
+        self.init()
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.youtubeID = try container.decode(String.self, forKey: .youtubeID)
+        self.title = try container.decode(String.self, forKey: .title)
+        // Video can't be saved at the device when it's decoded
+        self.filePath = nil
+        self.thumbnailPath = nil
+        // These might not come from the response
+        do {
+            self.watched = try container.decode(Bool.self, forKey: .watched)
+            self.rating.value = try container.decode(Double.self, forKey: .rating)
+        } catch {
+        }
     }
 }
 

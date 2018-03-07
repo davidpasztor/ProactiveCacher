@@ -12,6 +12,7 @@ target 'ProactiveCacher' do
   pod 'RealmSwift'
   pod 'PromiseKit'
   pod 'PromiseKit/CoreLocation'
+  pod 'Cosmos', '~> 15.0'
 
   target 'ProactiveCacherTests' do
     inherit! :search_paths

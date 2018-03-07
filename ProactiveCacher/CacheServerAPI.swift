@@ -13,14 +13,84 @@ class CacheServerAPI {
     static let shared = CacheServerAPI()
     private init(){}
     
-    let baseURL = "http://35.153.159.19:3000" //"http://localhost:3000"
+    let baseURL = "http://localhost:3000"//"http://35.153.159.19:3000" //"http://localhost:3000"
     
-    func getVideoList(completion: @escaping (Result<[Video]>)->()){
-        let videosUrl = URL(string: "\(baseURL)/videos")!
-        URLSession.shared.dataTask(with: videosUrl, completionHandler: { data, response, error in
+    var userID:String? {
+        get {
+            return UserDefaults.standard.string(forKey: "CacheServerUserID")
+        }
+        set(newValue){
+            print("Setting userID to \(newValue ?? "nil")")
+            UserDefaults.standard.set(newValue, forKey: "CacheServerUserID")
+        }
+    }
+    
+    var headers:[String:String] {
+        userID = userID ?? UUID().uuidString
+        return ["user":userID!]
+    }
+    
+    func requestWithHeaders(for url:URL, method: String = "GET")->URLRequest{
+        var request = URLRequest(url: url)
+        request.allHTTPHeaderFields = headers
+        request.httpMethod = method
+        return request
+    }
+    
+    func registerUser(completion: @escaping (Result<()>)->()){
+        var registerUrlRequest = URLRequest(url: URL(string: "\(baseURL)/register")!)
+        registerUrlRequest.httpMethod = "POST"
+        userID = UUID().uuidString
+        registerUrlRequest.httpBody = try? JSONEncoder().encode(["userID":userID!])
+        registerUrlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        URLSession.shared.dataTask(with: registerUrlRequest, completionHandler: { data, response, error in
             guard let data = data, error == nil else {
                 DispatchQueue.main.async {
                     completion(Result.failure(error!))
+                }
+                return
+            }
+            guard let response = response as? HTTPURLResponse else {
+                DispatchQueue.main.async {
+                    completion(Result.failure(CacheServerErrors.CustomMessage("No HTTP response")))
+                }
+                return
+            }
+            guard response.statusCode == 206 else {
+                let failureResponse = (try? JSONDecoder().decode([String:String].self, from: data))?["error"]
+                DispatchQueue.main.async {
+                    completion(Result.failure(CacheServerErrors.HTTPFailureResponse(response.statusCode,failureResponse)))
+                }
+                return
+            }
+            DispatchQueue.main.async {
+                completion(Result.success(()))
+            }
+        }).resume()
+    }
+    
+    func getVideoList(completion: @escaping (Result<[Video]>)->()){
+        let videosUrl = URL(string: "\(baseURL)/videos")!
+        URLSession.shared.dataTask(with: requestWithHeaders(for: videosUrl), completionHandler: { data, response, error in
+            guard let data = data, error == nil else {
+                DispatchQueue.main.async {
+                    completion(Result.failure(error!))
+                }
+                return
+            }
+            guard let response = response as? HTTPURLResponse else {
+                DispatchQueue.main.async {
+                    completion(Result.failure(CacheServerErrors.CustomMessage("No HTTP response")))
+                }
+                return
+            }
+            guard response.statusCode == 200 || response.statusCode == 206 else {
+                if response.statusCode == 401 {
+                    self.userID = nil
+                }
+                let failureResponse = (try? JSONDecoder().decode([String:String].self, from: data))?["error"]
+                DispatchQueue.main.async {
+                    completion(Result.failure(CacheServerErrors.HTTPFailureResponse(response.statusCode, failureResponse)))
                 }
                 return
             }
@@ -45,7 +115,7 @@ class CacheServerAPI {
             }
             return
         }
-        URLSession.shared.dataTask(with: getThumbnailUrl, completionHandler: { data, response, error in
+        URLSession.shared.dataTask(with: requestWithHeaders(for: getThumbnailUrl), completionHandler: { data, response, error in
             guard let data = data, error == nil else {
                 DispatchQueue.main.async {
                     completion(Result.failure(error!))
@@ -65,7 +135,7 @@ class CacheServerAPI {
         //uploadVideoRequest.httpBody = try? JSONEncoder().encode(["url":youtubeUrl])
         uploadVideoRequest.httpBody = try? JSONSerialization.data(withJSONObject: ["url":youtubeUrl.absoluteString])
         uploadVideoRequest.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
-        print(String(data:uploadVideoRequest.httpBody ?? Data(),encoding: .utf8) ?? "JSON Encoding of URL failed")
+        uploadVideoRequest.setValue("user", forHTTPHeaderField: headers["user"]!)
         URLSession.shared.dataTask(with: uploadVideoRequest, completionHandler: { data, response, error in
             guard error == nil else {
                 completion(Result.failure(error!)); return
@@ -74,14 +144,7 @@ class CacheServerAPI {
                 completion(Result.failure(CacheServerErrors.CustomMessage("No HTTP response"))); return
             }
             guard response.statusCode == 200 else {
-                let errorResponse:String? = String(data: data ?? Data(), encoding: .utf8)
-                /*
-                if let data = data {
-                    errorResponse = (try? JSONSerialization.jsonObject(with: data)) as? String
-                } else {
-                    errorResponse = nil
-                }
-                */
+                let errorResponse = String(data: data ?? Data(), encoding: .utf8)
                 completion(Result.failure(CacheServerErrors.HTTPFailureResponse(response.statusCode,errorResponse))); return
             }
             completion(Result.success(()))
@@ -96,7 +159,7 @@ class CacheServerAPI {
             }
             return
         }
-        URLSession.shared.dataTask(with: streamVideoUrl, completionHandler: { data, response, error in
+        URLSession.shared.dataTask(with: requestWithHeaders(for: streamVideoUrl), completionHandler: { data, response, error in
             guard let data = data, error == nil else {
                 DispatchQueue.main.async {
                     completion(Result.failure(error!))
