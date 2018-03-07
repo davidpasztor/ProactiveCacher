@@ -13,7 +13,7 @@ class CacheServerAPI {
     static let shared = CacheServerAPI()
     private init(){}
     
-    private let baseURL = "http://localhost:3000"
+    let baseURL = "http://35.153.159.19:3000" //"http://localhost:3000"
     
     func getVideoList(completion: @escaping (Result<[Video]>)->()){
         let videosUrl = URL(string: "\(baseURL)/videos")!

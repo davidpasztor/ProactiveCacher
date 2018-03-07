@@ -8,6 +8,7 @@
 
 import Foundation
 import RealmSwift
+import Reachability
 
 class BatteryStateLog: Object {
     @objc dynamic var batteryPercentage:Int = 0
@@ -21,14 +22,18 @@ class UserLocation: Object {
 }
 
 class UserLog: Object {
-    @objc dynamic var networkStatus = ""
-    @objc dynamic var location: UserLocation?
-    @objc dynamic var batteryState: BatteryStateLog?
+    @objc private dynamic var _networkStatus = ""
+    var location: UserLocation?
+    var batteryState: BatteryStateLog?
     @objc dynamic var downloadSpeed:Double = 0
-    @objc dynamic var signalStrength:Double = 0
     
-    enum NetworkStatus:String{
-        case Wifi, Mobile, Offline
+    var networkStatus: Reachability.Connection {
+        get {
+            return Reachability.Connection(description: _networkStatus)
+        }
+        set(newValue) {
+            _networkStatus = newValue.description
+        }
     }
 }
 
@@ -61,6 +66,19 @@ extension Realm {
             }
         } catch {
             print(error)
+        }
+    }
+}
+
+extension Reachability.Connection {
+    init(description: String){
+        switch description {
+        case "Cellular":
+            self = .cellular
+        case "WiFi":
+            self = .wifi
+        default:
+            self = .none
         }
     }
 }

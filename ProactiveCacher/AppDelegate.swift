@@ -8,7 +8,7 @@
 
 import UIKit
 import RealmSwift
-import BoxContentSDK
+import AVFoundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,13 +21,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let config = Realm.Configuration(
             // Set the new schema version. This must be greater than the previously used
             // version (if you've never set a schema version before, the version is 0).
-            schemaVersion: 0,
+            schemaVersion: 1,
             
             // Set the block which will be called automatically when opening a Realm with
             // a schema version lower than the one set above
             migrationBlock: { migration, oldSchemaVersion in
                 // We haven’t migrated anything yet, so oldSchemaVersion == 0
-                if (oldSchemaVersion < 0) {
+                if (oldSchemaVersion < 1) {
                     // Nothing to do!
                     // Realm will automatically detect new properties and removed properties
                     // And will update the schema on disk automatically
@@ -42,8 +42,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let _ = try! Realm()
         debugPrint("Realm location: \(Realm.Configuration.defaultConfiguration.fileURL!)")
         
-        //Set up BoxContent SDK
-        BOXContentClient.setClientID("fr23hr7q5fututlb7028kc7ecqbeuywu", clientSecret: "4dtJmnHrHlm1KnuOfBlEPQyFufr2irpf")
+        do {
+            // Videos have sound even if the phone in silent mode
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print(error)
+        }
         
         return true
     }

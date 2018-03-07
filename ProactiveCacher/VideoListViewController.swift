@@ -29,6 +29,7 @@ class VideoListViewController: UITableViewController {
         refreshControl?.addTarget(self, action: #selector(VideoListViewController.loadVideos), for: .valueChanged)
         addActivityIndicator(activityIndicator: activityIndicator, view: self.view)
         loadVideos()
+        UserDataLogger.shared.saveUserLog()
     }
     
     @objc func loadVideos(){
@@ -154,28 +155,10 @@ class VideoListViewController: UITableViewController {
             video = Video()
             video.title = videoMetadata.title
             video.youtubeID = videoMetadata.youtubeID
-            guard let streamURL = URL(string: "http://localhost:3000/stream?videoID=\(video.youtubeID)") else {
-                print("Invalid streamURL: http://localhost:3000/stream?videoID=\(video.youtubeID)"); return
+            guard let streamURL = URL(string: "\(CacheServerAPI.shared.baseURL)/stream?videoID=\(video.youtubeID)") else {
+                print("Invalid streamURL: \(CacheServerAPI.shared.baseURL)/stream?videoID=\(video.youtubeID)"); return
             }
             self.playVideo(from: streamURL)
-            /*
-            activityIndicator.startAnimating()
-            CacheServerAPI.shared.streamVideo(with: video.youtubeID, completion: { result in
-                switch result {
-                case let .success(htmlString):
-                    self.performSegue(withIdentifier: "streamVideoSegue", sender: htmlString)
-                case let .failure(error):
-                    print(error)
-                }
-                self.activityIndicator.stopAnimating()
-            })
-            */
-        }
-    }
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "streamVideoSegue", let destination = segue.destination as? StreamedVideoVC, let htmlString = sender as? String {
-            destination.streamHtmlString = htmlString
         }
     }
 

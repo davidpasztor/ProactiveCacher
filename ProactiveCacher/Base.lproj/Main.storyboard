@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -83,46 +82,11 @@
                     </navigationItem>
                     <connections>
                         <outlet property="uploadButton" destination="oly-Ym-kDg" id="3kc-lW-KEg"/>
-                        <segue destination="hZA-db-87k" kind="show" identifier="streamVideoSegue" id="Grs-Ne-Xti"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N7P-wd-9Bf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-12" y="33.990147783251231"/>
-        </scene>
-        <!--Streamed VideoVC-->
-        <scene sceneID="hIO-IR-vsE">
-            <objects>
-                <viewController id="hZA-db-87k" customClass="StreamedVideoVC" customModule="ProactiveCacher" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="aXt-an-p3c">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bck-Ju-5Z7">
-                                <rect key="frame" x="-0.66666666666665719" y="27" width="375.33333333333326" height="812"/>
-                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <wkWebViewConfiguration key="configuration">
-                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
-                                    <wkPreferences key="preferences"/>
-                                </wkWebViewConfiguration>
-                            </wkWebView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="Bck-Ju-5Z7" firstAttribute="height" secondItem="aXt-an-p3c" secondAttribute="height" id="7uU-XS-zyf"/>
-                            <constraint firstItem="Bck-Ju-5Z7" firstAttribute="centerY" secondItem="JmN-BO-hbC" secondAttribute="centerY" id="Ihd-1t-rBh"/>
-                            <constraint firstItem="Bck-Ju-5Z7" firstAttribute="centerX" secondItem="JmN-BO-hbC" secondAttribute="centerX" id="WSh-uU-VeO"/>
-                            <constraint firstItem="Bck-Ju-5Z7" firstAttribute="width" secondItem="aXt-an-p3c" secondAttribute="width" id="fi0-RK-YaO"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="JmN-BO-hbC"/>
-                    </view>
-                    <connections>
-                        <outlet property="videoPlayerView" destination="Bck-Ju-5Z7" id="kF3-qB-j65"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="a33-Jm-QS6" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="793" y="34"/>
         </scene>
     </scenes>
 </document>

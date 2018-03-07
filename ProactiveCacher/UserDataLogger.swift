@@ -7,27 +7,57 @@
 //
 
 import CoreLocation
-import PMKCoreLocation
 import PromiseKit
 import RealmSwift
 import UIKit
 import CoreTelephony
+import Reachability
 
 class UserDataLogger {
     static let shared = UserDataLogger()
     
     private init() {} //ensure no other instance can be created than the singleton
     
+    lazy var realm = try! Realm()
+    
+    let reachability = Reachability()
+    
+    func saveUserLog(){
+        let userLog = UserLog()
+        userLog.batteryState = getBatteryState()
+        CLLocationManager.promise().done { locations in
+            if let location = locations.last {
+                let locationLog = UserLocation()
+                locationLog.latitude = location.coordinate.latitude
+                locationLog.longitude = location.coordinate.longitude
+                userLog.location = locationLog
+            }
+        }.ensure {
+            if let connection = self.reachability?.connection {
+                userLog.networkStatus = connection
+                print("_networkStatus set to \(connection)")
+            } else {
+                print("_networkStatus set to default No connection")
+            }
+            //userLog._networkStatus = self.reachability?.connection ?? Reachability.Connection.none
+            //print("Network status from reachability: \(self.reachability?.connection.description ?? "Reachability is nil")")
+            print("Userlog saving, batteryState: \(userLog.batteryState?.batteryState ?? ""), percentage: \(userLog.batteryState?.batteryPercentage ?? 0), location: (\(userLog.location?.latitude ?? 0), \(userLog.location?.longitude ?? 0)), network: \(userLog.networkStatus)")
+            self.realm.save(object: userLog)
+        }.catch{ error in
+            print(error)
+        }
+    }
+    
     func saveUserLocation(){
-        CLLocationManager.promise().then{ location->Void in
+        CLLocationManager.promise().done{ (locations:[CLLocation]) in
+            guard let location = locations.last else {return}
             let lastLocation = UserLocation()
             lastLocation.latitude = location.coordinate.latitude
             lastLocation.latitude = location.coordinate.longitude
-            let realm = try! Realm()
-            try! realm.write {
-                realm.add(lastLocation)
-            }
+            self.realm.save(object: lastLocation)
             print("User location saved: (\(lastLocation.latitude),\(lastLocation.longitude)) at \(lastLocation.timeStamp)")
+        }.catch { error in
+            print(error)
         }
     }
     
@@ -53,19 +83,19 @@ class UserDataLogger {
     
     //Return download speed in kilobytes/sec
     func getDownloadSpeed()->Promise<Double>{
-        return Promise{ fulfill, reject in
+        return Promise{ seal in
             let url = URL(string: "https://placehold.it/150/92c952")!
             let startDate = Date()
             URLSession.shared.dataTask(with: url, completionHandler: { data, response, error in
                 guard data != nil, error == nil, let response = response else {
-                    reject(error ?? AppErrors.DownloadSpeed.Generic); return
+                    seal.reject(error ?? AppErrors.DownloadSpeed.Generic); return
                 }
                 let expectedContentSize = response.expectedContentLength //content size in bytes
                 guard expectedContentSize > 0 else {
-                    reject(AppErrors.DownloadSpeed.NoHeader); return
+                    seal.reject(AppErrors.DownloadSpeed.NoHeader); return
                 }
                 let responseTime = -startDate.timeIntervalSinceNow //download time in seconds
-                fulfill(Double(expectedContentSize)/1000/responseTime)
+                seal.fulfill(Double(expectedContentSize)/1000/responseTime)
             }).resume()
         }
     }
@@ -91,33 +121,12 @@ class UserDataLogger {
         }
         return NetworkType.Offline
     }
-    
-    func getSignalStrength()->Int?{
-        let libHandle = dlopen ("/System/Library/Frameworks/CoreTelephony.framework/CoreTelephony", RTLD_NOW)
-        let CTGetSignalStrength2 = dlsym(libHandle, "CTGetSignalStrength")
-        
-        typealias CFunction = @convention(c) () -> Int
-        
-        if (CTGetSignalStrength2 != nil) {
-            let fun = unsafeBitCast(CTGetSignalStrength2!, to: CFunction.self)
-            let result = fun()
-            return result
-        }
-        return nil
-    }
 }
 
 enum AppErrors: Error {
     enum DownloadSpeed: String, LocalizedError {
         case NoHeader = "No content-length header in response"
         case Generic = "Can't measure download speed"
-        
-        var errorDescription: String? {
-            return self.rawValue
-        }
-    }
-    enum InstagramErrors: String, LocalizedError {
-        case InvalidToken = "Access token expired"
         
         var errorDescription: String? {
             return self.rawValue
