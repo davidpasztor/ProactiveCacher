@@ -142,7 +142,21 @@ class VideoListViewController: UITableViewController {
             // Create the alert and show it
             let ratingController = UIAlertController(title: "Please rate the video you just watched", customView: ratingView, fallbackMessage: "This should be a cosmos view", preferredStyle: .actionSheet)
             
-            ratingController.addAction(UIAlertAction(title: "Done", style: .default, handler: nil))
+            ratingController.addAction(UIAlertAction(title: "Done", style: .default, handler: { action in
+                let video = self.videos[justWatchedVideoIndex]
+                if let rating = video.rating.value {
+                    CacheServerAPI.shared.rateVideo(with: video.youtubeID, rating: rating, completion: { result in
+                        switch result {
+                            case .success(_):
+                                print("Rating successfully uploaded")
+                            case let .failure(error):
+                                print("Error uploading rating: \(error)")
+                        }
+                    })
+                } else {
+                    print("Done pushed without chosing a rating")
+                }
+            }))
             ratingController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             
             self.present(ratingController, animated: true, completion: nil)

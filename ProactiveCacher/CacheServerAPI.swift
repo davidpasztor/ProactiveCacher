@@ -13,7 +13,7 @@ class CacheServerAPI {
     static let shared = CacheServerAPI()
     private init(){}
     
-    let baseURL = "http://localhost:3000"//"http://35.153.159.19:3000" //"http://localhost:3000"
+    let baseURL = "http://35.153.159.19:3000" //"http://localhost:3000"
     
     var userID:String? {
         get {
@@ -30,10 +30,14 @@ class CacheServerAPI {
         return ["user":userID!]
     }
     
-    func requestWithHeaders(for url:URL, method: String = "GET")->URLRequest{
+    func requestWithHeaders(for url:URL, method: String = "GET", body: Data? = nil)->URLRequest{
         var request = URLRequest(url: url)
         request.allHTTPHeaderFields = headers
         request.httpMethod = method
+        if method == "POST" {
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.httpBody = body
+        }
         return request
     }
     
@@ -84,7 +88,7 @@ class CacheServerAPI {
                 }
                 return
             }
-            guard response.statusCode == 200 || response.statusCode == 206 else {
+            guard response.statusCode == 200 || response.statusCode == 201 else {
                 if response.statusCode == 401 {
                     self.userID = nil
                 }
@@ -138,16 +142,27 @@ class CacheServerAPI {
         uploadVideoRequest.setValue("user", forHTTPHeaderField: headers["user"]!)
         URLSession.shared.dataTask(with: uploadVideoRequest, completionHandler: { data, response, error in
             guard error == nil else {
-                completion(Result.failure(error!)); return
+                DispatchQueue.main.async {
+                    completion(Result.failure(error!))
+                }
+                return
             }
             guard let response = response as? HTTPURLResponse else {
-                completion(Result.failure(CacheServerErrors.CustomMessage("No HTTP response"))); return
+                DispatchQueue.main.async {
+                    completion(Result.failure(CacheServerErrors.CustomMessage("No HTTP response")))
+                }
+                return
             }
-            guard response.statusCode == 200 else {
+            guard response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 202 else {
                 let errorResponse = String(data: data ?? Data(), encoding: .utf8)
-                completion(Result.failure(CacheServerErrors.HTTPFailureResponse(response.statusCode,errorResponse))); return
+                DispatchQueue.main.async {
+                    completion(Result.failure(CacheServerErrors.HTTPFailureResponse(response.statusCode,errorResponse)))
+                }
+                return
             }
-            completion(Result.success(()))
+            DispatchQueue.main.async {
+                completion(Result.success(()))
+            }
         }).resume()
     }
     
@@ -174,6 +189,29 @@ class CacheServerAPI {
             }
             DispatchQueue.main.async {
                 completion(Result.success(htmlString))
+            }
+        }).resume()
+    }
+    
+    func rateVideo(with youtubeID:String, rating:Double, completion: @escaping (Result<()>)->()){
+        let rateVideoUrl = URL(string: "\(baseURL)/videos/rate")!
+        let requestBody = try? JSONSerialization.data(withJSONObject: ["videoID":youtubeID,"rating":rating])
+        URLSession.shared.dataTask(with: requestWithHeaders(for: rateVideoUrl, method: "POST",body: requestBody), completionHandler: { data, response, error in
+            guard error == nil else {
+                DispatchQueue.main.async {
+                    completion(Result.failure(error!))
+                }
+                return
+            }
+            guard let response = response as? HTTPURLResponse else {
+                completion(Result.failure(CacheServerErrors.CustomMessage("No HTTP response"))); return
+            }
+            guard response.statusCode == 200 || response.statusCode == 201 else {
+                let errorResponse = String(data: data ?? Data(), encoding: .utf8)
+                completion(Result.failure(CacheServerErrors.HTTPFailureResponse(response.statusCode,errorResponse))); return
+            }
+            DispatchQueue.main.async {
+                completion(Result.success(()))
             }
         }).resume()
     }
