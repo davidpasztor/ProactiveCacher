@@ -18,7 +18,7 @@ class BatteryStateLog: Object {
 class UserLocation: Object {
     @objc dynamic var latitude:Double = 0
     @objc dynamic var longitude:Double = 0
-    @objc dynamic var timeStamp = Date()
+    @objc dynamic var timeStamp = Date()    // Kept in schemaVersion 3, will be deleted in schemaVersion 4
 }
 
 class UserLog: Object {
@@ -26,7 +26,14 @@ class UserLog: Object {
     @objc dynamic var location: UserLocation?
     @objc dynamic var batteryState: BatteryStateLog?
     @objc dynamic var downloadSpeed:Double = 0
+    // Make _timeStamp a private backing variable, since we want to make it immutable, but Realm properties must be mutable
+    @objc private dynamic var _timeStamp = Date()
+    // Only used as a primaryKey, since a Date object can't be a primary key, so it's safe to make it private, closure initialization is needed since the value is the result of a function call, DateFormatter.string(from:)
+    @objc private dynamic var _timeStampString: String = {
+        return ISO8601DateFormatter().string(from: Date())
+    }()
     
+    // Realm can't store enum values, so need this ignored property to back the private _networkStatus variable
     var networkStatus: Reachability.Connection {
         get {
             return Reachability.Connection(description: _networkStatus)
@@ -34,6 +41,14 @@ class UserLog: Object {
         set(newValue) {
             _networkStatus = newValue.description
         }
+    }
+    
+    var timeStamp:Date {
+        return _timeStamp
+    }
+    
+    override class func primaryKey()->String {
+        return "_timeStampString"
     }
 }
 

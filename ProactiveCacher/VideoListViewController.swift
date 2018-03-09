@@ -30,6 +30,7 @@ class VideoListViewController: UITableViewController {
         refreshControl?.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl?.addTarget(self, action: #selector(VideoListViewController.loadVideos), for: .valueChanged)
         addActivityIndicator(activityIndicator: activityIndicator, view: self.view)
+        // Check for server authorization, if the user is not registered yet, do the registration first
         if CacheServerAPI.shared.userID == nil {
             activityIndicator.startAnimating()
             CacheServerAPI.shared.registerUser(completion: { result in
@@ -50,6 +51,7 @@ class VideoListViewController: UITableViewController {
         UserDataLogger.shared.saveUserLog()
     }
     
+    // Function for loading the list of videos
     @objc func loadVideos(){
         activityIndicator.startAnimating()
         CacheServerAPI.shared.getVideoList(completion: { result in
@@ -92,6 +94,11 @@ class VideoListViewController: UITableViewController {
         self.present(actionController, animated: true, completion: nil)
     }
     
+    /**
+     Add an activity indicator to the specified view. Set Autolayout constraints to keep the indicator in the middle of the screen.
+     - parameter activityIndicator: activityIndicator view to be added
+     - parameter view: UIView to which the activity indicator should be added as a subview
+    */
     func addActivityIndicator(activityIndicator: UIActivityIndicatorView,view:UIView){
         view.addSubview(activityIndicator)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -108,6 +115,10 @@ class VideoListViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    /**
+     Play a video from the specified URL in an AVPlayerViewController. The URL can be both a local or remote URL. The viewcontroller with the video is presented from the main thread, so the function can safely be called from a background thread.
+     - parameter url: URL representing the local or remote location of the video to be played
+    */
     func playVideo(from url:URL){
         DispatchQueue.main.async {
             let playerController = AVPlayerViewController()
@@ -123,13 +134,14 @@ class VideoListViewController: UITableViewController {
         // Present the rating view if the user was watching a video
         if let justWatchedVideoIndex = watchedVideoIndex {
             self.watchedVideoIndex = nil
+            let starCount = 5
             let ratingView = CosmosView()
             ratingView.settings.minTouchRating = 0
-            ratingView.settings.totalStars = 5
+            ratingView.settings.totalStars = starCount
             ratingView.settings.updateOnTouch = true
             ratingView.settings.fillMode = .half
             ratingView.settings.starMargin = 5
-            ratingView.settings.starSize = Double(self.view.frame.width/5)-Double(ratingView.settings.totalStars)*ratingView.settings.starMargin
+            ratingView.settings.starSize = Double(self.view.frame.width/5)-Double(starCount)*ratingView.settings.starMargin
             ratingView.settings.emptyImage = UIImage(named: "GoldStarEmpty")
             ratingView.settings.filledImage = UIImage(named: "GoldStar")
             ratingView.didFinishTouchingCosmos = { rating in
@@ -141,7 +153,10 @@ class VideoListViewController: UITableViewController {
             
             // Create the alert and show it
             let ratingController = UIAlertController(title: "Please rate the video you just watched", customView: ratingView, fallbackMessage: "This should be a cosmos view", preferredStyle: .actionSheet)
-            
+            /*
+            let totalMargin = Double(starCount+1)*ratingView.settings.starMargin
+            ratingView.frame.origin.x = (ratingController.view.frame.width - (CGFloat(starCount)*CGFloat(ratingView.settings.starSize+totalMargin)))/2
+            */
             ratingController.addAction(UIAlertAction(title: "Done", style: .default, handler: { action in
                 let video = self.videos[justWatchedVideoIndex]
                 if let rating = video.rating.value {
@@ -194,12 +209,14 @@ class VideoListViewController: UITableViewController {
             video.youtubeID = videoMetadata.youtubeID
         }
         cell.titleLabel.text = video.title
+        cellDownloadIndicator.startAnimating()
         CacheServerAPI.shared.getThumbnail(for: video.youtubeID, completion: { result in
             if case let .success(thumbnailData) = result {
                 cell.thumbnailImageView.image = UIImage(data: thumbnailData)
             } else if case let .failure(error) = result {
                 print(error)
             }
+            cellDownloadIndicator.stopAnimating()
         })
         return cell
     }

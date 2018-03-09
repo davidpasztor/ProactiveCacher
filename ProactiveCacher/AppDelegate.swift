@@ -18,16 +18,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         //Perform Realm migration if needed
+        let newSchemaVersion: UInt64 = 3
         let config = Realm.Configuration(
             // Set the new schema version. This must be greater than the previously used
             // version (if you've never set a schema version before, the version is 0).
-            schemaVersion: 2,
+            schemaVersion: newSchemaVersion,
             
             // Set the block which will be called automatically when opening a Realm with
             // a schema version lower than the one set above
             migrationBlock: { migration, oldSchemaVersion in
                 // We haven’t migrated anything yet, so oldSchemaVersion == 0
-                if (oldSchemaVersion < 2) {
+                if (oldSchemaVersion < 3 && newSchemaVersion == 3) {
+                    // Need to migrate UserLog objects
+                    migration.enumerateObjects(ofType: UserLog.className(), { oldObject, newObject in
+                        let oldLocation = oldObject!["location"] as! MigrationObject
+                        let timeStamp = oldLocation["timeStamp"] as! Date
+                        newObject!["_timeStampString"] = ISO8601DateFormatter().string(from: timeStamp)
+                    })
+                } else if (oldSchemaVersion < newSchemaVersion) {
                     // Nothing to do!
                     // Realm will automatically detect new properties and removed properties
                     // And will update the schema on disk automatically

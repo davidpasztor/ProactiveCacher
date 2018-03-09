@@ -30,6 +30,13 @@ class CacheServerAPI {
         return ["user":userID!]
     }
     
+    /**
+     Create a URLRequest object from a URL containing all necessary headers for the CacheServer REST API
+     - parameter url: URL representing the API endpoint to call
+     - parameter method: HTTP verb, defaults to GET
+     - parameter body: httpBody to include in the request, defaults to nil, only used for POST requests
+     - returns: URLRequest with the specified URL, authorization headers and httpBody for POST request
+    */
     func requestWithHeaders(for url:URL, method: String = "GET", body: Data? = nil)->URLRequest{
         var request = URLRequest(url: url)
         request.allHTTPHeaderFields = headers
@@ -41,6 +48,10 @@ class CacheServerAPI {
         return request
     }
     
+    /**
+     Register user to the CacheServer API by calling the register endpoint. The userID is generated at random. Only call this method if there's no registered user for this app or if the server responds with HTTP status code 401 for the existing userID.
+     - parameter completion: completion handler returning `Result.success(Void)` in case of success and `Result.failure(Error)` containing the error in case of failure
+    */
     func registerUser(completion: @escaping (Result<()>)->()){
         var registerUrlRequest = URLRequest(url: URL(string: "\(baseURL)/register")!)
         registerUrlRequest.httpMethod = "POST"
@@ -111,6 +122,11 @@ class CacheServerAPI {
         }).resume()
     }
     
+    /**
+     Download the thumbnail image for a given video from the API.
+     - parameter video: YouTube ID of the video for which the thumbnail is requested
+     - parameter completion: completion handler returning `Result.success(Data)` containing the thumbnail image data in case of success and `Result.failure(Error)` containing the error in case of failure. The completion closure is called on the main thread, so it is safe to do UI updates from inside the closure in other functions.
+    */
     func getThumbnail(for video:String, completion: @escaping (Result<Data>)->()){
         let getThumbnailUrlString = "\(baseURL)/thumbnail?videoID=\(video)"
         guard let getThumbnailUrl = URL(string: getThumbnailUrlString) else {
@@ -132,6 +148,11 @@ class CacheServerAPI {
         }).resume()
     }
     
+    /**
+     Upload a YouTube video directly from YouTube to the server.
+     - parameter youtubeUrl: YouTube URL of the video to be uploaded. Must be a valid URL pointing to a YouTube video.
+     - parameter completion: completion handler returning `Result.success(Void)` in case of success and `Result.failure(Error)` containing the error in case of failure
+     */
     func uploadVideo(with youtubeUrl:URL,completion: @escaping (Result<Void>)->()){
         let uploadVideoUrl = URL(string: "\(baseURL)/storage")!
         var uploadVideoRequest = URLRequest(url: uploadVideoUrl)
@@ -166,33 +187,11 @@ class CacheServerAPI {
         }).resume()
     }
     
-    func streamVideo(with youtubeID:String, completion: @escaping (Result<String>)->()){
-        let streamVideoUrlString = "\(baseURL)/startStream?videoID=\(youtubeID)"
-        guard let streamVideoUrl = URL(string: streamVideoUrlString) else {
-            DispatchQueue.main.async {
-                completion(Result.failure(CacheServerErrors.IncorrectURL(streamVideoUrlString)))
-            }
-            return
-        }
-        URLSession.shared.dataTask(with: requestWithHeaders(for: streamVideoUrl), completionHandler: { data, response, error in
-            guard let data = data, error == nil else {
-                DispatchQueue.main.async {
-                    completion(Result.failure(error!))
-                }
-                return
-            }
-            guard let htmlString = String(data: data, encoding: .utf8) else {
-                DispatchQueue.main.async {
-                    completion(Result.failure(CacheServerErrors.CustomMessage("Couldn't convert stream response to HTML String")))
-                }
-                return
-            }
-            DispatchQueue.main.async {
-                completion(Result.success(htmlString))
-            }
-        }).resume()
-    }
-    
+    /**
+     Upload a rating from the user for a specific video.
+     - parameter youtubeID: YouTube ID of the video the user just rated
+     - parameter completion: completion handler returning `Result.success(Void)` in case of success and `Result.failure(Error)` containing the error in case of failure
+     */
     func rateVideo(with youtubeID:String, rating:Double, completion: @escaping (Result<()>)->()){
         let rateVideoUrl = URL(string: "\(baseURL)/videos/rate")!
         let requestBody = try? JSONSerialization.data(withJSONObject: ["videoID":youtubeID,"rating":rating])

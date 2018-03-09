@@ -41,7 +41,7 @@ class UserDataLogger {
             }
             //userLog._networkStatus = self.reachability?.connection ?? Reachability.Connection.none
             //print("Network status from reachability: \(self.reachability?.connection.description ?? "Reachability is nil")")
-            print("Userlog saving, batteryState: \(userLog.batteryState?.batteryState ?? ""), percentage: \(userLog.batteryState?.batteryPercentage ?? 0), location: (\(userLog.location?.latitude ?? 0), \(userLog.location?.longitude ?? 0)), network: \(userLog.networkStatus)")
+            print("Userlog saving, batteryState: \(userLog.batteryState?.batteryState ?? ""), percentage: \(userLog.batteryState?.batteryPercentage ?? 0), location: (\(userLog.location?.latitude ?? 0), \(userLog.location?.longitude ?? 0)), network: \(userLog.networkStatus) at \(userLog.timeStamp)")
             self.realm.save(object: userLog)
         }.catch{ error in
             print(error)
@@ -55,7 +55,7 @@ class UserDataLogger {
             lastLocation.latitude = location.coordinate.latitude
             lastLocation.latitude = location.coordinate.longitude
             self.realm.save(object: lastLocation)
-            print("User location saved: (\(lastLocation.latitude),\(lastLocation.longitude)) at \(lastLocation.timeStamp)")
+            print("User location saved: (\(lastLocation.latitude),\(lastLocation.longitude))")
         }.catch { error in
             print(error)
         }
