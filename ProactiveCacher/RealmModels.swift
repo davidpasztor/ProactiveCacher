@@ -18,7 +18,6 @@ class BatteryStateLog: Object {
 class UserLocation: Object {
     @objc dynamic var latitude:Double = 0
     @objc dynamic var longitude:Double = 0
-    @objc dynamic var timeStamp = Date()    // Kept in schemaVersion 3, will be deleted in schemaVersion 4
 }
 
 class UserLog: Object {

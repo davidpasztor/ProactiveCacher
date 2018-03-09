@@ -39,8 +39,6 @@ class UserDataLogger {
             } else {
                 print("_networkStatus set to default No connection")
             }
-            //userLog._networkStatus = self.reachability?.connection ?? Reachability.Connection.none
-            //print("Network status from reachability: \(self.reachability?.connection.description ?? "Reachability is nil")")
             print("Userlog saving, batteryState: \(userLog.batteryState?.batteryState ?? ""), percentage: \(userLog.batteryState?.batteryPercentage ?? 0), location: (\(userLog.location?.latitude ?? 0), \(userLog.location?.longitude ?? 0)), network: \(userLog.networkStatus) at \(userLog.timeStamp)")
             self.realm.save(object: userLog)
         }.catch{ error in
