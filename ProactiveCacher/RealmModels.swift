@@ -10,12 +10,12 @@ import Foundation
 import RealmSwift
 import Reachability
 
-class BatteryStateLog: Object {
+class BatteryStateLog: Object, Encodable {
     @objc dynamic var batteryPercentage:Int = 0
     @objc dynamic var batteryState = ""
 }
 
-class UserLocation: Object {
+class UserLocation: Object, Encodable {
     @objc dynamic var latitude:Double = 0
     @objc dynamic var longitude:Double = 0
 }
@@ -48,6 +48,20 @@ class UserLog: Object {
     
     override class func primaryKey()->String {
         return "_timeStampString"
+    }
+}
+
+extension UserLog: Encodable {
+    private enum CodingKeys: String, CodingKey {
+        case networkStatus, location, batteryState, timeStamp
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(_networkStatus, forKey: .networkStatus)
+        try container.encode(location, forKey: .location)
+        try container.encode(batteryState, forKey: .batteryState)
+        try container.encode(_timeStampString, forKey: .timeStamp)
     }
 }
 

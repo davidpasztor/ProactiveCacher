@@ -49,6 +49,15 @@ class VideoListViewController: UITableViewController {
             loadVideos()
         }
         UserDataLogger.shared.saveUserLog()
+        let userLogs = try! Realm().objects(UserLog.self)
+        CacheServerAPI.shared.uploadUserLogs(Array(userLogs), completion: { result in
+            switch result {
+            case .success(_):
+                print("Success uploading userlogs")
+            case let .failure(error):
+                print(error)
+            }
+        })
     }
     
     // Function for loading the list of videos

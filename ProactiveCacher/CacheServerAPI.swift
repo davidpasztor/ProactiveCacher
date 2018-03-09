@@ -20,7 +20,6 @@ class CacheServerAPI {
             return UserDefaults.standard.string(forKey: "CacheServerUserID")
         }
         set(newValue){
-            print("Setting userID to \(newValue ?? "nil")")
             UserDefaults.standard.set(newValue, forKey: "CacheServerUserID")
         }
     }
@@ -213,6 +212,46 @@ class CacheServerAPI {
                 completion(Result.success(()))
             }
         }).resume()
+    }
+    
+    /**
+     Upload one or more UserLog objects to the server. The UserLogs are added to the User corresponding to the userID in the request header.
+     - parameter logs: UserLogs to upload
+     - parameter completion: completion handler returning `Result.success(Void)` in case of success and `Result.failure(Error)` containing the error in case of failure
+     */
+    func uploadUserLogs(_ logs:[UserLog], completion: @escaping (Result<()>)->()){
+        let userLogsUrl = URL(string: "\(baseURL)/userlogs")!
+        do {
+            let requestBody = try JSONEncoder().encode(logs)
+            let userLogsUploadRequest = requestWithHeaders(for: userLogsUrl, method: "POST", body: requestBody)
+            URLSession.shared.dataTask(with: userLogsUploadRequest, completionHandler: { data, response, error in
+                guard error == nil else {
+                    DispatchQueue.main.async {
+                        completion(Result.failure(error!))
+                    }
+                    return
+                }
+                guard let response = response as? HTTPURLResponse else {
+                    completion(Result.failure(CacheServerErrors.CustomMessage("No HTTP response"))); return
+                }
+                guard response.statusCode == 200 || response.statusCode == 201 else {
+                    let errorResponse = String(data: data ?? Data(), encoding: .utf8)
+                    completion(Result.failure(CacheServerErrors.HTTPFailureResponse(response.statusCode,errorResponse))); return
+                }
+                DispatchQueue.main.async {
+                    completion(Result.success(()))
+                }
+            }).resume()
+        } catch {
+            DispatchQueue.main.async {
+                completion(.failure(error))
+            }
+            return
+        }
+    }
+    
+    func uploadUserLogs(_ logs:UserLog, completion: @escaping (Result<()>)->()){
+        uploadUserLogs([logs], completion: completion)
     }
 }
 
