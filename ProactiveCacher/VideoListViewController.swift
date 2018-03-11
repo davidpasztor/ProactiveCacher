@@ -49,11 +49,14 @@ class VideoListViewController: UITableViewController {
             loadVideos()
         }
         UserDataLogger.shared.saveUserLog()
-        let userLogs = try! Realm().objects(UserLog.self)
+        let realm = try! Realm()
+        let userLogs = realm.objects(UserLog.self).filter("syncedToBackend == false")
         CacheServerAPI.shared.uploadUserLogs(Array(userLogs), completion: { result in
             switch result {
             case .success(_):
-                print("Success uploading userlogs")
+                try! realm.write {
+                    userLogs.forEach({$0.syncedToBackend = true})
+                }
             case let .failure(error):
                 print(error)
             }
@@ -150,7 +153,9 @@ class VideoListViewController: UITableViewController {
             ratingView.settings.updateOnTouch = true
             ratingView.settings.fillMode = .half
             ratingView.settings.starMargin = 5
-            ratingView.settings.starSize = Double(self.view.frame.width/5)-Double(starCount)*ratingView.settings.starMargin
+            // Stars were still slightly too big, since the UIAlertController's width is smaller than the screen width, so added a constant 20 value, which seems to be the padding value on all devices, but if the app will support iPad, this will need to change, since an alert isn't full screen there
+            // However, the starSize need to be known before creating the UIAlertController, since intrinsically the UIAlertController sizes itself to fit the customView when it's initialized
+            ratingView.settings.starSize = (Double(self.view.frame.width-20)-Double(starCount+1)*ratingView.settings.starMargin)/Double(starCount)
             ratingView.settings.emptyImage = UIImage(named: "GoldStarEmpty")
             ratingView.settings.filledImage = UIImage(named: "GoldStar")
             ratingView.didFinishTouchingCosmos = { rating in
@@ -162,10 +167,6 @@ class VideoListViewController: UITableViewController {
             
             // Create the alert and show it
             let ratingController = UIAlertController(title: "Please rate the video you just watched", customView: ratingView, fallbackMessage: "This should be a cosmos view", preferredStyle: .actionSheet)
-            /*
-            let totalMargin = Double(starCount+1)*ratingView.settings.starMargin
-            ratingView.frame.origin.x = (ratingController.view.frame.width - (CGFloat(starCount)*CGFloat(ratingView.settings.starSize+totalMargin)))/2
-            */
             ratingController.addAction(UIAlertAction(title: "Done", style: .default, handler: { action in
                 let video = self.videos[justWatchedVideoIndex]
                 if let rating = video.rating.value {

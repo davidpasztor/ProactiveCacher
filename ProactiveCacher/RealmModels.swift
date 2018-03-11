@@ -24,13 +24,13 @@ class UserLog: Object {
     @objc private dynamic var _networkStatus = ""
     @objc dynamic var location: UserLocation?
     @objc dynamic var batteryState: BatteryStateLog?
-    @objc dynamic var downloadSpeed:Double = 0
     // Make _timeStamp a private backing variable, since we want to make it immutable, but Realm properties must be mutable
     @objc private dynamic var _timeStamp = Date()
     // Only used as a primaryKey, since a Date object can't be a primary key, so it's safe to make it private, closure initialization is needed since the value is the result of a function call, DateFormatter.string(from:)
     @objc private dynamic var _timeStampString: String = {
         return ISO8601DateFormatter().string(from: Date())
     }()
+    @objc dynamic var syncedToBackend = false
     
     // Realm can't store enum values, so need this ignored property to back the private _networkStatus variable
     var networkStatus: Reachability.Connection {
