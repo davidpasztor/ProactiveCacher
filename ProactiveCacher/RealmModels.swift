@@ -10,6 +10,46 @@ import Foundation
 import RealmSwift
 import Reachability
 
+class AppUsageLog: Object {
+    static var current: AppUsageLog = {
+        let realm = try! Realm()
+        return realm.objects(AppUsageLog.self).sorted(byKeyPath: "_appOpeningTime", ascending: true).last!
+    }()
+    static var previous: Results<AppUsageLog> = {
+        let realm = try! Realm()
+        let current = AppUsageLog.current
+        return realm.objects(AppUsageLog.self).filter("_appOpeningTime != %@", current._appOpeningTime)
+    }()
+    
+    // Time of the user opening the app
+    @objc private dynamic var _appOpeningTime = Date()
+    @objc private dynamic var _appOpeningTimeString: String = {
+        return ISO8601DateFormatter().string(from: Date())
+    }()
+    // Number of videos watched before quitting the app
+    @objc dynamic var watchedVideosCount = 0
+    
+    var appOpeningTime:Date {
+        return _appOpeningTime
+    }
+    
+    override class func primaryKey() -> String {
+        return "_appOpeningTimeString"
+    }
+}
+
+extension AppUsageLog: Encodable {
+    private enum CodingKeys: String, CodingKey {
+        case appOpeningTime, watchedVideosCount
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(_appOpeningTimeString, forKey: .appOpeningTime)
+        try container.encode(watchedVideosCount, forKey: .watchedVideosCount)
+    }
+}
+
 class BatteryStateLog: Object, Encodable {
     @objc dynamic var batteryPercentage:Int = 0
     @objc dynamic var batteryState = ""
@@ -99,13 +139,14 @@ class Video: Object, Decodable {
 }
 
 extension Realm {
+    // TODO: improve the error handling here
     func save<T:Object>(object:T){
         do {
             try self.write {
                 self.add(object)
             }
         } catch {
-            print(error)
+            print("Error creating Realm object, \(error)")
         }
     }
     
@@ -115,7 +156,7 @@ extension Realm {
                 self.add(object, update: update)
             }
         } catch {
-            print(error)
+            print("Error \(update ? "updating" : "creating") Realm object, \(error)")
         }
     }
 }

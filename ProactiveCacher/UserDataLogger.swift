@@ -42,7 +42,7 @@ class UserDataLogger {
             print("Userlog saving, batteryState: \(userLog.batteryState?.batteryState ?? ""), percentage: \(userLog.batteryState?.batteryPercentage ?? 0), location: (\(userLog.location?.latitude ?? 0), \(userLog.location?.longitude ?? 0)), network: \(userLog.networkStatus) at \(userLog.timeStamp)")
             self.realm.save(object: userLog)
         }.catch{ error in
-            print(error)
+            print("Cannot save UserLog: ",error)
         }
     }
     
@@ -55,7 +55,7 @@ class UserDataLogger {
             self.realm.save(object: lastLocation)
             print("User location saved: (\(lastLocation.latitude),\(lastLocation.longitude))")
         }.catch { error in
-            print(error)
+            print("Cannot save userlocation",error)
         }
     }
     
@@ -118,6 +118,18 @@ class UserDataLogger {
             }
         }
         return NetworkType.Offline
+    }
+    
+    func createAppAccessLog()->Result<Void>{
+        do {
+            let realm = try Realm()
+            try realm.write {
+                realm.add(AppUsageLog())
+            }
+            return .success(())
+        } catch {
+            return .failure(error)
+        }
     }
 }
 

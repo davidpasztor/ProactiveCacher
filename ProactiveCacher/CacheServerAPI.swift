@@ -13,7 +13,8 @@ class CacheServerAPI {
     static let shared = CacheServerAPI()
     private init(){}
     
-    let baseURL = "http://35.153.159.19:3000" //"http://localhost:3000"
+    let baseURL = "http://localhost:3000"
+    //let baseURL = "http://35.153.159.19:3000"
     
     var userID:String? {
         get {
@@ -159,7 +160,7 @@ class CacheServerAPI {
         //uploadVideoRequest.httpBody = try? JSONEncoder().encode(["url":youtubeUrl])
         uploadVideoRequest.httpBody = try? JSONSerialization.data(withJSONObject: ["url":youtubeUrl.absoluteString])
         uploadVideoRequest.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
-        uploadVideoRequest.setValue("user", forHTTPHeaderField: headers["user"]!)
+        uploadVideoRequest.setValue(headers["user"]!, forHTTPHeaderField: "user")
         URLSession.shared.dataTask(with: uploadVideoRequest, completionHandler: { data, response, error in
             guard error == nil else {
                 DispatchQueue.main.async {
@@ -202,11 +203,17 @@ class CacheServerAPI {
                 return
             }
             guard let response = response as? HTTPURLResponse else {
-                completion(Result.failure(CacheServerErrors.CustomMessage("No HTTP response"))); return
+                DispatchQueue.main.async {
+                    completion(Result.failure(CacheServerErrors.CustomMessage("No HTTP response")))
+                }
+                return
             }
             guard response.statusCode == 200 || response.statusCode == 201 else {
                 let errorResponse = String(data: data ?? Data(), encoding: .utf8)
-                completion(Result.failure(CacheServerErrors.HTTPFailureResponse(response.statusCode,errorResponse))); return
+                DispatchQueue.main.async {
+                    completion(Result.failure(CacheServerErrors.HTTPFailureResponse(response.statusCode,errorResponse)))
+                }
+                return
             }
             DispatchQueue.main.async {
                 completion(Result.success(()))
@@ -232,11 +239,17 @@ class CacheServerAPI {
                     return
                 }
                 guard let response = response as? HTTPURLResponse else {
-                    completion(Result.failure(CacheServerErrors.CustomMessage("No HTTP response"))); return
+                    DispatchQueue.main.async {
+                        completion(Result.failure(CacheServerErrors.CustomMessage("No HTTP response")))
+                    }
+                    return
                 }
                 guard response.statusCode == 200 || response.statusCode == 201 else {
                     let errorResponse = String(data: data ?? Data(), encoding: .utf8)
-                    completion(Result.failure(CacheServerErrors.HTTPFailureResponse(response.statusCode,errorResponse))); return
+                    DispatchQueue.main.async {
+                        completion(Result.failure(CacheServerErrors.HTTPFailureResponse(response.statusCode,errorResponse)))
+                    }
+                    return
                 }
                 DispatchQueue.main.async {
                     completion(Result.success(()))
@@ -252,6 +265,48 @@ class CacheServerAPI {
     
     func uploadUserLogs(_ logs:UserLog, completion: @escaping (Result<()>)->()){
         uploadUserLogs([logs], completion: completion)
+    }
+    
+    /**
+     Upload one or more AppUsageLog objects to the server. The AppUsageLog are added to the User corresponding to the userID in the request header.
+     - parameter logs: AppUsageLogs to upload
+     - parameter completion: completion handler returning `Result.success(Void)` in case of success and `Result.failure(Error)` containing the error in case of failure
+     */
+    func uploadAppUsageLogs(_ logs:[AppUsageLog], completion: @escaping (Result<()>)->()){
+        let appLogsUrl = URL(string: "\(baseURL)/applogs")!
+        do {
+            let requestBody = try JSONEncoder().encode(logs)
+            let appLogsUploadRequest = requestWithHeaders(for: appLogsUrl, method: "POST", body: requestBody)
+            URLSession.shared.dataTask(with: appLogsUploadRequest, completionHandler: { data, response, error in
+                guard error == nil else {
+                    DispatchQueue.main.async {
+                        completion(Result.failure(error!))
+                    }
+                    return
+                }
+                guard let response = response as? HTTPURLResponse else {
+                    DispatchQueue.main.async {
+                        completion(Result.failure(CacheServerErrors.CustomMessage("No HTTP response")))
+                    }
+                    return
+                }
+                guard response.statusCode == 200 || response.statusCode == 201 else {
+                    let errorResponse = String(data: data ?? Data(), encoding: .utf8)
+                    DispatchQueue.main.async {
+                        completion(Result.failure(CacheServerErrors.HTTPFailureResponse(response.statusCode,errorResponse)))
+                    }
+                    return
+                }
+                DispatchQueue.main.async {
+                    completion(Result.success(()))
+                }
+            }).resume()
+        } catch {
+            DispatchQueue.main.async {
+                completion(.failure(error))
+            }
+            return
+        }
     }
 }
 

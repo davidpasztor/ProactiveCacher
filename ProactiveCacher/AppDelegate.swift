@@ -50,12 +50,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let _ = try! Realm()
         debugPrint("Realm location: \(Realm.Configuration.defaultConfiguration.fileURL!)")
         
+        // Save the opening time of the app for future caching decisions
+        let appAccessLog = UserDataLogger.shared.createAppAccessLog()
+        switch appAccessLog {
+        case let .failure(error):
+            print("Error creating app access log : \(error)")
+        case .success(_):
+            print("App access log successfully created")
+        }
+        
+        //Upload the previous app usage logs to the backend
+        let previousAppUsageLogs = AppUsageLog.previous
+        print("There are \(previousAppUsageLogs.count) app usage logs to upload")
+        if previousAppUsageLogs.count > 0 {
+            CacheServerAPI.shared.uploadAppUsageLogs(Array(previousAppUsageLogs), completion: { result in
+                switch result {
+                case .success(_):
+                    let realm = try! Realm()
+                    try! Realm().write {
+                        realm.delete(previousAppUsageLogs)
+                    }
+                    print("App usage logs uploaded successfully and deleted from Realm")
+                case let .failure(error):
+                    print("App usage logs upload failed with \(error)")
+                }
+            })
+        }
+        
         do {
             // Videos have sound even if the phone in silent mode
             try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
             try AVAudioSession.sharedInstance().setActive(true)
         } catch {
-            print(error)
+            print("Can't set up AVAudioSession properties, ",error)
         }
         
         return true

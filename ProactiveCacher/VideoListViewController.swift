@@ -39,9 +39,10 @@ class VideoListViewController: UITableViewController {
                     self.loadVideos()
                 case let .failure(error):
                     if case let CacheServerErrors.HTTPFailureResponse(statusCode, _) = error, statusCode == 401 {
+                        print("Error 401 when registering user, resetting userID")
                         CacheServerAPI.shared.userID = nil
                     }
-                    print(error)
+                    print("Error registering user: ",error)
                 }
                 self.activityIndicator.stopAnimating()
             })
@@ -58,7 +59,7 @@ class VideoListViewController: UITableViewController {
                     userLogs.forEach({$0.syncedToBackend = true})
                 }
             case let .failure(error):
-                print(error)
+                print("Error uploading userlogs: ",error)
             }
         })
     }
@@ -72,7 +73,7 @@ class VideoListViewController: UITableViewController {
                 self.videos = videos
                 self.tableView.reloadData()
             case let .failure(error):
-                print(error)
+                print("Error loading videos: ",error)
             }
             self.activityIndicator.stopAnimating()
             self.refreshControl?.endRefreshing()
@@ -90,9 +91,10 @@ class VideoListViewController: UITableViewController {
                 CacheServerAPI.shared.uploadVideo(with: youtubeUrl, completion: { result in
                     switch result {
                         case .success(_):
-                            print("Upload successfully started!")
+                            print("Video upload successfully started!")
                         case let .failure(error):
-                            print("Upload failed with error: \(error)")
+                            //let errorController =
+                            print("Video upload failed with error: \(error)")
                     }
                 })
             } else {
@@ -161,7 +163,6 @@ class VideoListViewController: UITableViewController {
             ratingView.didFinishTouchingCosmos = { rating in
                 self.videos[justWatchedVideoIndex].rating.value = rating
             }
-            // Set the custom view to a fixed height. In a real world application, you could use autolayouted content for height constraints
             ratingView.translatesAutoresizingMaskIntoConstraints = false
             ratingView.addConstraint(NSLayoutConstraint(item: ratingView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: CGFloat(ratingView.settings.starSize)))
             
@@ -179,7 +180,7 @@ class VideoListViewController: UITableViewController {
                         }
                     })
                 } else {
-                    print("Done pushed without chosing a rating")
+                    print("Done pushed without choosing a rating")
                 }
             }))
             ratingController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -219,12 +220,14 @@ class VideoListViewController: UITableViewController {
             video.youtubeID = videoMetadata.youtubeID
         }
         cell.titleLabel.text = video.title
+        cell.titleLabel.backgroundColor = UIColor(white: 1, alpha: 0.75)
+        cell.titleLabel.textColor = UIColor(red: 33/255, green: 33/255, blue: 33/255, alpha: 1)
         cellDownloadIndicator.startAnimating()
         CacheServerAPI.shared.getThumbnail(for: video.youtubeID, completion: { result in
             if case let .success(thumbnailData) = result {
                 cell.thumbnailImageView.image = UIImage(data: thumbnailData)
             } else if case let .failure(error) = result {
-                print(error)
+                print("Error getting video thumbnail: ",error)
             }
             cellDownloadIndicator.stopAnimating()
         })
@@ -235,6 +238,9 @@ class VideoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let videoMetadata = videos[indexPath.row]
         let realm = try! Realm()
+        try! realm.write {
+            AppUsageLog.current.watchedVideosCount += 1
+        }
         var video:Video
         if let fetchedVideo = realm.object(ofType: Video.self, forPrimaryKey: videoMetadata.youtubeID) {
             video = fetchedVideo
