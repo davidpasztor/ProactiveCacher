@@ -13,8 +13,8 @@ class CacheServerAPI {
     static let shared = CacheServerAPI()
     private init(){}
     
-    let baseURL = "http://localhost:3000"
-    //let baseURL = "http://35.153.159.19:3000"
+    //let baseURL = "http://localhost:3000"
+    let baseURL = "http://35.153.159.19:3000"
     
     var userID:String? {
         get {

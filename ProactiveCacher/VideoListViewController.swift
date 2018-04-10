@@ -73,7 +73,14 @@ class VideoListViewController: UITableViewController {
                 self.videos = videos
                 self.tableView.reloadData()
             case let .failure(error):
-                print("Error loading videos: ",error)
+                if case let CacheServerErrors.HTTPFailureResponse(statusCode, _) = error, statusCode == 401 {
+                    print("Error 401 when registering user, resetting userID")
+                    CacheServerAPI.shared.userID = nil
+                    //Trigger video loading and registration again
+                    self.viewDidLoad()
+                } else {
+                    print("Error loading videos: ",error)
+                }
             }
             self.activityIndicator.stopAnimating()
             self.refreshControl?.endRefreshing()
