@@ -134,9 +134,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let appState = application.applicationState
         print("Remote notification received with userInfo: \(userInfo)")
         if appState == .background || (appState == .inactive && !appIsStarting) {
-            // Create UserLog and upload it to server
+            // Create UserLog
             if userInfo["message"] as? String == "Network Available" {
-                // call completion handler once userlog is saved and uploaded
                 UserDataLogger.shared.saveUserLogWithoutLocation()
                 completionHandler(.noData)
             } else if let videoID = userInfo["videoID"] as? String {   // Download pushed video

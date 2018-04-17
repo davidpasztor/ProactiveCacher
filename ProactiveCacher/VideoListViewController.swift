@@ -71,8 +71,10 @@ class VideoListViewController: UITableViewController {
             switch result {
             case let .success(videos):
                 let realm = try! Realm()
+                // Only add videos to Realm that weren't already added in order to avoid overwriting already cached videos
+                let newVideos = videos.filter({videoFromServer in self.videos.filter("youtubeID == %@",videoFromServer.youtubeID).count == 0})
                 try! realm.write {
-                    realm.add(videos, update: true)
+                    realm.add(newVideos)
                 }
                 self.tableView.reloadData()
             case let .failure(error):
@@ -266,13 +268,17 @@ class VideoListViewController: UITableViewController {
         var video:Video
         if let fetchedVideo = realm.object(ofType: Video.self, forPrimaryKey: videoMetadata.youtubeID) {
             video = fetchedVideo
-            if let filePathString = video.filePath, let filePath = URL(string: filePathString) {
-                self.playVideo(from: filePath)
-            }
         } else {
             video = Video()
             video.title = videoMetadata.title
             video.youtubeID = videoMetadata.youtubeID
+        }
+        // If video is already cached, play it from local path
+        if let filePathString = video.filePath, let filePath = URL(string: filePathString) {
+            print("Playing video from disk at: \(filePath)")
+            self.playVideo(from: filePath)
+        } else {
+            //Otherwise stream it from the server
             let streamUrlString = "\(CacheServerAPI.shared.baseURL)/stream?videoID=\(video.youtubeID)&user=\(CacheServerAPI.shared.userID!)"
             guard let streamURL = URL(string: streamUrlString) else {
                 print("Invalid streamURL: \(streamUrlString)"); return
