@@ -50,6 +50,7 @@ class VideoListViewController: UITableViewController {
             loadVideos()
         }
         UserDataLogger.shared.saveUserLog()
+        // Upload UserLogs to the server
         let realm = try! Realm()
         let userLogs = realm.objects(UserLog.self).filter("syncedToBackend == false")
         CacheServerAPI.shared.uploadUserLogs(Array(userLogs), completion: { result in
@@ -225,7 +226,6 @@ class VideoListViewController: UITableViewController {
         // Check if the video has already been downloaded or not
         let videoMetadata = videos[indexPath.row]
         let realm = try! Realm()
-        // If the video is already cached, load its thumbnail from the local storage
         var video:Video
         if let fetchedVideo = realm.object(ofType: Video.self, forPrimaryKey: videoMetadata.youtubeID) {
             video = fetchedVideo
@@ -242,9 +242,11 @@ class VideoListViewController: UITableViewController {
         }
         cell.titleLabel.backgroundColor = UIColor(white: 1, alpha: 0.75)
         cell.titleLabel.textColor = UIColor(red: 33/255, green: 33/255, blue: 33/255, alpha: 1)
-        if let thumbnailPath = video.thumbnailPath {
-            cell.thumbnailImageView.image = UIImage(contentsOfFile: thumbnailPath)
+        // If the video is already cached, load its thumbnail from the local storage
+        if let absoluteThumbnailUrl = video.absoluteThumbnailURL {
+            cell.thumbnailImageView.image = UIImage(contentsOfFile: absoluteThumbnailUrl.path)
         } else {
+            // Otherwise load it from the server
             cellDownloadIndicator.startAnimating()
             CacheServerAPI.shared.getThumbnail(for: video.youtubeID, completion: { result in
                 if case let .success(thumbnailData) = result {
@@ -274,9 +276,8 @@ class VideoListViewController: UITableViewController {
             video.youtubeID = videoMetadata.youtubeID
         }
         // If video is already cached, play it from local path
-        if let filePathString = video.filePath, let filePath = URL(string: filePathString) {
-            print("Playing video from disk at: \(filePath)")
-            self.playVideo(from: filePath)
+        if let absoluteFileURL = video.absoluteFileURL {
+            self.playVideo(from: absoluteFileURL)
         } else {
             //Otherwise stream it from the server
             let streamUrlString = "\(CacheServerAPI.shared.baseURL)/stream?videoID=\(video.youtubeID)&user=\(CacheServerAPI.shared.userID!)"

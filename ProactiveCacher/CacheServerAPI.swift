@@ -353,27 +353,14 @@ class CacheServerAPI {
                     return
                 }
                 do {
-                    let videosDirectory = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("videos", isDirectory: true)
-                    if !FileManager.default.fileExists(atPath: videosDirectory.path){
-                        try FileManager.default.createDirectory(at: videosDirectory, withIntermediateDirectories: false)
-                    }
-                    let videoUrl = videosDirectory.appendingPathComponent(videoID).appendingPathExtension("mp4")
+                    let videosDirectory = try FileManager.default.videosDirectory()
+                    let relativeVideoPath = "\(videoID).mp4"
                     //Need to refetch video to avoid access from incorrect thread error
                     let realm = try! Realm()
                     let video = realm.object(ofType: Video.self, forPrimaryKey: videoID)
-                    //TODO: was only needed for debugging incorrect first implementation
-                    if FileManager.default.fileExists(atPath: videoUrl.path) {
-                        //let videoThreadSafeReference = ThreadSafeReference(to: video)
-                        //video = realm.resolve(videoThreadSafeReference)!
-                        try! realm.write {
-                            video?.filePath = videoUrl.path
-                        }
-                    }
-                    //end TODO
-                    try data.write(to: videoUrl)
-                    //video = realm.resolve(videoThreadSafeReference)!
+                    try data.write(to: videosDirectory.appendingPathComponent(relativeVideoPath))
                     try! realm.write {
-                        video?.filePath = videoUrl.path
+                        video?.filePath = relativeVideoPath
                     }
                     videoResult = .success(())
                 } catch {
@@ -385,32 +372,18 @@ class CacheServerAPI {
         // Cache the thumbnail if it wasn't already cached
         if video.thumbnailPath == nil {
             cacheDispatchGroup.enter()
-            //let videoThreadSafeReference = ThreadSafeReference(to: video)
             // Getting the thumbnail
             CacheServerAPI.shared.getThumbnail(for: videoID,using: backgroundUrlSession, completion: { result in
                 if case let .success(thumbnailData) = result {
                     do {
-                        let thumbnailsDirectory = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("thumbnails", isDirectory: true)
-                        if !FileManager.default.fileExists(atPath: thumbnailsDirectory.path){
-                            try FileManager.default.createDirectory(at: thumbnailsDirectory, withIntermediateDirectories: false)
-                        }
-                        let thumbnailUrl = thumbnailsDirectory.appendingPathComponent(videoID).appendingPathExtension("mp4")
+                        let thumbnailsDirectory = try FileManager.default.thumbnailsDirectory()
+                        let relativeThumbnailPath = "\(videoID).jpg"
                         //Need to refetch video to avoid access from incorrect thread error
                         let realm = try! Realm()
                         let video = realm.object(ofType: Video.self, forPrimaryKey: videoID)
-                        //TODO: was only needed for debugging incorrect first implementation
-                        if FileManager.default.fileExists(atPath: thumbnailUrl.path) {
-                            //let videoThreadSafeReference = ThreadSafeReference(to: video)
-                            //video = realm.resolve(videoThreadSafeReference)!
-                            try! realm.write {
-                                video?.thumbnailPath = thumbnailUrl.path
-                            }
-                        }
-                        //end TODO
-                        try thumbnailData.write(to: thumbnailUrl)
-                        //video = realm.resolve(videoThreadSafeReference)!
+                        try thumbnailData.write(to: thumbnailsDirectory.appendingPathComponent(relativeThumbnailPath))
                         try! realm.write {
-                            video?.thumbnailPath = thumbnailUrl.path
+                            video?.thumbnailPath = relativeThumbnailPath
                         }
                         thumbnailResult = .success(())
                     } catch {

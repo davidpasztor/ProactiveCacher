@@ -114,6 +114,22 @@ class Video: Object, Decodable {
     @objc dynamic var watched = false
     let rating = RealmOptional<Double>()
     
+    var absoluteFileURL:URL? {
+        if let filePath = filePath {
+            return try? FileManager.default.videosDirectory().appendingPathComponent(filePath)
+        } else {
+            return nil
+        }
+    }
+    
+    var absoluteThumbnailURL:URL? {
+        if let thumbnailPath = thumbnailPath {
+            return try? FileManager.default.thumbnailsDirectory().appendingPathComponent(thumbnailPath)
+        } else {
+            return nil
+        }
+    }
+    
     override class func primaryKey()->String {
         return "youtubeID"
     }
@@ -185,5 +201,34 @@ extension List: Codable where List.Element: Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.unkeyedContainer()
         try container.encode(contentsOf: Array(self))
+    }
+}
+
+extension FileManager {
+    /**
+     Get the document directory from the user domain mask. Be aware that the application directory changes on every app launch, so this shouldn't be used as part of persisted absolute URLs.
+     */
+    func documentDirectory() throws -> URL {
+        return try self.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+    }
+    /**
+     Directory for storing Video thumbnails. Found at Application/sandboxID/Documents/thumbnails. If the directory doesn't exist yet, the function also creates it.
+     */
+    func thumbnailsDirectory() throws -> URL {
+        let thumbnailsDirectory = try documentDirectory().appendingPathComponent("thumbnails", isDirectory: true)
+        if !FileManager.default.fileExists(atPath: thumbnailsDirectory.path){
+            try FileManager.default.createDirectory(at: thumbnailsDirectory, withIntermediateDirectories: false)
+        }
+        return thumbnailsDirectory
+    }
+    /**
+     Directory for storing Videos. Found at Application/sandboxID/Documents/videos. If the directory doesn't exist yet, the function also creates it.
+     */
+    func videosDirectory() throws -> URL {
+        let videosDirectory = try documentDirectory().appendingPathComponent("videos", isDirectory: true)
+        if !FileManager.default.fileExists(atPath: videosDirectory.path){
+            try FileManager.default.createDirectory(at: videosDirectory, withIntermediateDirectories: false)
+        }
+        return videosDirectory
     }
 }
