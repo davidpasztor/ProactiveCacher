@@ -40,7 +40,7 @@ class UserDataLogger {
                 print("_networkStatus set to default No connection")
             }
             print("Userlog saving, batteryState: \(userLog.batteryState?.batteryState ?? ""), percentage: \(userLog.batteryState?.batteryPercentage ?? 0), location: (\(userLog.location?.latitude ?? 0), \(userLog.location?.longitude ?? 0)), network: \(userLog.networkStatus) at \(userLog.timeStamp)")
-            self.realm.save(object: userLog)
+            self.realm.saveOrUpdate(object: userLog)
         }.catch{ error in
             print("Cannot save UserLog: ",error)
         }

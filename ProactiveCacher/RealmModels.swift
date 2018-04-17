@@ -28,6 +28,7 @@ class AppUsageLog: Object {
     }()
     // Number of videos watched before quitting the app
     @objc dynamic var watchedVideosCount = 0
+    // TODO: add a property that tracks how many of the watched videos were cached to use as an indicator of the caching efficiency
     
     var appOpeningTime:Date {
         return _appOpeningTime
@@ -171,5 +172,18 @@ extension Reachability.Connection {
         default:
             self = .none
         }
+    }
+}
+
+extension List: Codable where List.Element: Codable {
+    public convenience init(from decoder: Decoder) throws {
+        self.init()
+        var container = try decoder.unkeyedContainer()
+        let array = try container.decode(Array<Element>.self)
+        self.append(objectsIn: array)
+    }
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.unkeyedContainer()
+        try container.encode(contentsOf: Array(self))
     }
 }

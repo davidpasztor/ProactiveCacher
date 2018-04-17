@@ -13,8 +13,9 @@ class CacheServerAPI {
     static let shared = CacheServerAPI()
     private init(){}
     
+    let baseURL = "http://192.168.1.95:3000"
     //let baseURL = "http://localhost:3000"
-    let baseURL = "http://35.153.159.19:3000"
+    //let baseURL = "http://35.153.159.19:3000"
     
     var userID:String? {
         get {
@@ -26,7 +27,11 @@ class CacheServerAPI {
     }
     
     var headers:[String:String] {
-        userID = userID ?? UUID().uuidString
+        #if targetEnvironment(simulator)
+            userID = userID ?? "iOS Simulator"
+        #else
+            userID = userID ?? UUID().uuidString
+        #endif
         return ["user":userID!]
     }
     
