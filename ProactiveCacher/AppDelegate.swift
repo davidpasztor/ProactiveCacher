@@ -88,7 +88,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         // Set up push notifications
-        registerForPushNotifications()
+        if !UIApplication.shared.isRegisteredForRemoteNotifications {
+            registerForPushNotifications()
+        }
         
         // Check if app was launched due to push notification
         if launchOptions?[.remoteNotification] != nil {
@@ -118,23 +120,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let token = deviceToken.map({ return String(format: "%02.2hhx", $0)}).joined()
         print("Device Token: \(token)")
+        CacheServerAPI.shared.userID = token
     }
     
-    func application(_ application: UIApplication,
-                     didFailToRegisterForRemoteNotificationsWithError error: Error) {
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Failed to register: \(error)")
+        let alert = UIAlertController(title: "Couldn't set up push notifications", message: "Push notifications are essential for the use of this application. You might not have internet connection at the moment, please try again setting up the application once you are connected to the internet.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Close app", style: .destructive, handler: { action in fatalError("Failed to registed for remote notifications: \(error)")}))
+        UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         let appState = application.applicationState
+        print("Remote notification received with userInfo: \(userInfo)")
         if appState == .background || (appState == .inactive && !appIsStarting) {
-            let aps = userInfo["aps"] as? [String:Any]
             // Create UserLog and upload it to server
-            if aps?["message"] as? String == "Network Available" {
+            if userInfo["message"] as? String == "Network Available" {
                 // call completion handler once userlog is saved and uploaded
-            } else if let videoID = aps?["videoID"] as? String {   // Download pushed video
-                //perform background fetch
-                //call completion handler
+                UserDataLogger.shared.saveUserLogWithoutLocation()
+                completionHandler(.noData)
+            } else if let videoID = userInfo["videoID"] as? String {   // Download pushed video
+                print("Caching video with ID \(videoID)")
+                CacheServerAPI.shared.cacheVideo(videoID, completion: { thumbnailResult, videoResult  in
+                    switch (thumbnailResult,videoResult) {
+                    case (.success(_),.success(_)):
+                        print("Video and thumbnail cached successfully")
+                        completionHandler(.newData)
+                    case let (.failure(error),.success(_)):
+                        print("Video cached, but failed to cache thumbnail: \(error)")
+                        completionHandler(.newData)
+                    case let (.success(_),.failure(error)):
+                        print("Thumbnail cached, but error caching video: \(error)")
+                        completionHandler(.failed)
+                    case let (.failure(thumbnailError),.failure(videoError)):
+                        print("Error caching video: \(videoError), erro caching thumbnail: \(thumbnailError)")
+                        completionHandler(.failed)
+                    }
+                })
+            } else {
+                print("Unrecognized notification payload: \(userInfo)")
+                completionHandler(.noData)
             }
         } else if appState == .inactive && appIsStarting {
             //User touched notification

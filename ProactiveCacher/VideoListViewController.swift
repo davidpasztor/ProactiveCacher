@@ -17,8 +17,7 @@ class VideoListViewController: UITableViewController {
     @IBOutlet weak var uploadButton: UIBarButtonItem!
     
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-    //var videos:Results<Video>?
-    var videos = [Video]()
+    lazy var videos:Results<Video> = try! Realm().objects(Video.self)
     var watchedVideoIndex: Int? = nil
 
     override func viewDidLoad() {
@@ -30,6 +29,7 @@ class VideoListViewController: UITableViewController {
         refreshControl?.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl?.addTarget(self, action: #selector(VideoListViewController.loadVideos), for: .valueChanged)
         addActivityIndicator(activityIndicator: activityIndicator, view: self.view)
+        // TODO: move this to AppDelegate, since the remote notification token will be used as userID from now on, so registration should happen once that is received
         // Check for server authorization, if the user is not registered yet, do the registration first
         if CacheServerAPI.shared.userID == nil {
             activityIndicator.startAnimating()
@@ -70,7 +70,10 @@ class VideoListViewController: UITableViewController {
         CacheServerAPI.shared.getVideoList(completion: { result in
             switch result {
             case let .success(videos):
-                self.videos = videos
+                let realm = try! Realm()
+                try! realm.write {
+                    realm.add(videos, update: true)
+                }
                 self.tableView.reloadData()
             case let .failure(error):
                 if case let CacheServerErrors.HTTPFailureResponse(statusCode, _) = error, statusCode == 401 {
@@ -155,24 +158,12 @@ class VideoListViewController: UITableViewController {
         // Present the rating view if the user was watching a video
         if let justWatchedVideoIndex = watchedVideoIndex {
             self.watchedVideoIndex = nil
-            let starCount = 5
-            let ratingView = CosmosView()
-            ratingView.settings.minTouchRating = 0
-            ratingView.settings.totalStars = starCount
-            ratingView.settings.updateOnTouch = true
-            ratingView.settings.fillMode = .half
-            ratingView.settings.starMargin = 5
-            // Stars were still slightly too big, since the UIAlertController's width is smaller than the screen width, so added a constant 20 value, which seems to be the padding value on all devices, but if the app will support iPad, this will need to change, since an alert isn't full screen there
-            // However, the starSize need to be known before creating the UIAlertController, since intrinsically the UIAlertController sizes itself to fit the customView when it's initialized
-            ratingView.settings.starSize = (Double(self.view.frame.width-20)-Double(starCount+1)*ratingView.settings.starMargin)/Double(starCount)
-            ratingView.settings.emptyImage = UIImage(named: "GoldStarEmpty")
-            ratingView.settings.filledImage = UIImage(named: "GoldStar")
+            let ratingView = createRatingView()
             ratingView.didFinishTouchingCosmos = { rating in
                 self.videos[justWatchedVideoIndex].rating.value = rating
             }
             ratingView.translatesAutoresizingMaskIntoConstraints = false
             ratingView.addConstraint(NSLayoutConstraint(item: ratingView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: CGFloat(ratingView.settings.starSize)))
-            
             // Create the alert and show it
             let ratingController = UIAlertController(title: "Please rate the video you just watched", customView: ratingView, fallbackMessage: "This should be a cosmos view", preferredStyle: .actionSheet)
             ratingController.addAction(UIAlertAction(title: "Done", style: .default, handler: { action in
@@ -195,6 +186,25 @@ class VideoListViewController: UITableViewController {
             self.present(ratingController, animated: true, completion: nil)
         }
     }
+    
+    /**
+        Create a `CosmosView` for handling the user input for rating the video after the user finished watching it.
+     */
+    func createRatingView() -> CosmosView {
+        let starCount = 5
+        let ratingView = CosmosView()
+        ratingView.settings.minTouchRating = 0
+        ratingView.settings.totalStars = starCount
+        ratingView.settings.updateOnTouch = true
+        ratingView.settings.fillMode = .half
+        ratingView.settings.starMargin = 5
+        // Stars were still slightly too big, since the UIAlertController's width is smaller than the screen width, so added a constant 20 value, which seems to be the padding value on all devices, but if the app will support iPad, this will need to change, since an alert isn't full screen there
+        // However, the starSize need to be known before creating the UIAlertController, since intrinsically the UIAlertController sizes itself to fit the customView when it's initialized
+        ratingView.settings.starSize = (Double(self.view.frame.width-20)-Double(starCount+1)*ratingView.settings.starMargin)/Double(starCount)
+        ratingView.settings.emptyImage = UIImage(named: "GoldStarEmpty")
+        ratingView.settings.filledImage = UIImage(named: "GoldStar")
+        return ratingView
+    }
 
     // MARK: - Table view data source
 
@@ -210,34 +220,39 @@ class VideoListViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "videoCell", for: indexPath) as! VideoTableViewCell
         let cellDownloadIndicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
         addActivityIndicator(activityIndicator: cellDownloadIndicator, view: cell.contentView)
-        // Check it the video has already been downloaded or not
+        // Check if the video has already been downloaded or not
         let videoMetadata = videos[indexPath.row]
         let realm = try! Realm()
         // If the video is already cached, load its thumbnail from the local storage
         var video:Video
         if let fetchedVideo = realm.object(ofType: Video.self, forPrimaryKey: videoMetadata.youtubeID) {
             video = fetchedVideo
-            if let thumbnailPath = video.thumbnailPath {
-                cell.thumbnailImageView.image = UIImage(contentsOfFile: thumbnailPath)
-                return cell // early return to prevent the thumbnail download from happening
-            }
         } else {
             video = Video()
             video.title = videoMetadata.title
             video.youtubeID = videoMetadata.youtubeID
         }
-        cell.titleLabel.text = video.title
+        print("Video filePath: \(video.filePath ?? ""), thumbnailPath: \(video.thumbnailPath ?? "")")
+        if video.filePath != nil {
+            cell.titleLabel.text = "\(video.title) ✅"
+        } else {
+            cell.titleLabel.text = video.title
+        }
         cell.titleLabel.backgroundColor = UIColor(white: 1, alpha: 0.75)
         cell.titleLabel.textColor = UIColor(red: 33/255, green: 33/255, blue: 33/255, alpha: 1)
-        cellDownloadIndicator.startAnimating()
-        CacheServerAPI.shared.getThumbnail(for: video.youtubeID, completion: { result in
-            if case let .success(thumbnailData) = result {
-                cell.thumbnailImageView.image = UIImage(data: thumbnailData)
-            } else if case let .failure(error) = result {
-                print("Error getting video thumbnail: ",error)
-            }
-            cellDownloadIndicator.stopAnimating()
-        })
+        if let thumbnailPath = video.thumbnailPath {
+            cell.thumbnailImageView.image = UIImage(contentsOfFile: thumbnailPath)
+        } else {
+            cellDownloadIndicator.startAnimating()
+            CacheServerAPI.shared.getThumbnail(for: video.youtubeID, completion: { result in
+                if case let .success(thumbnailData) = result {
+                    cell.thumbnailImageView.image = UIImage(data: thumbnailData)
+                } else if case let .failure(error) = result {
+                    print("Error getting video thumbnail: ",error)
+                }
+                cellDownloadIndicator.stopAnimating()
+            })
+        }
         return cell
     }
     

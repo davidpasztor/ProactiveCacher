@@ -7,15 +7,16 @@
 //
 
 import Foundation
+import RealmSwift
 
 class CacheServerAPI {
     //Create singleton instance
     static let shared = CacheServerAPI()
     private init(){}
     
-    let baseURL = "http://192.168.1.95:3000"
-    //let baseURL = "http://localhost:3000"
-    //let baseURL = "http://35.153.159.19:3000"
+    let baseURL = "http://192.168.1.95:3000" // Can only be used for local testing from a real device
+    //let baseURL = "http://localhost:3000" // Can only be used for local testing in the Simulator
+    //let baseURL = "http://35.153.159.19:3000" // AWS server IP address
     
     var userID:String? {
         get {
@@ -130,9 +131,10 @@ class CacheServerAPI {
     /**
      Download the thumbnail image for a given video from the API.
      - parameter video: YouTube ID of the video for which the thumbnail is requested
+     - parameter urlSession: `URLSession` object to use for the `dataTask`. Can be used to allow execution in the background using a background `URLSessionConfiguration`.
      - parameter completion: completion handler returning `Result.success(Data)` containing the thumbnail image data in case of success and `Result.failure(Error)` containing the error in case of failure. The completion closure is called on the main thread, so it is safe to do UI updates from inside the closure in other functions.
     */
-    func getThumbnail(for video:String, completion: @escaping (Result<Data>)->()){
+    func getThumbnail(for video:String,using urlSession:URLSession=URLSession.shared, completion: @escaping (Result<Data>)->()){
         let getThumbnailUrlString = "\(baseURL)/thumbnail?videoID=\(video)"
         guard let getThumbnailUrl = URL(string: getThumbnailUrlString) else {
             DispatchQueue.main.async {
@@ -140,7 +142,7 @@ class CacheServerAPI {
             }
             return
         }
-        URLSession.shared.dataTask(with: requestWithHeaders(for: getThumbnailUrl), completionHandler: { data, response, error in
+        urlSession.dataTask(with: requestWithHeaders(for: getThumbnailUrl), completionHandler: { data, response, error in
             guard let data = data, error == nil else {
                 DispatchQueue.main.async {
                     completion(Result.failure(error!))
@@ -312,6 +314,119 @@ class CacheServerAPI {
             }
             return
         }
+    }
+    
+    /**
+        Save a video along with its thumbnail on disk. The video file and its thumbnail image are saved to disk and the file locations are persisted to the corresponding `Video` object in Realm.
+     - parameter videoID: ID of the video to be downloaded
+     - parameter completion: completion handler returning `Result.success(Void)` in case of success and `Result.failure(Error)` containing the error in case of failure
+     */
+    func cacheVideo(_ videoID:String, completion: @escaping (_ thumbnailDownload:Result<()>,_ videoDownload:Result<()>)->()){
+        // Check if a Video object already exists for the given ID or not
+        var video:Video
+        let realm = try! Realm()
+        if let fetchedVideo = realm.object(ofType: Video.self, forPrimaryKey: videoID) {
+            video = fetchedVideo
+        } else {
+            video = Video()
+        }
+        //let backgroundUrlSession = URLSession(configuration: URLSessionConfiguration.background(withIdentifier: "CacheSession"))
+        let backgroundUrlSession = URLSession.shared
+        let cacheDispatchGroup = DispatchGroup()
+        var thumbnailResult:Result<()> = .failure(AppErrors.Unknown)
+        var videoResult:Result<()> = .failure(AppErrors.Unknown)
+        //TODO: put the two async network requests in a DispatchGroup and only call the completion handler once both succeed
+        // Cache the video if it wasn't already cached
+        if video.filePath == nil {
+            let streamUrlString = "\(CacheServerAPI.shared.baseURL)/stream?videoID=\(video.youtubeID)&user=\(CacheServerAPI.shared.userID!)"
+            guard let streamURL = URL(string: streamUrlString) else {
+                videoResult = .failure(AppErrors.InvalidURL(streamUrlString))
+                return
+            }
+            cacheDispatchGroup.enter()
+            // Download the video
+            //let videoThreadSafeReference = ThreadSafeReference(to: video)
+            backgroundUrlSession.dataTask(with: streamURL, completionHandler: { data, response, error in
+                guard let data = data, error == nil else {
+                    videoResult = .failure(error!)
+                    cacheDispatchGroup.leave()
+                    return
+                }
+                do {
+                    let videosDirectory = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("videos", isDirectory: true)
+                    if !FileManager.default.fileExists(atPath: videosDirectory.path){
+                        try FileManager.default.createDirectory(at: videosDirectory, withIntermediateDirectories: false)
+                    }
+                    let videoUrl = videosDirectory.appendingPathComponent(videoID).appendingPathExtension("mp4")
+                    //Need to refetch video to avoid access from incorrect thread error
+                    let realm = try! Realm()
+                    let video = realm.object(ofType: Video.self, forPrimaryKey: videoID)
+                    //TODO: was only needed for debugging incorrect first implementation
+                    if FileManager.default.fileExists(atPath: videoUrl.path) {
+                        //let videoThreadSafeReference = ThreadSafeReference(to: video)
+                        //video = realm.resolve(videoThreadSafeReference)!
+                        try! realm.write {
+                            video?.filePath = videoUrl.path
+                        }
+                    }
+                    //end TODO
+                    try data.write(to: videoUrl)
+                    //video = realm.resolve(videoThreadSafeReference)!
+                    try! realm.write {
+                        video?.filePath = videoUrl.path
+                    }
+                    videoResult = .success(())
+                } catch {
+                    videoResult = .failure(error)
+                }
+                cacheDispatchGroup.leave()
+            }).resume()
+        }
+        // Cache the thumbnail if it wasn't already cached
+        if video.thumbnailPath == nil {
+            cacheDispatchGroup.enter()
+            //let videoThreadSafeReference = ThreadSafeReference(to: video)
+            // Getting the thumbnail
+            CacheServerAPI.shared.getThumbnail(for: videoID,using: backgroundUrlSession, completion: { result in
+                if case let .success(thumbnailData) = result {
+                    do {
+                        let thumbnailsDirectory = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("thumbnails", isDirectory: true)
+                        if !FileManager.default.fileExists(atPath: thumbnailsDirectory.path){
+                            try FileManager.default.createDirectory(at: thumbnailsDirectory, withIntermediateDirectories: false)
+                        }
+                        let thumbnailUrl = thumbnailsDirectory.appendingPathComponent(videoID).appendingPathExtension("mp4")
+                        //Need to refetch video to avoid access from incorrect thread error
+                        let realm = try! Realm()
+                        let video = realm.object(ofType: Video.self, forPrimaryKey: videoID)
+                        //TODO: was only needed for debugging incorrect first implementation
+                        if FileManager.default.fileExists(atPath: thumbnailUrl.path) {
+                            //let videoThreadSafeReference = ThreadSafeReference(to: video)
+                            //video = realm.resolve(videoThreadSafeReference)!
+                            try! realm.write {
+                                video?.thumbnailPath = thumbnailUrl.path
+                            }
+                        }
+                        //end TODO
+                        try thumbnailData.write(to: thumbnailUrl)
+                        //video = realm.resolve(videoThreadSafeReference)!
+                        try! realm.write {
+                            video?.thumbnailPath = thumbnailUrl.path
+                        }
+                        thumbnailResult = .success(())
+                    } catch {
+                        thumbnailResult = .failure(error)
+                    }
+                } else if case let .failure(error) = result {
+                    thumbnailResult = .failure(error)
+                }
+                cacheDispatchGroup.leave()
+            })
+        }
+        cacheDispatchGroup.notify(queue: DispatchQueue.main, execute: {
+            DispatchQueue.main.async {
+                completion(thumbnailResult,videoResult)
+            }
+        })
     }
 }
 

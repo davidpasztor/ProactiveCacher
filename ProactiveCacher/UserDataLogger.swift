@@ -46,6 +46,19 @@ class UserDataLogger {
         }
     }
     
+    func saveUserLogWithoutLocation(){
+        let userLog = UserLog()
+        userLog.batteryState = getBatteryState()
+        if let connection = self.reachability?.connection {
+            userLog.networkStatus = connection
+            print("_networkStatus set to \(connection)")
+        } else {
+            print("_networkStatus set to default No connection")
+        }
+        print("Userlog saving, batteryState: \(userLog.batteryState?.batteryState ?? ""), percentage: \(userLog.batteryState?.batteryPercentage ?? 0), network: \(userLog.networkStatus) at \(userLog.timeStamp)")
+        self.realm.saveOrUpdate(object: userLog)
+    }
+    
     func saveUserLocation(){
         CLLocationManager.promise().done{ (locations:[CLLocation]) in
             guard let location = locations.last else {return}
@@ -145,4 +158,5 @@ enum AppErrors: Error {
     case InvalidURL(String)
     case Unknown
     case JSONError
+    case FileError
 }
