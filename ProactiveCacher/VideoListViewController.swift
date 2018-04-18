@@ -29,26 +29,7 @@ class VideoListViewController: UITableViewController {
         refreshControl?.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl?.addTarget(self, action: #selector(VideoListViewController.loadVideos), for: .valueChanged)
         addActivityIndicator(activityIndicator: activityIndicator, view: self.view)
-        // TODO: move this to AppDelegate, since the remote notification token will be used as userID from now on, so registration should happen once that is received
-        // Check for server authorization, if the user is not registered yet, do the registration first
-        if CacheServerAPI.shared.userID == nil {
-            activityIndicator.startAnimating()
-            CacheServerAPI.shared.registerUser(completion: { result in
-                switch result {
-                case .success(_):
-                    self.loadVideos()
-                case let .failure(error):
-                    if case let CacheServerErrors.HTTPFailureResponse(statusCode, _) = error, statusCode == 401 {
-                        print("Error 401 when registering user, resetting userID")
-                        CacheServerAPI.shared.userID = nil
-                    }
-                    print("Error registering user: ",error)
-                }
-                self.activityIndicator.stopAnimating()
-            })
-        } else {
-            loadVideos()
-        }
+        loadVideos()
         UserDataLogger.shared.saveUserLog()
         // Upload UserLogs to the server
         let realm = try! Realm()
@@ -79,14 +60,7 @@ class VideoListViewController: UITableViewController {
                 }
                 self.tableView.reloadData()
             case let .failure(error):
-                if case let CacheServerErrors.HTTPFailureResponse(statusCode, _) = error, statusCode == 401 {
-                    print("Error 401 when registering user, resetting userID")
-                    CacheServerAPI.shared.userID = nil
-                    //Trigger video loading and registration again
-                    self.viewDidLoad()
-                } else {
-                    print("Error loading videos: ",error)
-                }
+                print("Error loading videos: ",error)
             }
             self.activityIndicator.stopAnimating()
             self.refreshControl?.endRefreshing()
@@ -163,7 +137,14 @@ class VideoListViewController: UITableViewController {
             self.watchedVideoIndex = nil
             let ratingView = createRatingView()
             ratingView.didFinishTouchingCosmos = { rating in
-                self.videos[justWatchedVideoIndex].rating.value = rating
+                do {
+                    let realm = try Realm()
+                    try realm.write {
+                        self.videos[justWatchedVideoIndex].rating.value = rating
+                    }
+                } catch {
+                    print("Error updating rating for \(self.videos[justWatchedVideoIndex])")
+                }
             }
             ratingView.translatesAutoresizingMaskIntoConstraints = false
             ratingView.addConstraint(NSLayoutConstraint(item: ratingView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: CGFloat(ratingView.settings.starSize)))
@@ -185,7 +166,10 @@ class VideoListViewController: UITableViewController {
                 }
             }))
             ratingController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            
+            // TODO: Needed for iPad - tweak this, the ratingController is completely flawed
+            ratingController.popoverPresentationController?.sourceView = self.view
+            ratingController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+            ratingController.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
             self.present(ratingController, animated: true, completion: nil)
         }
     }

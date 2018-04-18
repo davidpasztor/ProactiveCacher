@@ -77,7 +77,7 @@ class CacheServerAPI {
                 }
                 return
             }
-            guard response.statusCode == 206 else {
+            guard response.statusCode == 201 else {
                 let failureResponse = (try? JSONDecoder().decode([String:String].self, from: data))?["error"]
                 DispatchQueue.main.async {
                     completion(Result.failure(CacheServerErrors.HTTPFailureResponse(response.statusCode,failureResponse)))

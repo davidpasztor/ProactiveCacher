@@ -121,6 +121,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let token = deviceToken.map({ return String(format: "%02.2hhx", $0)}).joined()
         print("Device Token: \(token)")
         CacheServerAPI.shared.userID = token
+        CacheServerAPI.shared.registerUser(completion: { result in
+            switch result {
+            case .success(_):
+                print("Registration successful!")
+            // TODO: create a loading VC and display that until the registration succeeds, only display the VideoListVC once the user is registered
+            // OR simply display an activity indicator on VideoListVC, which is stopped here in the completion handler,also call `loadVideos` from here --> should be able to access VideoListVC by accessing UIApplication.shared.keyWindow?.rootViewController as? VideoListViewController
+            case let .failure(error):
+                if case let CacheServerErrors.HTTPFailureResponse(statusCode, _) = error, statusCode == 401 {
+                    print("Error 401 when registering user")
+                } else {
+                    print("Error registering user: ",error)
+                }
+            }
+        })
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
