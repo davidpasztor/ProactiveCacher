@@ -52,6 +52,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let _ = try! Realm()
         debugPrint("Realm location: \(Realm.Configuration.defaultConfiguration.fileURL!)")
         
+        // Set up push notifications
+        if !UIApplication.shared.isRegisteredForRemoteNotifications {
+            registerForPushNotifications()
+        }
+        
         // Save the opening time of the app for future caching decisions
         let appAccessLog = UserDataLogger.shared.createAppAccessLog()
         switch appAccessLog {
@@ -69,7 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 switch result {
                 case .success(_):
                     let realm = try! Realm()
-                    try! Realm().write {
+                    try! realm.write {
                         realm.delete(previousAppUsageLogs)
                     }
                     print("App usage logs uploaded successfully and deleted from Realm")
@@ -87,11 +92,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("Can't set up AVAudioSession properties, ",error)
         }
         
-        // Set up push notifications
-        if !UIApplication.shared.isRegisteredForRemoteNotifications {
-            registerForPushNotifications()
-        }
-        
         // Check if app was launched due to push notification
         if launchOptions?[.remoteNotification] != nil {
             appIsStarting = true
@@ -105,10 +105,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // TODO: improve this function
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) {
             (granted, error) in
-            print("Permission granted: \(granted)")
+            //print("Permission granted: \(granted)")
             guard granted else { return }
+            //TODO: else display an alert requesting the user to change the notification settings in Settings
             UNUserNotificationCenter.current().getNotificationSettings { (settings) in
-                print("Notification settings: \(settings)")
+                //print("Notification settings: \(settings)")
                 guard settings.authorizationStatus == .authorized else { return }
                 DispatchQueue.main.async {
                     UIApplication.shared.registerForRemoteNotifications()
@@ -121,12 +122,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let token = deviceToken.map({ return String(format: "%02.2hhx", $0)}).joined()
         print("Device Token: \(token)")
         CacheServerAPI.shared.userID = token
+        print("UserID: \(CacheServerAPI.shared.userID!)")
         CacheServerAPI.shared.registerUser(completion: { result in
             switch result {
             case .success(_):
-                print("Registration successful!")
-            // TODO: create a loading VC and display that until the registration succeeds, only display the VideoListVC once the user is registered
-            // OR simply display an activity indicator on VideoListVC, which is stopped here in the completion handler,also call `loadVideos` from here --> should be able to access VideoListVC by accessing UIApplication.shared.keyWindow?.rootViewController as? VideoListViewController
+                print("Registration successful with userID: \(CacheServerAPI.shared.userID!)")
+                let rootVC = UIApplication.shared.keyWindow?.rootViewController
+                if let loadingVC = rootVC as? LoadingViewController {
+                    loadingVC.displayVideos()
+                } else if let navigationVC = rootVC as? UINavigationController, let loadingVC = navigationVC.topViewController as? LoadingViewController {
+                    loadingVC.displayVideos()
+                } else {
+                    print("RootViewController is not LoadingViewController!")
+                    print("RootVC: \(String(describing: UIApplication.shared.keyWindow?.rootViewController))")
+                }
             case let .failure(error):
                 if case let CacheServerErrors.HTTPFailureResponse(statusCode, _) = error, statusCode == 401 {
                     print("Error 401 when registering user")

@@ -10,6 +10,7 @@
 		6301589E202F7A8D00F84147 /* VideoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6301589D202F7A8D00F84147 /* VideoListViewController.swift */; };
 		630158A0202F7AC200F84147 /* VideoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6301589F202F7AC200F84147 /* VideoTableViewCell.swift */; };
 		630158C8204B243B00F84147 /* CacheServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630158C7204B243B00F84147 /* CacheServerAPI.swift */; };
+		637B81EC2088B9B000300B96 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B81EB2088B9B000300B96 /* LoadingViewController.swift */; };
 		63838C151FB60F4B002697D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C141FB60F4B002697D6 /* AppDelegate.swift */; };
 		63838C1A1FB60F4B002697D6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63838C181FB60F4B002697D6 /* Main.storyboard */; };
 		63838C1C1FB60F4B002697D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63838C1B1FB60F4B002697D6 /* Assets.xcassets */; };
@@ -60,6 +61,7 @@
 		6301589D202F7A8D00F84147 /* VideoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListViewController.swift; sourceTree = "<group>"; };
 		6301589F202F7AC200F84147 /* VideoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTableViewCell.swift; sourceTree = "<group>"; };
 		630158C7204B243B00F84147 /* CacheServerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheServerAPI.swift; sourceTree = "<group>"; };
+		637B81EB2088B9B000300B96 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		637FB90B20838AAD003BE2C3 /* ProactiveCacher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ProactiveCacher.entitlements; sourceTree = "<group>"; };
 		63838C111FB60F4B002697D6 /* ProactiveCacher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProactiveCacher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63838C141FB60F4B002697D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -156,6 +158,7 @@
 				63838C181FB60F4B002697D6 /* Main.storyboard */,
 				63838C141FB60F4B002697D6 /* AppDelegate.swift */,
 				630158C7204B243B00F84147 /* CacheServerAPI.swift */,
+				637B81EB2088B9B000300B96 /* LoadingViewController.swift */,
 				63838C501FB61961002697D6 /* RealmModels.swift */,
 				63838C421FB61306002697D6 /* UserDataLogger.swift */,
 				6301589D202F7A8D00F84147 /* VideoListViewController.swift */,
@@ -265,7 +268,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0910;
-				LastUpgradeCheck = 0910;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Pásztor Dávid";
 				TargetAttributes = {
 					63838C101FB60F4B002697D6 = {
@@ -502,6 +505,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				637B81EC2088B9B000300B96 /* LoadingViewController.swift in Sources */,
 				6301589E202F7A8D00F84147 /* VideoListViewController.swift in Sources */,
 				63838C511FB61961002697D6 /* RealmModels.swift in Sources */,
 				630158C8204B243B00F84147 /* CacheServerAPI.swift in Sources */,
@@ -576,6 +580,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -583,6 +588,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -633,6 +639,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -640,6 +647,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;

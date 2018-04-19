@@ -27,11 +27,9 @@ class CacheServerAPI {
         }
     }
     
-    var headers:[String:String] {
+    private var headers:[String:String] {
         #if targetEnvironment(simulator)
             userID = userID ?? "iOS Simulator"
-        #else
-            userID = userID ?? UUID().uuidString
         #endif
         return ["user":userID!]
     }
@@ -61,7 +59,6 @@ class CacheServerAPI {
     func registerUser(completion: @escaping (Result<()>)->()){
         var registerUrlRequest = URLRequest(url: URL(string: "\(baseURL)/register")!)
         registerUrlRequest.httpMethod = "POST"
-        userID = UUID().uuidString
         registerUrlRequest.httpBody = try? JSONEncoder().encode(["userID":userID!])
         registerUrlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         URLSession.shared.dataTask(with: registerUrlRequest, completionHandler: { data, response, error in

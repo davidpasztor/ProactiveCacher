@@ -28,7 +28,7 @@ class VideoListViewController: UITableViewController {
         refreshControl = UIRefreshControl()
         refreshControl?.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl?.addTarget(self, action: #selector(VideoListViewController.loadVideos), for: .valueChanged)
-        addActivityIndicator(activityIndicator: activityIndicator, view: self.view)
+        UIViewController.addActivityIndicator(activityIndicator: activityIndicator, view: self.view)
         loadVideos()
         UserDataLogger.shared.saveUserLog()
         // Upload UserLogs to the server
@@ -94,22 +94,6 @@ class VideoListViewController: UITableViewController {
         actionController.addAction(cancelAction)
         self.present(actionController, animated: true, completion: nil)
     }
-    
-    /**
-     Add an activity indicator to the specified view. Set Autolayout constraints to keep the indicator in the middle of the screen.
-     - parameter activityIndicator: activityIndicator view to be added
-     - parameter view: UIView to which the activity indicator should be added as a subview
-    */
-    func addActivityIndicator(activityIndicator: UIActivityIndicatorView,view:UIView){
-        view.addSubview(activityIndicator)
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.color = UIColor.black
-        let horizontalConstraint = NSLayoutConstraint(item: activityIndicator, attribute: NSLayoutAttribute.centerX, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.centerX, multiplier: 1, constant: 0)
-        view.addConstraint(horizontalConstraint)
-        let verticalConstraint = NSLayoutConstraint(item: activityIndicator, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.centerY, multiplier: 1, constant: 0)
-        view.addConstraint(verticalConstraint)
-    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -132,6 +116,7 @@ class VideoListViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.isNavigationBarHidden = true
         // Present the rating view if the user was watching a video
         if let justWatchedVideoIndex = watchedVideoIndex {
             self.watchedVideoIndex = nil
@@ -206,7 +191,7 @@ class VideoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "videoCell", for: indexPath) as! VideoTableViewCell
         let cellDownloadIndicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
-        addActivityIndicator(activityIndicator: cellDownloadIndicator, view: cell.contentView)
+        UIViewController.addActivityIndicator(activityIndicator: cellDownloadIndicator, view: cell.contentView)
         // Check if the video has already been downloaded or not
         let videoMetadata = videos[indexPath.row]
         let realm = try! Realm()
