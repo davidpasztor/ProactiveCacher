@@ -14,9 +14,9 @@ class CacheServerAPI {
     static let shared = CacheServerAPI()
     private init(){}
     
-    let baseURL = "http://192.168.1.95:3000" // Can only be used for local testing from a real device
+    //let baseURL = "http://192.168.1.95:3000" // Can only be used for local testing from a real device
     //let baseURL = "http://localhost:3000" // Can only be used for local testing in the Simulator
-    //let baseURL = "http://35.153.159.19:3000" // AWS server IP address
+    let baseURL = "http://35.153.159.19:3000" // AWS server IP address
     
     var userID:String? {
         get {

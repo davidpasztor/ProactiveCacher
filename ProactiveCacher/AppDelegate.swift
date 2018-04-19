@@ -10,6 +10,7 @@ import UIKit
 import RealmSwift
 import AVFoundation
 import UserNotifications
+import Reachability
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -163,22 +164,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 completionHandler(.noData)
             } else if let videoID = userInfo["videoID"] as? String {   // Download pushed video
                 print("Caching video with ID \(videoID)")
-                CacheServerAPI.shared.cacheVideo(videoID, completion: { thumbnailResult, videoResult  in
-                    switch (thumbnailResult,videoResult) {
-                    case (.success(_),.success(_)):
-                        print("Video and thumbnail cached successfully")
-                        completionHandler(.newData)
-                    case let (.failure(error),.success(_)):
-                        print("Video cached, but failed to cache thumbnail: \(error)")
-                        completionHandler(.newData)
-                    case let (.success(_),.failure(error)):
-                        print("Thumbnail cached, but error caching video: \(error)")
-                        completionHandler(.failed)
-                    case let (.failure(thumbnailError),.failure(videoError)):
-                        print("Error caching video: \(videoError), erro caching thumbnail: \(thumbnailError)")
-                        completionHandler(.failed)
-                    }
-                })
+                // Only cache the video if the device has wifi connection, don't do it on mobile network
+                // If there's only mobile network, create a UserLog object instead
+                if UserDataLogger.shared.reachability?.connection == .wifi {
+                    CacheServerAPI.shared.cacheVideo(videoID, completion: { thumbnailResult, videoResult  in
+                        switch (thumbnailResult,videoResult) {
+                        case (.success(_),.success(_)):
+                            print("Video and thumbnail cached successfully")
+                            completionHandler(.newData)
+                        case let (.failure(error),.success(_)):
+                            print("Video cached, but failed to cache thumbnail: \(error)")
+                            completionHandler(.newData)
+                        case let (.success(_),.failure(error)):
+                            print("Thumbnail cached, but error caching video: \(error)")
+                            completionHandler(.failed)
+                        case let (.failure(thumbnailError),.failure(videoError)):
+                            print("Error caching video: \(videoError), erro caching thumbnail: \(thumbnailError)")
+                            completionHandler(.failed)
+                        }
+                    })
+                } else {
+                    // No wifi available, so don't cache the video, but create a UserLog
+                    print("Not caching content due to lack of wifi connection")
+                    UserDataLogger.shared.saveUserLogWithoutLocation()
+                }
             } else {
                 print("Unrecognized notification payload: \(userInfo)")
                 completionHandler(.noData)

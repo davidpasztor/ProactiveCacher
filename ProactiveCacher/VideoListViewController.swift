@@ -30,6 +30,7 @@ class VideoListViewController: UITableViewController {
         refreshControl?.addTarget(self, action: #selector(VideoListViewController.loadVideos), for: .valueChanged)
         UIViewController.addActivityIndicator(activityIndicator: activityIndicator, view: self.view)
         loadVideos()
+        //TODO: could probably be moved to AppDelegate
         UserDataLogger.shared.saveUserLog()
         // Upload UserLogs to the server
         let realm = try! Realm()
