@@ -190,7 +190,7 @@ extension Reachability.Connection {
         }
     }
 }
-
+// Not used here at the moment, but doesn't seem to work in other projects (the init(from:) creates an empty list, the List elements are not added), also Decodable and Encodable conditional conformance should be separated since this conditional conformance only works for Codable classes, but doesn't work for De-/Encodable classes
 extension List: Codable where List.Element: Codable {
     public convenience init(from decoder: Decoder) throws {
         self.init()
