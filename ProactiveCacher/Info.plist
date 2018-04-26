@@ -44,6 +44,8 @@
 	<string>Use your location to improve the algorithm used for preactively caching content.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Use your location to improve the algorithm used for preactively caching content.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Use your location to improve the algorithm used for preactively caching content.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

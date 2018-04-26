@@ -95,11 +95,6 @@ class VideoListViewController: UITableViewController {
         actionController.addAction(cancelAction)
         self.present(actionController, animated: true, completion: nil)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     
     /**
      Play a video from the specified URL in an AVPlayerViewController. The URL can be both a local or remote URL. The viewcontroller with the video is presented from the main thread, so the function can safely be called from a background thread.
@@ -117,7 +112,8 @@ class VideoListViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.isNavigationBarHidden = true
+        self.navigationItem.setHidesBackButton(true, animated: false)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem()
         // Present the rating view if the user was watching a video
         if let justWatchedVideoIndex = watchedVideoIndex {
             self.watchedVideoIndex = nil
