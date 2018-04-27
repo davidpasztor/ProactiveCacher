@@ -361,6 +361,7 @@ class CacheServerAPI {
                     try data.write(to: videosDirectory.appendingPathComponent(relativeVideoPath))
                     try! realm.write {
                         video?.filePath = relativeVideoPath
+                        video?.uploadDate = Date()
                     }
                     videoResult = .success(())
                 } catch {

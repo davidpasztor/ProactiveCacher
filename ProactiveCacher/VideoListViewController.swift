@@ -47,6 +47,26 @@ class VideoListViewController: UITableViewController {
                 print("Error uploading userlogs: ",error)
             }
         })
+        // Delete cached videos if they are older than a threshold
+        let videoAgeThreshold = DateComponents(day: -2)
+        let oldCachedVideos = videos.filter("filePath != nil AND uploadDate < %@",Calendar.current.date(byAdding: videoAgeThreshold, to: Date())!)
+        for video in oldCachedVideos {
+            do {
+                try realm.write {
+                    video.filePath = nil
+                    video.thumbnailPath = nil
+                }
+                if let videoUrl = video.absoluteFileURL {
+                    try FileManager.default.removeItem(at: videoUrl)
+                }
+                if let thumbnailUrl = video.absoluteThumbnailURL {
+                    try FileManager.default.removeItem(at: thumbnailUrl)
+                }
+                print("Deleted cached file for video \(video.youtubeID) that was cached at \(video.uploadDate)")
+            } catch {
+                print("Error while deleting cached video: ",error)
+            }
+        }
     }
     
     // Function for loading the list of videos
