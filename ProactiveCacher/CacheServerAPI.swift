@@ -117,7 +117,7 @@ class CacheServerAPI {
                 return
             }
             do {
-                let videos = try JSONDecoder().decode([Video].self, from: data)
+                let videos = try Video.jsonDecoder.decode([Video].self, from: data)
                 DispatchQueue.main.async {
                     completion(Result.success(videos))
                 }

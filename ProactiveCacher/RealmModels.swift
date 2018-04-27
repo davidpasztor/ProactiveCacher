@@ -112,6 +112,7 @@ class Video: Object, Decodable {
     @objc dynamic var filePath:String? = nil
     @objc dynamic var thumbnailPath:String? = nil
     @objc dynamic var watched = false
+    @objc dynamic var uploadDate = Date()
     let rating = RealmOptional<Double>()
     
     var absoluteFileURL:URL? {
@@ -135,14 +136,24 @@ class Video: Object, Decodable {
     }
     
     private enum CodingKeys: String, CodingKey {
-        case youtubeID, title, filePath, thumbnailPath, watched, rating
+        case youtubeID, title, filePath, thumbnailPath, watched, rating, uploadDate
     }
+    
+    static let jsonDecoder: JSONDecoder = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(dateFormatter)
+        return decoder
+    }()
     
     convenience required init(from decoder: Decoder) throws {
         self.init()
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.youtubeID = try container.decode(String.self, forKey: .youtubeID)
         self.title = try container.decode(String.self, forKey: .title)
+        self.uploadDate = try container.decode(Date.self, forKey: .uploadDate)
         // Video can't be saved at the device when it's decoded
         self.filePath = nil
         self.thumbnailPath = nil

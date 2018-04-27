@@ -17,8 +17,9 @@ class VideoListViewController: UITableViewController {
     @IBOutlet weak var uploadButton: UIBarButtonItem!
     
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-    // Keep the cached videos on top of the list --> with ascending sorting, when filePath is nil, the Video will be at the end of the sorted Results
-    lazy var videos:Results<Video> = try! Realm().objects(Video.self).sorted(byKeyPath: "filePath", ascending: false)
+    // Keep the cached videos on top of the list and sort the non-cached videos based on their uploadDate property
+    // descending sorting keeps the videos whose filePath is non-nil on top and 
+    lazy var videos:Results<Video> = try! Realm().objects(Video.self).sorted(by: [SortDescriptor(keyPath: "filePath", ascending: false),SortDescriptor(keyPath: "uploadDate", ascending: false)])
     var watchedVideoIndex: Int? = nil
 
     override func viewDidLoad() {
@@ -61,6 +62,7 @@ class VideoListViewController: UITableViewController {
                 let videosToDelete = self.videos.filter("NOT youtubeID IN %@", videosFromServer.map{$0.youtubeID})
                 try! realm.write {
                     realm.add(newVideos)
+                    // TODO: in case any of the videos in videosToDelete was cached, also delete their cached files
                     realm.delete(videosToDelete)
                 }
                 self.tableView.reloadData()
