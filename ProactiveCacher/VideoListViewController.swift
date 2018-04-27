@@ -17,7 +17,8 @@ class VideoListViewController: UITableViewController {
     @IBOutlet weak var uploadButton: UIBarButtonItem!
     
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-    lazy var videos:Results<Video> = try! Realm().objects(Video.self)
+    // Keep the cached videos on top of the list --> with ascending sorting, when filePath is nil, the Video will be at the end of the sorted Results
+    lazy var videos:Results<Video> = try! Realm().objects(Video.self).sorted(byKeyPath: "filePath", ascending: false)
     var watchedVideoIndex: Int? = nil
 
     override func viewDidLoad() {
@@ -52,12 +53,15 @@ class VideoListViewController: UITableViewController {
         activityIndicator.startAnimating()
         CacheServerAPI.shared.getVideoList(completion: { result in
             switch result {
-            case let .success(videos):
+            case let .success(videosFromServer):
                 let realm = try! Realm()
                 // Only add videos to Realm that weren't already added in order to avoid overwriting already cached videos
-                let newVideos = videos.filter({videoFromServer in self.videos.filter("youtubeID == %@",videoFromServer.youtubeID).count == 0})
+                let newVideos = videosFromServer.filter({videoFromServer in self.videos.filter("youtubeID == %@",videoFromServer.youtubeID).count == 0})
+                // Delete videos from the device that were deleted from the server
+                let videosToDelete = self.videos.filter("NOT youtubeID IN %@", videosFromServer.map{$0.youtubeID})
                 try! realm.write {
                     realm.add(newVideos)
+                    realm.delete(videosToDelete)
                 }
                 self.tableView.reloadData()
             case let .failure(error):
@@ -80,14 +84,22 @@ class VideoListViewController: UITableViewController {
                     switch result {
                         case .success(_):
                             print("Video upload successfully started!")
+                            let successController = UIAlertController(title: "Success", message: "Video successfully shared!", preferredStyle: .alert)
+                            successController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                            self.present(successController, animated: true, completion: nil)
                         case let .failure(error):
-                            //let errorController =
                             print("Video upload failed with error: \(error)")
+                            let errorController = UIAlertController(title: "Error", message: "Video couldn't be shared, please make sure you have an active internet connection and that the URL you supply is a valid Youtube URL.", preferredStyle: .alert)
+                            errorController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                            self.present(errorController, animated: true, completion: nil)
                     }
                 })
             } else {
                 print("Invalid URL \(actionController.textFields?.first?.text ?? "")")
                 //Present another controller with an error message
+                let errorController = UIAlertController(title: "Invalid URL", message: "Please make sure you supply a valid Youtube URL.", preferredStyle: .alert)
+                errorController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                self.present(errorController, animated: true, completion: nil)
             }
         })
         actionController.addAction(uploadAction)

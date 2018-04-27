@@ -87,6 +87,10 @@ class CacheServerAPI {
         }).resume()
     }
     
+    /**
+     Retrieve all available videos from the server.
+     - parameter completion: completion handler returning `Result.success([Videos])` in case of success and `Result.failure(Error)` containing the error in case of failure
+     */
     func getVideoList(completion: @escaping (Result<[Video]>)->()){
         let videosUrl = URL(string: "\(baseURL)/videos")!
         URLSession.shared.dataTask(with: requestWithHeaders(for: videosUrl), completionHandler: { data, response, error in
@@ -332,7 +336,6 @@ class CacheServerAPI {
         let cacheDispatchGroup = DispatchGroup()
         var thumbnailResult:Result<()> = .failure(AppErrors.Unknown)
         var videoResult:Result<()> = .failure(AppErrors.Unknown)
-        //TODO: put the two async network requests in a DispatchGroup and only call the completion handler once both succeed
         // Cache the video if it wasn't already cached
         if video.filePath == nil {
             let streamUrlString = "\(CacheServerAPI.shared.baseURL)/stream?videoID=\(video.youtubeID)&user=\(CacheServerAPI.shared.userID!)"
