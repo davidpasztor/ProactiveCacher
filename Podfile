@@ -21,7 +21,13 @@ target 'ProactiveCacher' do
 
   target 'ProactiveCacherUITests' do
     inherit! :search_paths
-    # Pods for testing
+    # Pods for UI testing
+  end
+
+  target 'VideoSharingExtension' do
+    inherit! :search_paths
+    # Pods for share extension
   end
 
 end
+

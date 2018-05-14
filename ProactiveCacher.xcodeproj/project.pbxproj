@@ -10,6 +10,9 @@
 		6301589E202F7A8D00F84147 /* VideoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6301589D202F7A8D00F84147 /* VideoListViewController.swift */; };
 		630158A0202F7AC200F84147 /* VideoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6301589F202F7AC200F84147 /* VideoTableViewCell.swift */; };
 		630158C8204B243B00F84147 /* CacheServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630158C7204B243B00F84147 /* CacheServerAPI.swift */; };
+		6334276D209A461F0043557E /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6334276C209A461F0043557E /* ShareViewController.swift */; };
+		63342770209A461F0043557E /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6334276E209A461F0043557E /* MainInterface.storyboard */; };
+		63342774209A461F0043557E /* VideoSharingExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6334276A209A461F0043557E /* VideoSharingExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		637B81EC2088B9B000300B96 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B81EB2088B9B000300B96 /* LoadingViewController.swift */; };
 		63838C151FB60F4B002697D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C141FB60F4B002697D6 /* AppDelegate.swift */; };
 		63838C1A1FB60F4B002697D6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63838C181FB60F4B002697D6 /* Main.storyboard */; };
@@ -19,12 +22,27 @@
 		63838C351FB60F4B002697D6 /* ProactiveCacherUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C341FB60F4B002697D6 /* ProactiveCacherUITests.swift */; };
 		63838C431FB61306002697D6 /* UserDataLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C421FB61306002697D6 /* UserDataLogger.swift */; };
 		63838C511FB61961002697D6 /* RealmModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C501FB61961002697D6 /* RealmModels.swift */; };
+		63B4D40420A9BD8300862867 /* URLValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B4D40320A9BD8300862867 /* URLValidator.swift */; };
+		63B4D40520A9BD8300862867 /* URLValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B4D40320A9BD8300862867 /* URLValidator.swift */; };
+		63B4D40620A9BE6A00862867 /* CacheServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630158C7204B243B00F84147 /* CacheServerAPI.swift */; };
+		63B4D40720A9DEF100862867 /* RealmModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C501FB61961002697D6 /* RealmModels.swift */; };
+		63B4D40820A9DF0C00862867 /* UserDataLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C421FB61306002697D6 /* UserDataLogger.swift */; };
+		63B4D40B20A9E87700862867 /* MiscExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B4D40A20A9E87700862867 /* MiscExtensions.swift */; };
+		63B4D40C20A9E87700862867 /* MiscExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B4D40A20A9E87700862867 /* MiscExtensions.swift */; };
 		6F4B5700E2FBCDE328D02928 /* Pods_ProactiveCacherTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002DE974C06082E7EA5C11C1 /* Pods_ProactiveCacherTests.framework */; };
 		7D9C2598E082DC3ED4E5D5AF /* Pods_ProactiveCacher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 430B7DCEAE3AD42A4D4597B7 /* Pods_ProactiveCacher.framework */; };
 		CA0D652EA34B1ED547949808 /* Pods_ProactiveCacherUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2A372F4DD44BD37B6A252FE /* Pods_ProactiveCacherUITests.framework */; };
+		EE203D2E04C5734EB1E379A4 /* Pods_VideoSharingExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF31C1AC538B3F595D3D792 /* Pods_VideoSharingExtension.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		63342772209A461F0043557E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63838C091FB60F4B002697D6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 63342769209A461F0043557E;
+			remoteInfo = VideoSharingExtension;
+		};
 		63838C261FB60F4B002697D6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 63838C091FB60F4B002697D6 /* Project object */;
@@ -42,6 +60,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		63342778209A461F0043557E /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				63342774209A461F0043557E /* VideoSharingExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		63838C4F1FB6193E002697D6 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -56,11 +85,17 @@
 
 /* Begin PBXFileReference section */
 		002DE974C06082E7EA5C11C1 /* Pods_ProactiveCacherTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ProactiveCacherTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1CF31C1AC538B3F595D3D792 /* Pods_VideoSharingExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VideoSharingExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		430B7DCEAE3AD42A4D4597B7 /* Pods_ProactiveCacher.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ProactiveCacher.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B7FE2CDFA7F6FD01FEBB87C /* Pods-VideoSharingExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VideoSharingExtension.release.xcconfig"; path = "Pods/Target Support Files/Pods-VideoSharingExtension/Pods-VideoSharingExtension.release.xcconfig"; sourceTree = "<group>"; };
 		59DC71FE55969750FA050ED5 /* Pods-ProactiveCacherUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ProactiveCacherUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ProactiveCacherUITests/Pods-ProactiveCacherUITests.release.xcconfig"; sourceTree = "<group>"; };
 		6301589D202F7A8D00F84147 /* VideoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListViewController.swift; sourceTree = "<group>"; };
 		6301589F202F7AC200F84147 /* VideoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTableViewCell.swift; sourceTree = "<group>"; };
 		630158C7204B243B00F84147 /* CacheServerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheServerAPI.swift; sourceTree = "<group>"; };
+		6334276A209A461F0043557E /* VideoSharingExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = VideoSharingExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		6334276C209A461F0043557E /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		6334276F209A461F0043557E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		63342771209A461F0043557E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		637B81EB2088B9B000300B96 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		637FB90B20838AAD003BE2C3 /* ProactiveCacher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ProactiveCacher.entitlements; sourceTree = "<group>"; };
 		63838C111FB60F4B002697D6 /* ProactiveCacher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProactiveCacher.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -77,7 +112,11 @@
 		63838C361FB60F4B002697D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63838C421FB61306002697D6 /* UserDataLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataLogger.swift; sourceTree = "<group>"; };
 		63838C501FB61961002697D6 /* RealmModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmModels.swift; sourceTree = "<group>"; };
+		63B4D40320A9BD8300862867 /* URLValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLValidator.swift; sourceTree = "<group>"; };
+		63B4D40920A9E32B00862867 /* VideoSharingExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VideoSharingExtension.entitlements; sourceTree = "<group>"; };
+		63B4D40A20A9E87700862867 /* MiscExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscExtensions.swift; sourceTree = "<group>"; };
 		87CC8A6A13B74969D2C6BB32 /* Pods-ProactiveCacher.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ProactiveCacher.release.xcconfig"; path = "Pods/Target Support Files/Pods-ProactiveCacher/Pods-ProactiveCacher.release.xcconfig"; sourceTree = "<group>"; };
+		982D792AF59E946350D0CAE9 /* Pods-VideoSharingExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VideoSharingExtension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VideoSharingExtension/Pods-VideoSharingExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		A606E17A473FC540F05958A1 /* Pods-ProactiveCacher.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ProactiveCacher.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ProactiveCacher/Pods-ProactiveCacher.debug.xcconfig"; sourceTree = "<group>"; };
 		B89862C7F1354EEA8B07DC50 /* Pods-ProactiveCacherUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ProactiveCacherUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ProactiveCacherUITests/Pods-ProactiveCacherUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		C2A372F4DD44BD37B6A252FE /* Pods_ProactiveCacherUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ProactiveCacherUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -86,6 +125,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		63342767209A461F0043557E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EE203D2E04C5734EB1E379A4 /* Pods_VideoSharingExtension.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		63838C0E1FB60F4B002697D6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -122,8 +169,21 @@
 				D1EB3FC59AEF73936B5FA8A1 /* Pods-ProactiveCacherTests.release.xcconfig */,
 				B89862C7F1354EEA8B07DC50 /* Pods-ProactiveCacherUITests.debug.xcconfig */,
 				59DC71FE55969750FA050ED5 /* Pods-ProactiveCacherUITests.release.xcconfig */,
+				982D792AF59E946350D0CAE9 /* Pods-VideoSharingExtension.debug.xcconfig */,
+				4B7FE2CDFA7F6FD01FEBB87C /* Pods-VideoSharingExtension.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		6334276B209A461F0043557E /* VideoSharingExtension */ = {
+			isa = PBXGroup;
+			children = (
+				63B4D40920A9E32B00862867 /* VideoSharingExtension.entitlements */,
+				6334276C209A461F0043557E /* ShareViewController.swift */,
+				6334276E209A461F0043557E /* MainInterface.storyboard */,
+				63342771209A461F0043557E /* Info.plist */,
+			);
+			path = VideoSharingExtension;
 			sourceTree = "<group>";
 		};
 		63838C081FB60F4B002697D6 = {
@@ -132,6 +192,7 @@
 				63838C131FB60F4B002697D6 /* ProactiveCacher */,
 				63838C281FB60F4B002697D6 /* ProactiveCacherTests */,
 				63838C331FB60F4B002697D6 /* ProactiveCacherUITests */,
+				6334276B209A461F0043557E /* VideoSharingExtension */,
 				63838C121FB60F4B002697D6 /* Products */,
 				63838C441FB615A4002697D6 /* Frameworks */,
 				11D9F45D615D9DA65403445C /* Pods */,
@@ -144,6 +205,7 @@
 				63838C111FB60F4B002697D6 /* ProactiveCacher.app */,
 				63838C251FB60F4B002697D6 /* ProactiveCacherTests.xctest */,
 				63838C301FB60F4B002697D6 /* ProactiveCacherUITests.xctest */,
+				6334276A209A461F0043557E /* VideoSharingExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -159,7 +221,9 @@
 				63838C141FB60F4B002697D6 /* AppDelegate.swift */,
 				630158C7204B243B00F84147 /* CacheServerAPI.swift */,
 				637B81EB2088B9B000300B96 /* LoadingViewController.swift */,
+				63B4D40A20A9E87700862867 /* MiscExtensions.swift */,
 				63838C501FB61961002697D6 /* RealmModels.swift */,
+				63B4D40320A9BD8300862867 /* URLValidator.swift */,
 				63838C421FB61306002697D6 /* UserDataLogger.swift */,
 				6301589D202F7A8D00F84147 /* VideoListViewController.swift */,
 				6301589F202F7AC200F84147 /* VideoTableViewCell.swift */,
@@ -191,6 +255,7 @@
 				430B7DCEAE3AD42A4D4597B7 /* Pods_ProactiveCacher.framework */,
 				002DE974C06082E7EA5C11C1 /* Pods_ProactiveCacherTests.framework */,
 				C2A372F4DD44BD37B6A252FE /* Pods_ProactiveCacherUITests.framework */,
+				1CF31C1AC538B3F595D3D792 /* Pods_VideoSharingExtension.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -198,6 +263,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		63342769209A461F0043557E /* VideoSharingExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 63342777209A461F0043557E /* Build configuration list for PBXNativeTarget "VideoSharingExtension" */;
+			buildPhases = (
+				10C401D3FC300F52F669056D /* [CP] Check Pods Manifest.lock */,
+				63342766209A461F0043557E /* Sources */,
+				63342767209A461F0043557E /* Frameworks */,
+				63342768209A461F0043557E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VideoSharingExtension;
+			productName = VideoSharingExtension;
+			productReference = 6334276A209A461F0043557E /* VideoSharingExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		63838C101FB60F4B002697D6 /* ProactiveCacher */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 63838C391FB60F4B002697D6 /* Build configuration list for PBXNativeTarget "ProactiveCacher" */;
@@ -208,11 +291,12 @@
 				63838C0F1FB60F4B002697D6 /* Resources */,
 				63838C4F1FB6193E002697D6 /* Embed Frameworks */,
 				04079FE576E3B4623E4B1E60 /* [CP] Embed Pods Frameworks */,
-				B8F63CE36BA805A674AD820B /* [CP] Copy Pods Resources */,
+				63342778209A461F0043557E /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				63342773209A461F0043557E /* PBXTargetDependency */,
 			);
 			name = ProactiveCacher;
 			productName = ProactiveCacher;
@@ -227,8 +311,6 @@
 				63838C211FB60F4B002697D6 /* Sources */,
 				63838C221FB60F4B002697D6 /* Frameworks */,
 				63838C231FB60F4B002697D6 /* Resources */,
-				2A051F2BCF21EF6FD44E032B /* [CP] Embed Pods Frameworks */,
-				E8D2FE5AD573626E8BA836CE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -248,8 +330,6 @@
 				63838C2C1FB60F4B002697D6 /* Sources */,
 				63838C2D1FB60F4B002697D6 /* Frameworks */,
 				63838C2E1FB60F4B002697D6 /* Resources */,
-				74260D53D54A696DE8851053 /* [CP] Embed Pods Frameworks */,
-				3A696D8A7A3819473286A9BD /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -267,14 +347,26 @@
 		63838C091FB60F4B002697D6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0910;
+				LastSwiftUpdateCheck = 0930;
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Pásztor Dávid";
 				TargetAttributes = {
+					63342769209A461F0043557E = {
+						CreatedOnToolsVersion = 9.3;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
 					63838C101FB60F4B002697D6 = {
 						CreatedOnToolsVersion = 9.1;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
@@ -311,11 +403,20 @@
 				63838C101FB60F4B002697D6 /* ProactiveCacher */,
 				63838C241FB60F4B002697D6 /* ProactiveCacherTests */,
 				63838C2F1FB60F4B002697D6 /* ProactiveCacherUITests */,
+				63342769209A461F0043557E /* VideoSharingExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		63342768209A461F0043557E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63342770209A461F0043557E /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		63838C0F1FB60F4B002697D6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -387,49 +488,22 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ProactiveCacher/Pods-ProactiveCacher-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		2A051F2BCF21EF6FD44E032B /* [CP] Embed Pods Frameworks */ = {
+		10C401D3FC300F52F669056D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-VideoSharingExtension-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ProactiveCacherTests/Pods-ProactiveCacherTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		3A696D8A7A3819473286A9BD /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ProactiveCacherUITests/Pods-ProactiveCacherUITests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		74260D53D54A696DE8851053 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ProactiveCacherUITests/Pods-ProactiveCacherUITests-frameworks.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		76483FEA2C702FC7578AE434 /* [CP] Check Pods Manifest.lock */ = {
@@ -468,39 +542,22 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		B8F63CE36BA805A674AD820B /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ProactiveCacher/Pods-ProactiveCacher-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E8D2FE5AD573626E8BA836CE /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ProactiveCacherTests/Pods-ProactiveCacherTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		63342766209A461F0043557E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63B4D40520A9BD8300862867 /* URLValidator.swift in Sources */,
+				63B4D40720A9DEF100862867 /* RealmModels.swift in Sources */,
+				6334276D209A461F0043557E /* ShareViewController.swift in Sources */,
+				63B4D40820A9DF0C00862867 /* UserDataLogger.swift in Sources */,
+				63B4D40620A9BE6A00862867 /* CacheServerAPI.swift in Sources */,
+				63B4D40C20A9E87700862867 /* MiscExtensions.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		63838C0D1FB60F4B002697D6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -511,7 +568,9 @@
 				630158C8204B243B00F84147 /* CacheServerAPI.swift in Sources */,
 				63838C151FB60F4B002697D6 /* AppDelegate.swift in Sources */,
 				63838C431FB61306002697D6 /* UserDataLogger.swift in Sources */,
+				63B4D40420A9BD8300862867 /* URLValidator.swift in Sources */,
 				630158A0202F7AC200F84147 /* VideoTableViewCell.swift in Sources */,
+				63B4D40B20A9E87700862867 /* MiscExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -534,6 +593,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		63342773209A461F0043557E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 63342769209A461F0043557E /* VideoSharingExtension */;
+			targetProxy = 63342772209A461F0043557E /* PBXContainerItemProxy */;
+		};
 		63838C271FB60F4B002697D6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 63838C101FB60F4B002697D6 /* ProactiveCacher */;
@@ -547,6 +611,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		6334276E209A461F0043557E /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6334276F209A461F0043557E /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
 		63838C181FB60F4B002697D6 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -566,6 +638,44 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		63342775209A461F0043557E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 982D792AF59E946350D0CAE9 /* Pods-VideoSharingExtension.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = VideoSharingExtension/VideoSharingExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2A6XVR8XB3;
+				INFOPLIST_FILE = VideoSharingExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.DavidPasztor.ProactiveCacher.VideoSharingExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		63342776209A461F0043557E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4B7FE2CDFA7F6FD01FEBB87C /* Pods-VideoSharingExtension.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = VideoSharingExtension/VideoSharingExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2A6XVR8XB3;
+				INFOPLIST_FILE = VideoSharingExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.DavidPasztor.ProactiveCacher.VideoSharingExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		63838C371FB60F4B002697D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -681,6 +791,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A606E17A473FC540F05958A1 /* Pods-ProactiveCacher.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ProactiveCacher/ProactiveCacher.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -702,6 +813,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 87CC8A6A13B74969D2C6BB32 /* Pods-ProactiveCacher.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ProactiveCacher/ProactiveCacher.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -792,6 +904,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		63342777209A461F0043557E /* Build configuration list for PBXNativeTarget "VideoSharingExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				63342775209A461F0043557E /* Debug */,
+				63342776209A461F0043557E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		63838C0C1FB60F4B002697D6 /* Build configuration list for PBXProject "ProactiveCacher" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

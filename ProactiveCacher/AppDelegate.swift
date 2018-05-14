@@ -58,6 +58,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             registerForPushNotifications()
         }
         
+        // To enable sharing the userID between the app and its extensions, need to use AppGroups --> cannot use UserDefaults.standard anymore, handle migrating the data between the UserDefaults suits
+        let userIDKey = "CacheServerUserID"
+        let sharedUserDefaults = UserDefaults(suiteName: "group.com.DavidPasztor.ProactiveCacher")
+        print("Shared UserDefaults: \(sharedUserDefaults ??? "No shared UserDefaults")")
+        if sharedUserDefaults?.string(forKey: userIDKey) == nil {
+            sharedUserDefaults?.set(UserDefaults.standard.string(forKey: userIDKey), forKey: userIDKey)
+        }
+        
+        //TODO: before creating a new AppUsageLog, should check that the app wasn't opened by the system in response to a push notification but rather the user actually opened it (even though no video can be watched in the background, so we don't really care about extra AppUsageLogs with 0 watchedVideosCount --> no need to cache if the user opens the app but doesn't watch any videos)
         // Save the opening time of the app for future caching decisions
         let appAccessLog = UserDataLogger.shared.createAppAccessLog()
         switch appAccessLog {
@@ -96,6 +105,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Check if app was launched due to push notification
         if launchOptions?[.remoteNotification] != nil {
             appIsStarting = true
+            //TODO: might have to move the notification handling to separate function that are called from here as well, since didReceiveNotifications might not be called if the app is opened due to the push notification (not sure though in the case of silent ones)
         }
         
         return true

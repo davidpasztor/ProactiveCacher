@@ -20,10 +20,10 @@ class CacheServerAPI {
     
     var userID:String? {
         get {
-            return UserDefaults.standard.string(forKey: "CacheServerUserID")
+            return UserDefaults(suiteName: "group.com.DavidPasztor.ProactiveCacher")?.string(forKey: "CacheServerUserID")
         }
         set(newValue){
-            UserDefaults.standard.set(newValue, forKey: "CacheServerUserID")
+            UserDefaults(suiteName: "group.com.DavidPasztor.ProactiveCacher")?.set(newValue, forKey: "CacheServerUserID")
         }
     }
     
@@ -182,7 +182,7 @@ class CacheServerAPI {
                 }
                 return
             }
-            guard response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 202 else {
+            guard response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 206 else {
                 let errorResponse = String(data: data ?? Data(), encoding: .utf8)
                 DispatchQueue.main.async {
                     completion(Result.failure(CacheServerErrors.HTTPFailureResponse(response.statusCode,errorResponse)))
