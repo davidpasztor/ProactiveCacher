@@ -14,7 +14,7 @@ class CacheServerAPI {
     static let shared = CacheServerAPI()
     private init(){}
     
-    //let baseURL = "http://192.168.1.95:3000" // Can only be used for local testing from a real device
+    //let baseURL = "http://192.168.1.68:3000" // Can only be used for local testing from a real device
     //let baseURL = "http://localhost:3000" // Can only be used for local testing in the Simulator
     let baseURL = "http://35.153.159.19:3000" // AWS server IP address
     
@@ -359,7 +359,7 @@ class CacheServerAPI {
                     let realm = try! Realm()
                     let video = realm.object(ofType: Video.self, forPrimaryKey: videoID)
                     try data.write(to: videosDirectory.appendingPathComponent(relativeVideoPath))
-                    try! realm.write {
+                    try realm.write {
                         video?.filePath = relativeVideoPath
                         video?.uploadDate = Date()
                     }
@@ -369,6 +369,9 @@ class CacheServerAPI {
                 }
                 cacheDispatchGroup.leave()
             }).resume()
+        } else {
+            // If the video was already cached, return success
+            videoResult = .success(())
         }
         // Cache the thumbnail if it wasn't already cached
         if video.thumbnailPath == nil {
@@ -383,7 +386,7 @@ class CacheServerAPI {
                         let realm = try! Realm()
                         let video = realm.object(ofType: Video.self, forPrimaryKey: videoID)
                         try thumbnailData.write(to: thumbnailsDirectory.appendingPathComponent(relativeThumbnailPath))
-                        try! realm.write {
+                        try realm.write {
                             video?.thumbnailPath = relativeThumbnailPath
                         }
                         thumbnailResult = .success(())
@@ -395,6 +398,9 @@ class CacheServerAPI {
                 }
                 cacheDispatchGroup.leave()
             })
+        } else {
+            // If the thumbnail was already cached, return success
+            thumbnailResult = .success(())
         }
         cacheDispatchGroup.notify(queue: DispatchQueue.main, execute: {
             DispatchQueue.main.async {

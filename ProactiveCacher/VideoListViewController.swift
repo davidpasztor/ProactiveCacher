@@ -80,9 +80,26 @@ class VideoListViewController: UITableViewController {
                 let newVideos = videosFromServer.filter({videoFromServer in self.videos.filter("youtubeID == %@",videoFromServer.youtubeID).count == 0})
                 // Delete videos from the device that were deleted from the server
                 let videosToDelete = self.videos.filter("NOT youtubeID IN %@", videosFromServer.map{$0.youtubeID})
+                for video in videosToDelete {
+                    if let videoURL = video.absoluteFileURL {
+                        do {
+                            print("Deleting cached video file for video \(video.youtubeID)")
+                            try FileManager.default.removeItem(at: videoURL)
+                        } catch {
+                            print("Error deleting cached video file for video \(video.youtubeID): \(error)")
+                        }
+                    }
+                    if let thumbnailURL = video.absoluteThumbnailURL {
+                        do {
+                            print("Deleting cached thumbnail image for video \(video.youtubeID)")
+                            try FileManager.default.removeItem(at: thumbnailURL)
+                        } catch {
+                            print("Error deleting cached thumbnail image for video \(video.youtubeID): \(error)")
+                        }
+                    }
+                }
                 try! realm.write {
                     realm.add(newVideos)
-                    // TODO: in case any of the videos in videosToDelete was cached, also delete their cached files
                     realm.delete(videosToDelete)
                 }
                 self.tableView.reloadData()
@@ -234,7 +251,7 @@ class VideoListViewController: UITableViewController {
             video.title = videoMetadata.title
             video.youtubeID = videoMetadata.youtubeID
         }
-        print("Video filePath: \(video.filePath ?? ""), thumbnailPath: \(video.thumbnailPath ?? "")")
+        //print("Video filePath: \(video.filePath ?? ""), thumbnailPath: \(video.thumbnailPath ?? "")")
         if video.filePath != nil {
             cell.titleLabel.text = "\(video.title) ✅"
         } else {
@@ -251,6 +268,17 @@ class VideoListViewController: UITableViewController {
             CacheServerAPI.shared.getThumbnail(for: video.youtubeID, completion: { result in
                 if case let .success(thumbnailData) = result {
                     cell.thumbnailImageView.image = UIImage(data: thumbnailData)
+                    // Cache the thumbnail
+                    do {
+                        let thumbnailsDirectory = try FileManager.default.thumbnailsDirectory()
+                        let relativeThumbnailPath = "\(video.youtubeID).jpg"
+                        try thumbnailData.write(to: thumbnailsDirectory.appendingPathComponent(relativeThumbnailPath))
+                        try realm.write {
+                            video.thumbnailPath = relativeThumbnailPath
+                        }
+                    } catch {
+                        print("Error caching thumbnail: \(error)")
+                    }
                 } else if case let .failure(error) = result {
                     print("Error getting video thumbnail: ",error)
                 }
