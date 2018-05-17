@@ -79,7 +79,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //Upload the previous app usage logs to the backend
         let previousAppUsageLogs = AppUsageLog.previous
         print("There are \(previousAppUsageLogs.count) app usage logs to upload")
-        if previousAppUsageLogs.count > 0 {
+        // Ensure that this doesn't happen before registration completes
+        if previousAppUsageLogs.count > 0, CacheServerAPI.shared.userID != nil {
             CacheServerAPI.shared.uploadAppUsageLogs(Array(previousAppUsageLogs), completion: { result in
                 switch result {
                 case .success(_):

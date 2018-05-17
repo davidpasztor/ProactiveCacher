@@ -168,7 +168,13 @@ class VideoListViewController: UITableViewController {
         // Present the rating view if the user was watching a video
         if let justWatchedVideoIndex = watchedVideoIndex {
             self.watchedVideoIndex = nil
-            let ratingView = createRatingView()
+            let presentingView: UIView
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                presentingView = UIView(frame: self.view.frame.applying(CGAffineTransform(scaleX: 1/3, y: 1/3)))
+            } else {
+                presentingView = self.view
+            }
+            let ratingView = createRatingView(fitting: presentingView)
             ratingView.didFinishTouchingCosmos = { rating in
                 do {
                     let realm = try Realm()
@@ -200,17 +206,18 @@ class VideoListViewController: UITableViewController {
             }))
             ratingController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             // TODO: Needed for iPad - tweak this, the ratingController is completely flawed
-            ratingController.popoverPresentationController?.sourceView = self.view
-            ratingController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            ratingController.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            ratingController.popoverPresentationController?.sourceView = presentingView
+            ratingController.popoverPresentationController?.permittedArrowDirections = []
+            ratingController.popoverPresentationController?.sourceRect = CGRect(x: presentingView.bounds.midX, y: presentingView.bounds.midY, width: 0, height: 0)
             self.present(ratingController, animated: true, completion: nil)
         }
     }
     
     /**
         Create a `CosmosView` for handling the user input for rating the video after the user finished watching it.
+     - parameter presentingView: view over which the `UIAlertController` containing the `CosmosView` will be presented. Its `frame` is used for sizing the `CosmosView`.
      */
-    func createRatingView() -> CosmosView {
+    func createRatingView(fitting presentingView:UIView) -> CosmosView {
         let starCount = 5
         let ratingView = CosmosView()
         ratingView.settings.minTouchRating = 0
@@ -220,7 +227,7 @@ class VideoListViewController: UITableViewController {
         ratingView.settings.starMargin = 5
         // Stars were still slightly too big, since the UIAlertController's width is smaller than the screen width, so added a constant 20 value, which seems to be the padding value on all devices, but if the app will support iPad, this will need to change, since an alert isn't full screen there
         // However, the starSize need to be known before creating the UIAlertController, since intrinsically the UIAlertController sizes itself to fit the customView when it's initialized
-        ratingView.settings.starSize = (Double(self.view.frame.width-20)-Double(starCount+1)*ratingView.settings.starMargin)/Double(starCount)
+        ratingView.settings.starSize = (Double(presentingView.frame.width-20)-Double(starCount+1)*ratingView.settings.starMargin)/Double(starCount)
         ratingView.settings.emptyImage = UIImage(named: "GoldStarEmpty")
         ratingView.settings.filledImage = UIImage(named: "GoldStar")
         return ratingView
@@ -305,6 +312,7 @@ class VideoListViewController: UITableViewController {
         }
         // If video is already cached, play it from local path
         if let absoluteFileURL = video.absoluteFileURL {
+            self.watchedVideoIndex = indexPath.row
             self.playVideo(from: absoluteFileURL)
         } else {
             //Otherwise stream it from the server
