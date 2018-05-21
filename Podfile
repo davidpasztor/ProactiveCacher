@@ -13,6 +13,7 @@ target 'ProactiveCacher' do
   pod 'PromiseKit'
   pod 'PromiseKit/CoreLocation'
   pod 'Cosmos', '~> 15.0'
+  pod 'SideMenuSwift'
 
   target 'ProactiveCacherTests' do
     inherit! :search_paths

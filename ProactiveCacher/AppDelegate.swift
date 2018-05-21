@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         //Perform Realm migration if needed
-        let newSchemaVersion: UInt64 = 6
+        let newSchemaVersion: UInt64 = 7
         let config = Realm.Configuration(
             // Set the new schema version. This must be greater than the previously used
             // version (if you've never set a schema version before, the version is 0).
@@ -62,10 +62,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let userIDKey = "CacheServerUserID"
         let sharedUserDefaults = UserDefaults(suiteName: "group.com.DavidPasztor.ProactiveCacher")
         print("Shared UserDefaults: \(sharedUserDefaults ??? "No shared UserDefaults")")
-        if sharedUserDefaults?.string(forKey: userIDKey) == nil {
-            sharedUserDefaults?.set(UserDefaults.standard.string(forKey: userIDKey), forKey: userIDKey)
-        }
         
+        if sharedUserDefaults?.string(forKey: userIDKey) == nil, let savedUserID = UserDefaults.standard.string(forKey: userIDKey) {
+            sharedUserDefaults?.set(savedUserID, forKey: userIDKey)
+        }
         //TODO: before creating a new AppUsageLog, should check that the app wasn't opened by the system in response to a push notification but rather the user actually opened it (even though no video can be watched in the background, so we don't really care about extra AppUsageLogs with 0 watchedVideosCount --> no need to cache if the user opens the app but doesn't watch any videos)
         // Save the opening time of the app for future caching decisions
         let appAccessLog = UserDataLogger.shared.createAppAccessLog()

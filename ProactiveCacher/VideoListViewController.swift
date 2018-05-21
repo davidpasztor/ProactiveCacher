@@ -101,6 +101,11 @@ class VideoListViewController: UITableViewController {
                 try! realm.write {
                     realm.add(newVideos)
                     realm.delete(videosToDelete)
+                    for videoFromServer in videosFromServer {
+                        if let category = videoFromServer.category {
+                            self.videos.filter("youtubeID == %@",videoFromServer.youtubeID).first?.category = category
+                        }
+                    }
                 }
                 self.tableView.reloadData()
             case let .failure(error):

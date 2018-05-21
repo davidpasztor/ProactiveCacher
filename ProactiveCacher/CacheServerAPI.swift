@@ -29,7 +29,7 @@ class CacheServerAPI {
     
     private var headers:[String:String] {
         #if targetEnvironment(simulator)
-            userID = userID ?? "iOS Simulator"
+        userID = userID ?? "bc1e740eb300df5fc8e74f4d50e5644024f55a5254e95bdd122a9eb6e0dd99ad"
         #endif
         return ["user":userID!]
     }
