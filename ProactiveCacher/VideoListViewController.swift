@@ -20,7 +20,8 @@ class VideoListViewController: UITableViewController {
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
     // Keep the cached videos on top of the list and sort the non-cached videos based on their uploadDate property
     // descending sorting keeps the videos whose filePath is non-nil on top and 
-    lazy var videos:Results<Video> = try! Realm().objects(Video.self).sorted(by: [SortDescriptor(keyPath: "filePath", ascending: false),SortDescriptor(keyPath: "uploadDate", ascending: false)])
+    static let videoSortDescriptors = [SortDescriptor(keyPath: "filePath", ascending: false),SortDescriptor(keyPath: "uploadDate", ascending: false)]
+    lazy var videos = try! Realm().objects(Video.self).sorted(by: VideoListViewController.videoSortDescriptors)
     var watchedVideoIndex: Int? = nil
 
     override func viewDidLoad() {
