@@ -29,6 +29,7 @@
 		63B4D40820A9DF0C00862867 /* UserDataLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C421FB61306002697D6 /* UserDataLogger.swift */; };
 		63B4D40B20A9E87700862867 /* MiscExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B4D40A20A9E87700862867 /* MiscExtensions.swift */; };
 		63B4D40C20A9E87700862867 /* MiscExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B4D40A20A9E87700862867 /* MiscExtensions.swift */; };
+		63E4215220B34F4F0067FB23 /* VideoCategoriesListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E4215120B34F4F0067FB23 /* VideoCategoriesListVC.swift */; };
 		6F4B5700E2FBCDE328D02928 /* Pods_ProactiveCacherTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002DE974C06082E7EA5C11C1 /* Pods_ProactiveCacherTests.framework */; };
 		7D9C2598E082DC3ED4E5D5AF /* Pods_ProactiveCacher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 430B7DCEAE3AD42A4D4597B7 /* Pods_ProactiveCacher.framework */; };
 		CA0D652EA34B1ED547949808 /* Pods_ProactiveCacherUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2A372F4DD44BD37B6A252FE /* Pods_ProactiveCacherUITests.framework */; };
@@ -115,6 +116,7 @@
 		63B4D40320A9BD8300862867 /* URLValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLValidator.swift; sourceTree = "<group>"; };
 		63B4D40920A9E32B00862867 /* VideoSharingExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VideoSharingExtension.entitlements; sourceTree = "<group>"; };
 		63B4D40A20A9E87700862867 /* MiscExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscExtensions.swift; sourceTree = "<group>"; };
+		63E4215120B34F4F0067FB23 /* VideoCategoriesListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCategoriesListVC.swift; sourceTree = "<group>"; };
 		87CC8A6A13B74969D2C6BB32 /* Pods-ProactiveCacher.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ProactiveCacher.release.xcconfig"; path = "Pods/Target Support Files/Pods-ProactiveCacher/Pods-ProactiveCacher.release.xcconfig"; sourceTree = "<group>"; };
 		982D792AF59E946350D0CAE9 /* Pods-VideoSharingExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VideoSharingExtension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VideoSharingExtension/Pods-VideoSharingExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		A606E17A473FC540F05958A1 /* Pods-ProactiveCacher.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ProactiveCacher.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ProactiveCacher/Pods-ProactiveCacher.debug.xcconfig"; sourceTree = "<group>"; };
@@ -226,6 +228,7 @@
 				63B4D40320A9BD8300862867 /* URLValidator.swift */,
 				63838C421FB61306002697D6 /* UserDataLogger.swift */,
 				6301589D202F7A8D00F84147 /* VideoListViewController.swift */,
+				63E4215120B34F4F0067FB23 /* VideoCategoriesListVC.swift */,
 				6301589F202F7AC200F84147 /* VideoTableViewCell.swift */,
 			);
 			path = ProactiveCacher;
@@ -572,6 +575,7 @@
 				63838C431FB61306002697D6 /* UserDataLogger.swift in Sources */,
 				63B4D40420A9BD8300862867 /* URLValidator.swift in Sources */,
 				630158A0202F7AC200F84147 /* VideoTableViewCell.swift in Sources */,
+				63E4215220B34F4F0067FB23 /* VideoCategoriesListVC.swift in Sources */,
 				63B4D40B20A9E87700862867 /* MiscExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

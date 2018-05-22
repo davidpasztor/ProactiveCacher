@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cEw-SM-REY">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="D9u-OF-jEP">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -75,6 +76,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="Opj-lf-YnL">
+                        <barButtonItem key="leftBarButtonItem" title="Categories" id="MOv-bo-mIi">
+                            <connections>
+                                <action selector="browseCategories:" destination="dEp-Jo-BRw" id="s4m-Oy-ffL"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="oly-Ym-kDg" userLabel="UploadButton">
                             <connections>
                                 <action selector="addVideo:" destination="dEp-Jo-BRw" id="zec-Du-TZc"/>
@@ -82,6 +88,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="categoriesButton" destination="MOv-bo-mIi" id="sEI-0c-06h"/>
                         <outlet property="uploadButton" destination="oly-Ym-kDg" id="3kc-lW-KEg"/>
                     </connections>
                 </tableViewController>
@@ -119,6 +126,65 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="U6P-Rx-o9N" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-142" y="34"/>
+        </scene>
+        <!--Side Menu Controller-->
+        <scene sceneID="zFc-jf-grr">
+            <objects>
+                <viewController id="D9u-OF-jEP" customClass="SideMenuController" customModule="SideMenuSwift" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="0j2-dy-3Yg">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="5qZ-zD-kBs"/>
+                    </view>
+                    <connections>
+                        <segue destination="cEw-SM-REY" kind="custom" identifier="SideMenu.Content" customClass="SideMenuSegue" customModule="SideMenuSwift" id="Rkw-iD-9xq"/>
+                        <segue destination="ch8-Fy-Mi5" kind="custom" identifier="SideMenu.Menu" customClass="SideMenuSegue" customModule="SideMenuSwift" id="KPV-bx-Icl"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uZ2-QH-Pd6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1649" y="34"/>
+        </scene>
+        <!--Video Categories ListVC-->
+        <scene sceneID="pbf-oe-WNK">
+            <objects>
+                <viewController id="ch8-Fy-Mi5" customClass="VideoCategoriesListVC" customModule="ProactiveCacher" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Nak-2r-EMj">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="f57-le-P7y">
+                                <rect key="frame" x="125" y="0.0" width="250" height="812"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="videoCategoryCell" id="ySE-nr-ZWL">
+                                        <rect key="frame" x="0.0" y="28" width="250" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ySE-nr-ZWL" id="o4s-6z-Us2">
+                                            <rect key="frame" x="0.0" y="0.0" width="250" height="43.666666666666664"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="f57-le-P7y" firstAttribute="centerY" secondItem="Nak-2r-EMj" secondAttribute="centerY" id="OF1-L1-eNh"/>
+                            <constraint firstItem="11V-XC-jsW" firstAttribute="trailing" secondItem="f57-le-P7y" secondAttribute="trailing" id="dcT-Zk-tf7"/>
+                            <constraint firstItem="f57-le-P7y" firstAttribute="width" secondItem="Nak-2r-EMj" secondAttribute="width" multiplier="2/3" id="uSp-8h-Gdo"/>
+                            <constraint firstItem="f57-le-P7y" firstAttribute="height" secondItem="Nak-2r-EMj" secondAttribute="height" id="xK0-2r-3ez"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="11V-XC-jsW"/>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="f57-le-P7y" id="EKB-7X-xKT"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eq3-hp-ui7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-884" y="782"/>
         </scene>
     </scenes>
 </document>

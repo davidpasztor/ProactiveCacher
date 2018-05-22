@@ -137,7 +137,7 @@ class Video: Object, Decodable {
     }
     
     private enum CodingKeys: String, CodingKey {
-        case youtubeID, title, filePath, thumbnailPath, watched, rating, uploadDate, categoryId
+        case youtubeID, title, filePath, thumbnailPath, watched, rating, uploadDate, category
     }
     
     static let jsonDecoder: JSONDecoder = {
@@ -158,8 +158,8 @@ class Video: Object, Decodable {
         // Video can't be saved at the device when it's decoded
         self.filePath = nil
         self.thumbnailPath = nil
-        if let categoryId = try container.decodeIfPresent(String.self, forKey: .categoryId) {
-            self.category = realm?.object(ofType: VideoCategory.self, forPrimaryKey: categoryId)
+        if let category = try container.decodeIfPresent(VideoCategory.self, forKey: .category) {
+            self.category = category
         }
         // These might not come from the response
         do {
@@ -170,13 +170,17 @@ class Video: Object, Decodable {
     }
 }
 
-class VideoCategory: Object {
+class VideoCategory: Object, Decodable {
     @objc dynamic var name = ""
     @objc dynamic var id = ""
     let videos = LinkingObjects(fromType: Video.self, property: "category")
     
     override class func primaryKey()->String {
         return "id"
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case name, id
     }
 }
 

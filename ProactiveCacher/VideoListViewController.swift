@@ -15,6 +15,7 @@ import Cosmos
 class VideoListViewController: UITableViewController {
     
     @IBOutlet weak var uploadButton: UIBarButtonItem!
+    @IBOutlet weak var categoriesButton: UIBarButtonItem!
     
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
     // Keep the cached videos on top of the list and sort the non-cached videos based on their uploadDate property
@@ -69,6 +70,11 @@ class VideoListViewController: UITableViewController {
         }
     }
     
+    @IBAction func browseCategories(_ sender: UIBarButtonItem) {
+        sideMenuController?.revealMenu()
+    }
+    
+    
     // Function for loading the list of videos
     @objc func loadVideos(){
         activityIndicator.startAnimating()
@@ -99,11 +105,11 @@ class VideoListViewController: UITableViewController {
                     }
                 }
                 try! realm.write {
-                    realm.add(newVideos)
+                    realm.add(newVideos, update: true)
                     realm.delete(videosToDelete)
                     for videoFromServer in videosFromServer {
                         if let category = videoFromServer.category {
-                            self.videos.filter("youtubeID == %@",videoFromServer.youtubeID).first?.category = category
+                            self.videos.filter("youtubeID == %@",videoFromServer.youtubeID).first?.category = realm.object(ofType: VideoCategory.self, forPrimaryKey: category.id) ?? category
                         }
                     }
                 }
@@ -168,8 +174,6 @@ class VideoListViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationItem.setHidesBackButton(true, animated: false)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem()
         // Present the rating view if the user was watching a video
         if let justWatchedVideoIndex = watchedVideoIndex {
             self.watchedVideoIndex = nil

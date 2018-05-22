@@ -11,6 +11,7 @@ import RealmSwift
 import AVFoundation
 import UserNotifications
 import Reachability
+import SideMenuSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -109,6 +110,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             //TODO: might have to move the notification handling to separate function that are called from here as well, since didReceiveNotifications might not be called if the app is opened due to the push notification (not sure though in the case of silent ones)
         }
         
+        // Set up the category selector
+        SideMenuController.preferences.basic.menuWidth = UIScreen.main.bounds.width * 2/3
         return true
     }
     
