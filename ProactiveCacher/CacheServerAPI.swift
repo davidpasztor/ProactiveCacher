@@ -86,6 +86,23 @@ class CacheServerAPI {
             }
         }).resume()
     }
+    /*
+    func checkForRegistrationIssue<T>(response: HTTPURLResponse, inputCompletion: @escaping (Result<T>)->(), outputCompletion: @escaping ((Result<T>)->())->()){
+        if response.statusCode == 401 {
+            registerUser(completion: {result in
+                switch result {
+                case .success(_):
+                    outputCompletion(inputCompletion)
+                case let .failure(error):
+                    // Should somehow return error wrapped in a closure, not the original completion...
+                    outputCompletion(inputCompletion)
+                }
+            })
+        } else {
+            outputCompletion(inputCompletion)
+        }
+    }
+    */
     
     /**
      Retrieve all available videos from the server.
@@ -182,7 +199,7 @@ class CacheServerAPI {
                 }
                 return
             }
-            guard response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 206 else {
+            guard response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 202 else {
                 let errorResponse = String(data: data ?? Data(), encoding: .utf8)
                 DispatchQueue.main.async {
                     completion(Result.failure(CacheServerErrors.HTTPFailureResponse(response.statusCode,errorResponse)))

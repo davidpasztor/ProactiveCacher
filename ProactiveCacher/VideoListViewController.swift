@@ -106,6 +106,7 @@ class VideoListViewController: UITableViewController {
                     }
                 }
                 try! realm.write {
+                    //TODO: check that categories are added to Realm for newVideos successfully
                     realm.add(newVideos, update: true)
                     realm.delete(videosToDelete)
                     for videoFromServer in videosFromServer {

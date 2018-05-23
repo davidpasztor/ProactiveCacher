@@ -143,9 +143,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             case .success(_):
                 print("Registration successful with userID: \(CacheServerAPI.shared.userID!)")
                 let rootVC = UIApplication.shared.keyWindow?.rootViewController
-                if let loadingVC = rootVC as? LoadingViewController {
-                    loadingVC.displayVideos()
-                } else if let navigationVC = rootVC as? UINavigationController, let loadingVC = navigationVC.topViewController as? LoadingViewController {
+                if let sideMenuVC = rootVC as? SideMenuController, let navigationVC = sideMenuVC.contentViewController as? UINavigationController, let loadingVC = navigationVC.topViewController as? LoadingViewController {
                     loadingVC.displayVideos()
                 } else {
                     print("RootViewController is not LoadingViewController!")
