@@ -21,9 +21,11 @@ class VideoCategoriesListVC: UIViewController {
             if let navigationVC = sideMenuController?.contentViewController as? UINavigationController, let videoListVC = navigationVC.topViewController as? VideoListViewController {
                 if let selectedCategory = selectedCategory {
                     print("Filtering videos for category \(selectedCategory.name)")
+                    videoListVC.navigationItem.title = selectedCategory.name
                     videoListVC.videos = try! Realm().objects(Video.self).filter("category == %@",selectedCategory).sorted(by: VideoListViewController.videoSortDescriptors)
                 } else {
                     print("Displaying all videos")
+                    videoListVC.navigationItem.title = "All"
                     videoListVC.videos = try! Realm().objects(Video.self).sorted(by: VideoListViewController.videoSortDescriptors)
                 }
                 videoListVC.tableView.reloadData()

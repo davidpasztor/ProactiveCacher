@@ -16,6 +16,7 @@ class VideoListViewController: UITableViewController {
     
     @IBOutlet weak var uploadButton: UIBarButtonItem!
     @IBOutlet weak var categoriesButton: UIBarButtonItem!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
     // Keep the cached videos on top of the list and sort the non-cached videos based on their uploadDate property
@@ -26,6 +27,7 @@ class VideoListViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        searchBar.delegate = self
         //Since the videos have to have a 16:9 ratio, the thumbnails should also
         tableView.rowHeight = CGFloat(tableView.frame.width)/16*9
         //Pull to refresh
@@ -75,7 +77,6 @@ class VideoListViewController: UITableViewController {
         sideMenuController?.revealMenu()
     }
     
-    
     // Function for loading the list of videos
     @objc func loadVideos(){
         activityIndicator.startAnimating()
@@ -105,15 +106,22 @@ class VideoListViewController: UITableViewController {
                         }
                     }
                 }
+                let categories = newVideos.compactMap({$0.category})
                 try! realm.write {
                     //TODO: check that categories are added to Realm for newVideos successfully
+                    realm.add(categories,update:true)
                     realm.add(newVideos, update: true)
                     realm.delete(videosToDelete)
+                    for videoWithNoCategory in realm.objects(Video.self).filter("category == nil") {
+                        videoWithNoCategory.category = videosFromServer.first(where: {$0.youtubeID == videoWithNoCategory.youtubeID})?.category
+                    }
+                    /*
                     for videoFromServer in videosFromServer {
                         if let category = videoFromServer.category {
                             self.videos.filter("youtubeID == %@",videoFromServer.youtubeID).first?.category = realm.object(ofType: VideoCategory.self, forPrimaryKey: category.id) ?? category
                         }
                     }
+                    */
                 }
                 self.tableView.reloadData()
             case let .failure(error):
@@ -335,7 +343,23 @@ class VideoListViewController: UITableViewController {
             self.playVideo(from: streamURL)
         }
     }
+}
 
+extension VideoListViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        print("Searching for text: \(searchBar.text ?? "")")
+        YouTubeAPI.shared.searchVideos(keyword: searchBar.text!, in: nil, completion: { result in
+            switch result {
+            case let .failure(error):
+                print(error)
+            case let .success(matchingVideos):
+                // Can't assign this to the data source, since the data source is a Results instance and we don't want to save all found videos to the server, only the ones that have been watched --> the watched ones should prompt the rating view as well
+                // Can probably sort this by pushing a new viewcontroller displaying the search results
+                print(matchingVideos)
+            }
+        })
+        searchBar.resignFirstResponder()
+    }
 }
 
 //: [Add custom views to actionsheet in UIAlertController](https://stackoverflow.com/questions/32790207/uialertcontroller-add-custom-views-to-actionsheet/47925120#47925120)

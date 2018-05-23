@@ -91,6 +91,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                     print("App usage logs uploaded successfully and deleted from Realm")
                 case let .failure(error):
+                    if case let CacheServerErrors.HTTPFailureResponse(statusCode,_) = error {
+                        if statusCode == 401 {
+                            CacheServerAPI.shared.registerUser(completion: { result in
+                                switch result {
+                                case .success(_):
+                                    print("Successfully reregistered")
+                                case let .failure(error):
+                                    print("Error reregistering: \(error)")
+                                }
+                            })
+                        } else {
+                            print(error)
+                        }
+                    }
                     print("App usage logs upload failed with \(error)")
                 }
             })
