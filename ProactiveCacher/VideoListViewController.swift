@@ -353,7 +353,6 @@ class VideoListViewController: UITableViewController {
 
 extension VideoListViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        print("Searching for text: \(searchBar.text ?? "")")
         YouTubeAPI.shared.searchVideos(keyword: searchBar.text!, in: nil, completion: { result in
             searchBar.text = ""
             switch result {

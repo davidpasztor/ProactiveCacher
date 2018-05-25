@@ -21,7 +21,9 @@ struct YouTubeVideo: Decodable {
     let channelId:String
     let title:String
     let channelTitle:String
-    let thumbnailResponse: ThumbnailResponse
+    var thumbnailUrlString:String {
+        return "https://i.ytimg.com/vi/\(id)/mqdefault.jpg"
+    }
     var thumbnail: UIImage?
     var watchURL: URL? {
         return URL(string: "\(YouTubeAPI.shared.videoBaseURL)\(id)")
@@ -31,16 +33,10 @@ struct YouTubeVideo: Decodable {
         case id, snippet
     }
     private enum SnippetKeys: String, CodingKey {
-        case channelId, title, description, channelTitle, tags, thumbnails
+        case channelId, title, channelTitle
     }
     private enum IdKeys: String, CodingKey {
         case videoId
-    }
-    
-    struct ThumbnailResponse: Decodable {
-        let url:String
-        let width:Int
-        let height:Int
     }
     
     init(from decoder:Decoder) throws {
@@ -51,8 +47,6 @@ struct YouTubeVideo: Decodable {
         self.channelId = try snippetContainer.decode(String.self, forKey: .channelId)
         self.title = try snippetContainer.decode(String.self, forKey: .title)
         self.channelTitle = try snippetContainer.decode(String.self, forKey: .channelTitle)
-        let thumbnailsResponse = try snippetContainer.decode([String:ThumbnailResponse].self, forKey: .thumbnails)
-        self.thumbnailResponse = thumbnailsResponse["high"] ?? thumbnailsResponse["default"]!
     }
 }
 

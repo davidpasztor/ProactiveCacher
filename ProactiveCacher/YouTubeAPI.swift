@@ -46,7 +46,7 @@ class YouTubeAPI {
                 var matchingVideosResponse = try JSONDecoder().decode(YouTubeVideosResponse.self, from: data)
                 let thumbnailsGroup = DispatchGroup()
                 for index in matchingVideosResponse.videos.indices {
-                    guard let url = URL(string: matchingVideosResponse.videos[index].thumbnailResponse.url) else { continue }
+                    guard let url = URL(string: matchingVideosResponse.videos[index].thumbnailUrlString) else { continue }
                     thumbnailsGroup.enter()
                     UIImage.downloadFromRemoteURL(url, completion: { result in
                         switch result {

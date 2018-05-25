@@ -24,8 +24,7 @@ class VideoSearchResultsVC: UIViewController {
         searchResultsTable.delegate = self
         searchResultsTable.dataSource = self
         UIViewController.addActivityIndicator(activityIndicator: activityIndicator, view: self.view)
-        searchResultsTable.rowHeight = CGFloat(searchResultsTable.frame.width)/16*9
-        //TODO: UI is flawed, black rectangles between cells
+        searchResultsTable.rowHeight = searchResultsTable.frame.width/16*9
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -47,6 +46,9 @@ extension VideoSearchResultsVC: UITableViewDataSource {
         let video = videoResults[indexPath.row]
         cell.thumbnailImageView.image = video.thumbnail
         cell.titleLabel.text = video.title
+        // TODO: should probably be moved to the VideoTableViewCell class, since now these 2 lines need to be called on both this VC and VideoListViewController
+        cell.titleLabel.backgroundColor = UIColor(white: 1, alpha: 0.75)
+        cell.titleLabel.textColor = UIColor(red: 33/255, green: 33/255, blue: 33/255, alpha: 1)
         return cell
     }
 }
