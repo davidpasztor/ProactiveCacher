@@ -55,7 +55,6 @@ extension VideoSearchResultsVC: UITableViewDataSource {
 
 extension VideoSearchResultsVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Video \(videoResults[indexPath.row].title) selected")
         guard let watchURL = videoResults[indexPath.row].watchURL else {
             print("No videoURL for video \(videoResults[indexPath.row].id)")
             return
