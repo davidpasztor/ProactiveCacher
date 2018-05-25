@@ -71,6 +71,10 @@ class VideoListViewController: UITableViewController {
                 print("Error while deleting cached video: ",error)
             }
         }
+        //Remove categories that have no videos
+        try! realm.write {
+            realm.delete(realm.objects(VideoCategory.self).filter("videos.@count == 0"))
+        }
     }
     
     @IBAction func browseCategories(_ sender: UIBarButtonItem) {
@@ -108,20 +112,13 @@ class VideoListViewController: UITableViewController {
                 }
                 let categories = newVideos.compactMap({$0.category})
                 try! realm.write {
-                    //TODO: check that categories are added to Realm for newVideos successfully
                     realm.add(categories,update:true)
                     realm.add(newVideos, update: true)
                     realm.delete(videosToDelete)
+                    // Update existing videos that had no category associated with them
                     for videoWithNoCategory in realm.objects(Video.self).filter("category == nil") {
                         videoWithNoCategory.category = videosFromServer.first(where: {$0.youtubeID == videoWithNoCategory.youtubeID})?.category
                     }
-                    /*
-                    for videoFromServer in videosFromServer {
-                        if let category = videoFromServer.category {
-                            self.videos.filter("youtubeID == %@",videoFromServer.youtubeID).first?.category = realm.object(ofType: VideoCategory.self, forPrimaryKey: category.id) ?? category
-                        }
-                    }
-                    */
                 }
                 self.tableView.reloadData()
             case let .failure(error):
@@ -343,19 +340,31 @@ class VideoListViewController: UITableViewController {
             self.playVideo(from: streamURL)
         }
     }
+    
+    // MARK: - Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showSearchResults", let destVC = segue.destination as? VideoSearchResultsVC, let matchingVideos = sender as? [YouTubeVideo] {
+            destVC.videoResults = matchingVideos
+        } else {
+            print("Unknown segue: \(segue.identifier ?? "no id") or wrong destination: \(segue.destination)")
+        }
+    }
 }
 
 extension VideoListViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         print("Searching for text: \(searchBar.text ?? "")")
         YouTubeAPI.shared.searchVideos(keyword: searchBar.text!, in: nil, completion: { result in
+            searchBar.text = ""
             switch result {
             case let .failure(error):
                 print(error)
             case let .success(matchingVideos):
                 // Can't assign this to the data source, since the data source is a Results instance and we don't want to save all found videos to the server, only the ones that have been watched --> the watched ones should prompt the rating view as well
                 // Can probably sort this by pushing a new viewcontroller displaying the search results
-                print(matchingVideos)
+                // OR add another data source of type [YouTubeVideo] and switch between the two data sources depending on a boolean (isSearching), however with this approach it seems overly complicated to cancel a search and display all videos again
+                // --> should probably simply use the pushing approach
+                self.performSegue(withIdentifier: "showSearchResults", sender: matchingVideos)
             }
         })
         searchBar.resignFirstResponder()

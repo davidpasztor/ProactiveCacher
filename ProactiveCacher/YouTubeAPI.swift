@@ -15,6 +15,7 @@ class YouTubeAPI {
     
     private let apiKey = "AIzaSyBHmIX8EfCwI1o77jUpjtM1gCP1wlQRPOk"
     let baseUrlString = "https://www.googleapis.com/youtube/v3"
+    let videoBaseURL = "https://www.youtube.com/embed/"
     
     func searchVideos(keyword:String,in category:String?, completion: @escaping (Result<[YouTubeVideo]>)->()){
         let categoryParam = category == nil ? "" : "&videoCategoryId\(category!)"

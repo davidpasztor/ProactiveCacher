@@ -96,11 +96,112 @@
                         <outlet property="categoriesButton" destination="MOv-bo-mIi" id="sEI-0c-06h"/>
                         <outlet property="searchBar" destination="BLn-9d-2LG" id="Unw-Z4-dKu"/>
                         <outlet property="uploadButton" destination="oly-Ym-kDg" id="3kc-lW-KEg"/>
+                        <segue destination="PIg-OB-NjI" kind="show" identifier="showSearchResults" id="0cO-xu-dMF"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N7P-wd-9Bf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="593" y="34"/>
+        </scene>
+        <!--Video Search ResultsVC-->
+        <scene sceneID="6pf-nZ-nZQ">
+            <objects>
+                <viewController id="PIg-OB-NjI" customClass="VideoSearchResultsVC" customModule="ProactiveCacher" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="yHI-Sc-yJv">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="gPt-d4-qVW">
+                                <rect key="frame" x="-0.66666666666665719" y="27" width="375.33333333333326" height="812"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="videoResultCell" rowHeight="111" id="4x5-cC-goZ" customClass="VideoTableViewCell" customModule="ProactiveCacher" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375.33333333333326" height="111"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4x5-cC-goZ" id="BJm-rh-Y0r">
+                                            <rect key="frame" x="0.0" y="0.0" width="375.33333333333326" height="110.66666666666667"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="OAQ-ib-NAy">
+                                                    <rect key="frame" x="-0.66666666666665719" y="0.0" width="375.33333333333326" height="110.66666666666667"/>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" layoutMarginsFollowReadableWidth="YES" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="6" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lVL-cN-BAF">
+                                                    <rect key="frame" x="19.999999999999996" y="85.333333333333329" width="43.666666666666657" height="20.333333333333329"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="OAQ-ib-NAy" firstAttribute="centerX" secondItem="BJm-rh-Y0r" secondAttribute="centerX" id="Hch-Sy-4CP"/>
+                                                <constraint firstItem="lVL-cN-BAF" firstAttribute="leading" secondItem="BJm-rh-Y0r" secondAttribute="leading" constant="20" id="ITi-dG-Moa"/>
+                                                <constraint firstItem="lVL-cN-BAF" firstAttribute="top" relation="greaterThanOrEqual" secondItem="BJm-rh-Y0r" secondAttribute="top" constant="20" id="Kph-av-dUx"/>
+                                                <constraint firstItem="OAQ-ib-NAy" firstAttribute="height" secondItem="BJm-rh-Y0r" secondAttribute="height" id="VS2-G0-obG"/>
+                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="lVL-cN-BAF" secondAttribute="trailing" id="Y7e-h0-ElJ"/>
+                                                <constraint firstItem="OAQ-ib-NAy" firstAttribute="width" secondItem="BJm-rh-Y0r" secondAttribute="width" id="mwG-sj-yJK"/>
+                                                <constraint firstItem="OAQ-ib-NAy" firstAttribute="centerY" secondItem="BJm-rh-Y0r" secondAttribute="centerY" id="r57-u1-vpB"/>
+                                                <constraint firstAttribute="bottom" secondItem="lVL-cN-BAF" secondAttribute="bottom" constant="5" id="vAi-Jk-2hc"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="thumbnailImageView" destination="OAQ-ib-NAy" id="zo2-Zs-ZMv"/>
+                                            <outlet property="titleLabel" destination="lVL-cN-BAF" id="7kP-Td-F8Y"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="gPt-d4-qVW" firstAttribute="width" secondItem="yHI-Sc-yJv" secondAttribute="width" id="Hua-at-SiR"/>
+                            <constraint firstItem="gPt-d4-qVW" firstAttribute="centerY" secondItem="VmL-Bv-Dz3" secondAttribute="centerY" id="IaF-um-hls"/>
+                            <constraint firstItem="gPt-d4-qVW" firstAttribute="centerX" secondItem="VmL-Bv-Dz3" secondAttribute="centerX" id="JfV-iV-XeZ"/>
+                            <constraint firstItem="gPt-d4-qVW" firstAttribute="height" secondItem="yHI-Sc-yJv" secondAttribute="height" id="WtS-u0-HzL"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="VmL-Bv-Dz3"/>
+                    </view>
+                    <connections>
+                        <outlet property="searchResultsTable" destination="gPt-d4-qVW" id="0jw-Ji-b9l"/>
+                        <segue destination="yhX-Bn-qek" kind="show" identifier="playVideoFromYT" id="DgT-RE-oLq"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Zu7-sP-UAq" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1391" y="39"/>
+        </scene>
+        <!--You Tube Video PlayerVC-->
+        <scene sceneID="ELt-Mm-Q5Z">
+            <objects>
+                <viewController id="yhX-Bn-qek" customClass="YouTubeVideoPlayerVC" customModule="ProactiveCacher" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="QHq-I9-RSS">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tw7-xB-Lf6">
+                                <rect key="frame" x="-0.66666666666665719" y="27" width="375.33333333333326" height="812"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Tw7-xB-Lf6" firstAttribute="centerX" secondItem="gYz-28-WE0" secondAttribute="centerX" id="1Ac-5g-hx0"/>
+                            <constraint firstItem="Tw7-xB-Lf6" firstAttribute="height" secondItem="QHq-I9-RSS" secondAttribute="height" id="2h3-q5-krK"/>
+                            <constraint firstItem="Tw7-xB-Lf6" firstAttribute="width" secondItem="QHq-I9-RSS" secondAttribute="width" id="RJH-TT-EgK"/>
+                            <constraint firstItem="Tw7-xB-Lf6" firstAttribute="centerY" secondItem="gYz-28-WE0" secondAttribute="centerY" id="mFm-Zj-JNi"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="gYz-28-WE0"/>
+                    </view>
+                    <connections>
+                        <outlet property="videoPlayerView" destination="Tw7-xB-Lf6" id="vCn-1b-5rE"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="h4Z-ga-lvE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2218" y="34"/>
         </scene>
         <!--Loading View Controller-->
         <scene sceneID="VOp-7e-TxI">

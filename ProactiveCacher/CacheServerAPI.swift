@@ -14,6 +14,7 @@ class CacheServerAPI {
     static let shared = CacheServerAPI()
     private init(){}
     
+    //let baseURL = "http://146.169.135.188:3000" // Imperial local IP
     //let baseURL = "http://192.168.1.68:3000" // Can only be used for local testing from a real device
     //let baseURL = "http://localhost:3000" // Can only be used for local testing in the Simulator
     let baseURL = "http://35.153.159.19:3000" // AWS server IP address
@@ -87,7 +88,7 @@ class CacheServerAPI {
         }).resume()
     }
     /*
-    func checkForRegistrationIssue<T>(response: HTTPURLResponse, inputCompletion: @escaping (Result<T>)->(), outputCompletion: @escaping ((Result<T>)->())->()){
+    func checkForRegistrationIssue<T>(response: HTTPURLResponse, inputCompletion: @escaping (Result<T>)->(), outputCompletion: @escaping ((Result<T>)->())->(Result<T>)){
         if response.statusCode == 401 {
             registerUser(completion: {result in
                 switch result {
@@ -95,7 +96,7 @@ class CacheServerAPI {
                     outputCompletion(inputCompletion)
                 case let .failure(error):
                     // Should somehow return error wrapped in a closure, not the original completion...
-                    outputCompletion(inputCompletion)
+                    outputCompletion(.failure(error))
                 }
             })
         } else {

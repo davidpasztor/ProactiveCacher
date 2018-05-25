@@ -41,6 +41,12 @@ class VideoCategoriesListVC: UIViewController {
         tableView.dataSource = self
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // Even though the `videoCategories` `Results` is auto-updating, need to call `reloadData` to let the `tableView` know that its `dataSource` has changed
+        tableView.reloadData()
+    }
+    
 }
 
 extension VideoCategoriesListVC: UITableViewDataSource {

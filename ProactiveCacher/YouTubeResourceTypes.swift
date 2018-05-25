@@ -23,6 +23,9 @@ struct YouTubeVideo: Decodable {
     let channelTitle:String
     let thumbnailResponse: ThumbnailResponse
     var thumbnail: UIImage?
+    var watchURL: URL? {
+        return URL(string: "\(YouTubeAPI.shared.videoBaseURL)\(id)")
+    }
     
     private enum CodingKeys: String, CodingKey {
         case id, snippet

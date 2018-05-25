@@ -15,6 +15,8 @@
 		63342774209A461F0043557E /* VideoSharingExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6334276A209A461F0043557E /* VideoSharingExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		63520F7420B6004C00FEDC7D /* YouTubeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63520F7320B6004C00FEDC7D /* YouTubeAPI.swift */; };
 		63520F7620B61BA900FEDC7D /* YouTubeResourceTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63520F7520B61BA900FEDC7D /* YouTubeResourceTypes.swift */; };
+		63520F7820B62D0D00FEDC7D /* VideoSearchResultsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63520F7720B62D0D00FEDC7D /* VideoSearchResultsVC.swift */; };
+		63520F7A20B709EE00FEDC7D /* YouTubeVideoPlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63520F7920B709EE00FEDC7D /* YouTubeVideoPlayerVC.swift */; };
 		637B81EC2088B9B000300B96 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B81EB2088B9B000300B96 /* LoadingViewController.swift */; };
 		63838C151FB60F4B002697D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C141FB60F4B002697D6 /* AppDelegate.swift */; };
 		63838C1A1FB60F4B002697D6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63838C181FB60F4B002697D6 /* Main.storyboard */; };
@@ -101,6 +103,8 @@
 		63342771209A461F0043557E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63520F7320B6004C00FEDC7D /* YouTubeAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeAPI.swift; sourceTree = "<group>"; };
 		63520F7520B61BA900FEDC7D /* YouTubeResourceTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeResourceTypes.swift; sourceTree = "<group>"; };
+		63520F7720B62D0D00FEDC7D /* VideoSearchResultsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSearchResultsVC.swift; sourceTree = "<group>"; };
+		63520F7920B709EE00FEDC7D /* YouTubeVideoPlayerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeVideoPlayerVC.swift; sourceTree = "<group>"; };
 		637B81EB2088B9B000300B96 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		637FB90B20838AAD003BE2C3 /* ProactiveCacher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ProactiveCacher.entitlements; sourceTree = "<group>"; };
 		63838C111FB60F4B002697D6 /* ProactiveCacher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProactiveCacher.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -233,9 +237,11 @@
 				63838C421FB61306002697D6 /* UserDataLogger.swift */,
 				6301589D202F7A8D00F84147 /* VideoListViewController.swift */,
 				63E4215120B34F4F0067FB23 /* VideoCategoriesListVC.swift */,
+				63520F7720B62D0D00FEDC7D /* VideoSearchResultsVC.swift */,
 				6301589F202F7AC200F84147 /* VideoTableViewCell.swift */,
 				63520F7320B6004C00FEDC7D /* YouTubeAPI.swift */,
 				63520F7520B61BA900FEDC7D /* YouTubeResourceTypes.swift */,
+				63520F7920B709EE00FEDC7D /* YouTubeVideoPlayerVC.swift */,
 			);
 			path = ProactiveCacher;
 			sourceTree = "<group>";
@@ -580,11 +586,13 @@
 				63838C151FB60F4B002697D6 /* AppDelegate.swift in Sources */,
 				63838C431FB61306002697D6 /* UserDataLogger.swift in Sources */,
 				63B4D40420A9BD8300862867 /* URLValidator.swift in Sources */,
+				63520F7A20B709EE00FEDC7D /* YouTubeVideoPlayerVC.swift in Sources */,
 				63520F7620B61BA900FEDC7D /* YouTubeResourceTypes.swift in Sources */,
 				630158A0202F7AC200F84147 /* VideoTableViewCell.swift in Sources */,
 				63E4215220B34F4F0067FB23 /* VideoCategoriesListVC.swift in Sources */,
 				63B4D40B20A9E87700862867 /* MiscExtensions.swift in Sources */,
 				63520F7420B6004C00FEDC7D /* YouTubeAPI.swift in Sources */,
+				63520F7820B62D0D00FEDC7D /* VideoSearchResultsVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
