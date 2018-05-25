@@ -25,6 +25,7 @@ class VideoSearchResultsVC: UIViewController {
         searchResultsTable.dataSource = self
         UIViewController.addActivityIndicator(activityIndicator: activityIndicator, view: self.view)
         searchResultsTable.rowHeight = CGFloat(searchResultsTable.frame.width)/16*9
+        //TODO: UI is flawed, black rectangles between cells
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

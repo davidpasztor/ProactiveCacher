@@ -360,10 +360,6 @@ extension VideoListViewController: UISearchBarDelegate {
             case let .failure(error):
                 print(error)
             case let .success(matchingVideos):
-                // Can't assign this to the data source, since the data source is a Results instance and we don't want to save all found videos to the server, only the ones that have been watched --> the watched ones should prompt the rating view as well
-                // Can probably sort this by pushing a new viewcontroller displaying the search results
-                // OR add another data source of type [YouTubeVideo] and switch between the two data sources depending on a boolean (isSearching), however with this approach it seems overly complicated to cancel a search and display all videos again
-                // --> should probably simply use the pushing approach
                 self.performSegue(withIdentifier: "showSearchResults", sender: matchingVideos)
             }
         })

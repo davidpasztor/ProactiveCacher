@@ -26,7 +26,6 @@ class YouTubeAPI {
             }
             return
         }
-        print(searchUrl.absoluteString)
         URLSession.shared.dataTask(with: searchUrl, completionHandler: { data, response, error in
             guard let data = data, error == nil else {
                 completion(.failure(error!))
@@ -62,10 +61,6 @@ class YouTubeAPI {
                 thumbnailsGroup.notify(queue: DispatchQueue.main, execute: {
                     completion(.success(matchingVideosResponse.videos))
                 })
-
-                DispatchQueue.main.async {
-                    completion(.success(matchingVideosResponse.videos))
-                }
             } catch {
                 DispatchQueue.main.async {
                     completion(.failure(error))
