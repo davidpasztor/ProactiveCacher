@@ -28,7 +28,9 @@ class AppUsageLog: Object {
     }()
     // Number of videos watched before quitting the app
     @objc dynamic var watchedVideosCount = 0
-    // TODO: add a property that tracks how many of the watched videos were cached to use as an indicator of the caching efficiency
+    // Properties used for calculating hit-rate on the server
+    @objc dynamic var watchedCachedVideosCount = 0
+    @objc dynamic var notWatchedCachedVideosCount = 0
     
     var appOpeningTime:Date {
         return _appOpeningTime
@@ -41,13 +43,15 @@ class AppUsageLog: Object {
 
 extension AppUsageLog: Encodable {
     private enum CodingKeys: String, CodingKey {
-        case appOpeningTime, watchedVideosCount
+        case appOpeningTime, watchedVideosCount, watchedCachedVideosCount, notWatchedCachedVideosCount
     }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(_appOpeningTimeString, forKey: .appOpeningTime)
         try container.encode(watchedVideosCount, forKey: .watchedVideosCount)
+        try container.encode(watchedCachedVideosCount, forKey: .watchedCachedVideosCount)
+        try container.encode(notWatchedCachedVideosCount, forKey: .notWatchedCachedVideosCount)
     }
 }
 
@@ -67,7 +71,7 @@ class UserLog: Object {
     @objc dynamic var batteryState: BatteryStateLog?
     // Make _timeStamp a private backing variable, since we want to make it immutable, but Realm properties must be mutable
     @objc private dynamic var _timeStamp = Date()
-    // Only used as a primaryKey, since a Date object can't be a primary key, so it's safe to make it private, closure initialization is needed since the value is the result of a function call, DateFormatter.string(from:)
+    // Only used as a primaryKey, since a Date object can't be a primary key, so it's safe to make it private
     @objc private dynamic var _timeStampString: String = {
         return ISO8601DateFormatter().string(from: Date())
     }()
@@ -137,7 +141,7 @@ class Video: Object, Decodable {
     }
     
     private enum CodingKeys: String, CodingKey {
-        case youtubeID, title, filePath, thumbnailPath, watched, rating, uploadDate, category
+        case youtubeID, title, uploadDate, category
     }
     
     static let jsonDecoder: JSONDecoder = {
@@ -155,17 +159,8 @@ class Video: Object, Decodable {
         self.youtubeID = try container.decode(String.self, forKey: .youtubeID)
         self.title = try container.decode(String.self, forKey: .title)
         self.uploadDate = try container.decode(Date.self, forKey: .uploadDate)
-        // Video can't be saved at the device when it's decoded
-        self.filePath = nil
-        self.thumbnailPath = nil
         if let category = try container.decodeIfPresent(VideoCategory.self, forKey: .category) {
             self.category = category
-        }
-        // These might not come from the response
-        do {
-            self.watched = try container.decode(Bool.self, forKey: .watched)
-            self.rating.value = try container.decode(Double.self, forKey: .rating)
-        } catch {
         }
     }
 }

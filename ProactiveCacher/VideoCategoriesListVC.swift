@@ -20,11 +20,9 @@ class VideoCategoriesListVC: UIViewController {
         didSet {
             if let navigationVC = sideMenuController?.contentViewController as? UINavigationController, let videoListVC = navigationVC.topViewController as? VideoListViewController {
                 if let selectedCategory = selectedCategory {
-                    print("Filtering videos for category \(selectedCategory.name)")
                     videoListVC.navigationItem.title = selectedCategory.name
                     videoListVC.videos = try! Realm().objects(Video.self).filter("category == %@",selectedCategory).sorted(by: VideoListViewController.videoSortDescriptors)
                 } else {
-                    print("Displaying all videos")
                     videoListVC.navigationItem.title = "All"
                     videoListVC.videos = try! Realm().objects(Video.self).sorted(by: VideoListViewController.videoSortDescriptors)
                 }
@@ -73,10 +71,8 @@ extension VideoCategoriesListVC: UITableViewDataSource {
 extension VideoCategoriesListVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-            print("Category all selected")
             selectedCategory = nil
         } else {
-            print("Category \(videoCategories[indexPath.row-1]) selected")
             selectedCategory = videoCategories[indexPath.row-1]
         }
         sideMenuController?.hideMenu()

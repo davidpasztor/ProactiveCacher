@@ -57,6 +57,11 @@ class VideoListViewController: UITableViewController {
         for video in oldCachedVideos {
             do {
                 try realm.write {
+                    if (video.watched) {
+                        AppUsageLog.current.watchedCachedVideosCount += 1
+                    } else {
+                        AppUsageLog.current.notWatchedCachedVideosCount += 1
+                    }
                     video.filePath = nil
                     video.thumbnailPath = nil
                 }
@@ -189,6 +194,9 @@ class VideoListViewController: UITableViewController {
                 presentingView = UIView(frame: self.view.frame.applying(CGAffineTransform(scaleX: 1/3, y: 1/3)))
             } else {
                 presentingView = self.view
+            }
+            try! Realm().write {
+                self.videos[justWatchedVideoIndex].watched = true
             }
             let ratingView = createRatingView(fitting: presentingView)
             ratingView.didFinishTouchingCosmos = { rating in
