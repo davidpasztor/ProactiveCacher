@@ -23,12 +23,6 @@ class YouTubeVideoPlayerVC: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         // Size of the webView is used to size the YT player frame in the JS code and the size of the webView is only known in `viewDidLayoutSubviews`, however, this function is called again once the HTML is loaded, so need to store a bool indicating whether the HTML has already been loaded once
-        /*
-        print("videoPlayerView size: \(videoPlayerView.frame.width)x\(videoPlayerView.frame.height)")
-        print("screen bounds: \(UIScreen.main.bounds)")
-        print("screen native bounds: \(UIScreen.main.nativeBounds)")
-        print("screen native scale: \(UIScreen.main.nativeScale)")
-         */
         if !didLoadVideo {
             videoPlayerView.loadHTMLString(embedVideoHtml, baseURL: nil)
             didLoadVideo = true

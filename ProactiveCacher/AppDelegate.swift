@@ -12,6 +12,7 @@ import AVFoundation
 import UserNotifications
 import Reachability
 import SideMenuSwift
+import MediaPlayer
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -117,6 +118,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } catch {
             print("Can't set up AVAudioSession properties, ",error)
         }
+        // Show video info when playing the video on lockscreen
+        application.beginReceivingRemoteControlEvents()
         
         // Check if app was launched due to push notification
         if launchOptions?[.remoteNotification] != nil {

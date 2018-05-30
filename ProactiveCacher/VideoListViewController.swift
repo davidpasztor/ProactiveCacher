@@ -11,6 +11,7 @@ import AVKit
 import AVFoundation
 import RealmSwift
 import Cosmos
+import MediaPlayer
 
 class VideoListViewController: UITableViewController {
     
@@ -179,9 +180,33 @@ class VideoListViewController: UITableViewController {
             let playerController = AVPlayerViewController()
             playerController.player = AVPlayer(url: url)
             self.present(playerController, animated: true, completion: nil)
+            //playerController.updatesNowPlayingInfoCenter = false
             playerController.view.frame = self.view.frame
             playerController.player?.play()
+            //self.setNowPlayingInfo(to: self.videos[self.watchedVideoIndex!])
         }
+    }
+    
+    /**
+     Set information to display on the lock screen when playing a video in the background
+     */
+    func setNowPlayingInfo(to currentlyPlayedVideo:Video){
+        print("Setting nowPlayingInfo")
+        let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
+        var nowPlayingInfo = nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
+        
+        nowPlayingInfo[MPMediaItemPropertyTitle] = currentlyPlayedVideo.title
+        
+        if let absoluteThumbnailUrl = currentlyPlayedVideo.absoluteThumbnailURL {
+            let artworkImage = UIImage(contentsOfFile: absoluteThumbnailUrl.path) ?? UIImage()
+            let artwork = MPMediaItemArtwork(boundsSize: artworkImage.size, requestHandler: {  (_) -> UIImage in
+                return artworkImage
+            })
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
+        }
+        
+        print(nowPlayingInfo)
+        nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -337,6 +362,7 @@ class VideoListViewController: UITableViewController {
         // If video is already cached, play it from local path
         if let absoluteFileURL = video.absoluteFileURL {
             self.watchedVideoIndex = indexPath.row
+            self.setNowPlayingInfo(to: video)
             self.playVideo(from: absoluteFileURL)
         } else {
             //Otherwise stream it from the server
@@ -345,6 +371,7 @@ class VideoListViewController: UITableViewController {
                 print("Invalid streamURL: \(streamUrlString)"); return
             }
             self.watchedVideoIndex = indexPath.row
+            self.setNowPlayingInfo(to: video)
             self.playVideo(from: streamURL)
         }
     }
