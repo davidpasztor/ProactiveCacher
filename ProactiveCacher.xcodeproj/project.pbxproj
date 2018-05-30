@@ -26,6 +26,7 @@
 		63838C351FB60F4B002697D6 /* ProactiveCacherUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C341FB60F4B002697D6 /* ProactiveCacherUITests.swift */; };
 		63838C431FB61306002697D6 /* UserDataLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C421FB61306002697D6 /* UserDataLogger.swift */; };
 		63838C511FB61961002697D6 /* RealmModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63838C501FB61961002697D6 /* RealmModels.swift */; };
+		63AA068B20BF27F6004C02F6 /* RatingControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AA068A20BF27F6004C02F6 /* RatingControllerDelegate.swift */; };
 		63B4D40420A9BD8300862867 /* URLValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B4D40320A9BD8300862867 /* URLValidator.swift */; };
 		63B4D40520A9BD8300862867 /* URLValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B4D40320A9BD8300862867 /* URLValidator.swift */; };
 		63B4D40620A9BE6A00862867 /* CacheServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630158C7204B243B00F84147 /* CacheServerAPI.swift */; };
@@ -121,6 +122,7 @@
 		63838C361FB60F4B002697D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63838C421FB61306002697D6 /* UserDataLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataLogger.swift; sourceTree = "<group>"; };
 		63838C501FB61961002697D6 /* RealmModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmModels.swift; sourceTree = "<group>"; };
+		63AA068A20BF27F6004C02F6 /* RatingControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingControllerDelegate.swift; sourceTree = "<group>"; };
 		63B4D40320A9BD8300862867 /* URLValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLValidator.swift; sourceTree = "<group>"; };
 		63B4D40920A9E32B00862867 /* VideoSharingExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VideoSharingExtension.entitlements; sourceTree = "<group>"; };
 		63B4D40A20A9E87700862867 /* MiscExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscExtensions.swift; sourceTree = "<group>"; };
@@ -232,6 +234,7 @@
 				630158C7204B243B00F84147 /* CacheServerAPI.swift */,
 				637B81EB2088B9B000300B96 /* LoadingViewController.swift */,
 				63B4D40A20A9E87700862867 /* MiscExtensions.swift */,
+				63AA068A20BF27F6004C02F6 /* RatingControllerDelegate.swift */,
 				63838C501FB61961002697D6 /* RealmModels.swift */,
 				63B4D40320A9BD8300862867 /* URLValidator.swift */,
 				63838C421FB61306002697D6 /* UserDataLogger.swift */,
@@ -584,6 +587,7 @@
 				63838C511FB61961002697D6 /* RealmModels.swift in Sources */,
 				630158C8204B243B00F84147 /* CacheServerAPI.swift in Sources */,
 				63838C151FB60F4B002697D6 /* AppDelegate.swift in Sources */,
+				63AA068B20BF27F6004C02F6 /* RatingControllerDelegate.swift in Sources */,
 				63838C431FB61306002697D6 /* UserDataLogger.swift in Sources */,
 				63B4D40420A9BD8300862867 /* URLValidator.swift in Sources */,
 				63520F7A20B709EE00FEDC7D /* YouTubeVideoPlayerVC.swift in Sources */,
