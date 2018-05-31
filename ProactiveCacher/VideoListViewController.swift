@@ -342,7 +342,6 @@ class VideoListViewController: UITableViewController, RatingControllerDelegate {
 
 extension VideoListViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        // TODO: add category to function call if the user is browsing a certain category
         YouTubeAPI.shared.searchVideos(keyword: searchBar.text!, in: nil, completion: { result in
             searchBar.text = ""
             switch result {

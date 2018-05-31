@@ -48,7 +48,6 @@ class VideoSearchResultsVC: UIViewController, RatingControllerDelegate {
             // Add an action for sharing, but not rating the video
             ratingController.addAction(shareVideoAlertAction(video: videoToShare))
             ratingController.addAction(shareAndRateVideoAlertAction(video: videoToShare))
-            // TODO: add action for rating and sharing
             self.present(ratingController, animated: true, completion: nil)
         }
     }
