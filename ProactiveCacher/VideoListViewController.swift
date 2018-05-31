@@ -230,7 +230,8 @@ class VideoListViewController: UITableViewController, RatingControllerDelegate {
                 }
             }
             // Create the alert and show it
-            let ratingController = alertControllerForRating(embedding: ratingView, of: self.videos[justWatchedVideoIndex], presentingView: presentingView)
+            let ratingController = alertControllerForRating(embedding: ratingView, presentingView: presentingView)
+            ratingController.addAction(doneRatingAlertAction(for: self.videos[justWatchedVideoIndex]))
             self.present(ratingController, animated: true, completion: nil)
         }
     }

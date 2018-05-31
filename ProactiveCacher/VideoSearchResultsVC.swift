@@ -12,12 +12,13 @@ import AVFoundation
 
 // If I decide to use another VC that's pushed from the VideoListVC need to make sure that there's no code duplication between the two
 // Should probably create a superclass that is generic on its data source and make both classes inherit form that
-class VideoSearchResultsVC: UIViewController {
+class VideoSearchResultsVC: UIViewController, RatingControllerDelegate {
     
     @IBOutlet weak var searchResultsTable: UITableView!
     
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
     var videoResults = [YouTubeVideo]()
+    var watchedVideoIndex: Int? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +26,30 @@ class VideoSearchResultsVC: UIViewController {
         searchResultsTable.dataSource = self
         UIViewController.addActivityIndicator(activityIndicator: activityIndicator, view: self.view)
         searchResultsTable.rowHeight = searchResultsTable.frame.width/16*9
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // Present the rating view if the user was watching a video
+        if let justWatchedVideoIndex = watchedVideoIndex {
+            self.watchedVideoIndex = nil
+            let presentingView = transformPresentingView(self.view)
+            let ratingView = createRatingView(fitting: presentingView)
+            let videoToShare = Video()
+            videoToShare.youtubeID = videoResults[justWatchedVideoIndex].id
+            videoToShare.title = videoResults[justWatchedVideoIndex].title
+            // Save thumbnail and assign the saved path to thumbnailPath
+            //videoToShare.thumbnailPath =
+            ratingView.didFinishTouchingCosmos = { rating in
+                videoToShare.rating.value = rating
+            }
+            // Create the alert and show it
+            let ratingController = alertControllerForRating(embedding: ratingView, presentingView: presentingView)
+            // Add an action for sharing, but not rating the video
+            ratingController.addAction(shareVideoAlertAction(video: videoToShare))
+            // TODO: add action for rating and sharing
+            self.present(ratingController, animated: true, completion: nil)
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -46,7 +71,6 @@ extension VideoSearchResultsVC: UITableViewDataSource {
         let video = videoResults[indexPath.row]
         cell.thumbnailImageView.image = video.thumbnail
         cell.titleLabel.text = video.title
-        // TODO: should probably be moved to the VideoTableViewCell class, since now these 2 lines need to be called on both this VC and VideoListViewController
         cell.titleLabel.backgroundColor = UIColor(white: 1, alpha: 0.75)
         cell.titleLabel.textColor = UIColor(red: 33/255, green: 33/255, blue: 33/255, alpha: 1)
         return cell
@@ -59,6 +83,7 @@ extension VideoSearchResultsVC: UITableViewDelegate {
             print("No videoURL for video \(videoResults[indexPath.row].id)")
             return
         }
+        self.watchedVideoIndex = indexPath.row
         self.performSegue(withIdentifier: "playVideoFromYT", sender: watchURL)
     }
 }
