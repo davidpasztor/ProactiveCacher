@@ -39,6 +39,12 @@ protocol RatingControllerDelegate where Self: UIViewController {
      - parameter video: `Video` to share
      */
     func shareVideoAlertAction(video:Video)->UIAlertAction
+    
+    /**
+     Create a `UIAlertAction` for sharing a `Video` and uploading a rating for it at the same time.
+     - parameter video: `Video` to share
+     */
+    func shareAndRateVideoAlertAction(video: Video) -> UIAlertAction
 }
 
 extension RatingControllerDelegate {
@@ -113,6 +119,29 @@ extension RatingControllerDelegate {
                 switch result {
                 case .success(_):
                     let successController = UIAlertController(title: "Success", message: "Video successfully shared!", preferredStyle: .alert)
+                    successController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                    self.present(successController, animated: true, completion: nil)
+                case let .failure(error):
+                    print("Error sharing video: \(error)")
+                    let errorController = UIAlertController(title: "Error", message: "Video couldn't be shared, you probably don't have an internet connection or there's an issue with the server, please try again later.", preferredStyle: .alert)
+                    errorController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                    self.present(errorController, animated: true, completion: nil)
+                }
+            })
+        })
+    }
+    
+    func shareAndRateVideoAlertAction(video: Video) -> UIAlertAction {
+        return UIAlertAction(title: "Share video and upload rating", style: .default, handler: { action in
+            let videoUrlString = "https://youtu.be/\(video.youtubeID)"
+            guard let videoUrl = URL(string: videoUrlString) else {
+                print("Incorrect videoUrl \(videoUrlString)")
+                return
+            }
+            CacheServerAPI.shared.uploadVideo(with: videoUrl, rating: video.rating.value, completion: { result in
+                switch result {
+                case .success(_):
+                    let successController = UIAlertController(title: "Success", message: "Video successfully shared and rating uploaded!", preferredStyle: .alert)
                     successController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
                     self.present(successController, animated: true, completion: nil)
                 case let .failure(error):

@@ -14,7 +14,7 @@ class CacheServerAPI {
     static let shared = CacheServerAPI()
     private init(){}
     
-    //let baseURL = "http://146.169.135.188:3000" // Imperial local IP
+    //let baseURL = "http://146.169.136.76:3000" // Imperial local IP
     //let baseURL = "http://192.168.1.68:3000" // Can only be used for local testing from a real device
     //let baseURL = "http://localhost:3000" // Can only be used for local testing in the Simulator
     let baseURL = "http://35.153.159.19:3000" // AWS server IP address
@@ -126,7 +126,18 @@ class CacheServerAPI {
             }
             guard response.statusCode == 200 || response.statusCode == 201 else {
                 if response.statusCode == 401 {
+                    // TODO: if this causes problems in the future, change resetting `userID` to reregistering
                     self.userID = nil
+                    /*
+                    CacheServerAPI.shared.registerUser(completion: { result in
+                        switch result {
+                        case .success(_):
+                            print("Successfully reregistered")
+                        case let .failure(error):
+                            print("Error reregistering: \(error)")
+                        }
+                    })
+                    */
                 }
                 let failureResponse = (try? JSONDecoder().decode([String:String].self, from: data))?["error"]
                 DispatchQueue.main.async {
@@ -179,14 +190,18 @@ class CacheServerAPI {
      - parameter youtubeUrl: YouTube URL of the video to be uploaded. Must be a valid URL pointing to a YouTube video.
      - parameter completion: completion handler returning `Result.success(Void)` in case of success and `Result.failure(Error)` containing the error in case of failure
      */
-    func uploadVideo(with youtubeUrl:URL,completion: @escaping (Result<Void>)->()){
+    func uploadVideo(with youtubeUrl:URL,rating:Double? = nil,completion: @escaping (Result<Void>)->()){
         let uploadVideoUrl = URL(string: "\(baseURL)/storage")!
-        var uploadVideoRequest = URLRequest(url: uploadVideoUrl)
-        uploadVideoRequest.httpMethod = "POST"
-        //uploadVideoRequest.httpBody = try? JSONEncoder().encode(["url":youtubeUrl])
-        uploadVideoRequest.httpBody = try? JSONSerialization.data(withJSONObject: ["url":youtubeUrl.absoluteString])
-        uploadVideoRequest.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
-        uploadVideoRequest.setValue(headers["user"]!, forHTTPHeaderField: "user")
+        //var uploadVideoRequest = URLRequest(url: uploadVideoUrl)
+        //uploadVideoRequest.httpMethod = "POST"
+        var jsonBody: [String:Any] = ["url":youtubeUrl.absoluteString]
+        if let rating = rating {
+            jsonBody["rating"] = rating
+        }
+        //uploadVideoRequest.httpBody = try? JSONSerialization.data(withJSONObject: jsonBody)
+        //uploadVideoRequest.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+        //uploadVideoRequest.setValue(headers["user"]!, forHTTPHeaderField: "user")
+        let uploadVideoRequest = requestWithHeaders(for: uploadVideoUrl, method: "POST", body: try? JSONSerialization.data(withJSONObject: jsonBody))
         URLSession.shared.dataTask(with: uploadVideoRequest, completionHandler: { data, response, error in
             guard error == nil else {
                 DispatchQueue.main.async {
